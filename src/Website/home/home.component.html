@@ -1,40 +1,45 @@
 <!--Star Header-->
 <header>
-    <div class="header-container">
-      <div class="logo">
-        <a routerLink="/home">
-          <img src="https://chamygaby.vn/thumbs/205x69x2/upload/photo/logo-1260.png" alt="Chamy Gaby Logo">
-        </a>
-      </div>
-      <nav class="navbar" #navbar>
-        <!-- Nút hamburger -->
-        <button class="hamburger" (click)="toggleMenu()" aria-label="Toggle Menu">
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-        </button>
-        <!-- Menu -->
-        <div class="menu-container">
-            <button class="close-btn" (click)="toggleMenu()" aria-label="Close Menu">✕</button>
-            <ul class="top-menu">
-                <li><a routerLink="/login"><i class="fas fa-user"></i> LOGIN</a></li>
-                <li><a routerLink="/search"><i class="fas fa-search"></i> Tìm kiếm</a></li>
-                <li><a routerLink="/cart"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
-            </ul>
-            <ul class="main-menu">
-                <li><a routerLink="/product">SẢN PHẨM MỚI</a></li>
-                <li><a routerLink="/sale">SẢN PHẨM GIẢM GIÁ</a></li>
-                <li><a routerLink="/collections">BỘ SƯU TẬP</a></li>
-                <li><a routerLink="/recruitment">TUYỂN DỤNG</a></li>
-                <li><a routerLink="/policy">CHÍNH SÁCH</a></li>
-                <li><a routerLink="/stores">HỆ THỐNG CỬA HÀNG</a></li>
-            </ul>
-        </div>
-      </nav>
+  <div class="header-container">
+    <div class="logo">
+      <a routerLink="/home">
+        <img src="https://chamygaby.vn/thumbs/205x69x2/upload/photo/logo-1260.png" alt="Chamy Gaby Logo">
+      </a>
     </div>
+    <nav class="navbar" #navbar>
+      <!-- Nút hamburger -->
+      <button class="hamburger" (click)="toggleMenu()" aria-label="Toggle Menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+      <!-- Menu -->
+      <div class="menu-container">
+          <button class="close-btn" (click)="toggleMenu()" aria-label="Close Menu">✕</button>
+          <ul class="top-menu">
+              <li><a routerLink="/login"><i class="fas fa-user"></i> LOGIN</a></li>
+              <li><a routerLink="/search"><i class="fas fa-search"></i> Tìm kiếm</a></li>
+              <li><a routerLink="/cart"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
+          </ul>
+          <ul class="main-menu">
+              <li><a routerLink="/product">SẢN PHẨM MỚI</a></li>
+              <li><a routerLink="/sale">SẢN PHẨM GIẢM GIÁ</a></li>
+              <li><a routerLink="/collections">BỘ SƯU TẬP</a></li>
+              <li><a routerLink="/recruitment">TUYỂN DỤNG</a></li>
+              <li><a routerLink="/policy">CHÍNH SÁCH</a></li>
+              <li><a routerLink="/stores">HỆ THỐNG CỬA HÀNG</a></li>
+          </ul>
+      </div>
+    </nav>
+    <ul class="right-icon">
+      <li><a routerLink="/login"><i class="fas fa-user"></i> LOGIN</a></li>
+      <li><a routerLink="/search"><i class="fas fa-search"></i> Tìm kiếm</a></li>
+      <li><a routerLink="/cart"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
+    </ul>
+  </div>
 </header>
 <!--End Header-->
-
+<div class="overlay" (click)="toggleMenu()"></div>
 <!--Star Main-->
 <main>
     <!--banner-->
@@ -51,18 +56,18 @@
         <div class="products">
             <h2>New Arrival</h2>
             <div class="product-grid">
-                <a class="item" *ngFor="let product of products" routerLink="/product/{{product.Id}}">
+                <a class="item" *ngFor="let product of products">
                     <div class="image-container">
-                    <img [src]="product.Images[0].Link" alt="{{product.Name}}"> <!-- Use the first image -->
+                    <img [src]="product.Images[0].Link" alt="{{product.Name}}" routerLink="/product/{{product.Id}}"> <!-- Use the first image -->
                     <div class="hover-bar">
-                        <span class="icon eye-icon"></span> <!-- Icon "Xem chi tiết" -->
-                        <span class="icon cart-icon"></span> <!-- Icon "Thêm vào giỏ" -->
-                        <span class="icon heart-icon"></span> <!-- Icon "Yêu thích" -->
+                        <a href=""><i class="fa-solid fa-eye"></i></a> <!-- Icon "Xem chi tiết" -->
+                        <a href=""><i class="fa-solid fa-bag-shopping"></i></a> <!-- Icon "Thêm vào giỏ" -->
+                        <a href=""><i class="fa-regular fa-heart"></i></a> <!-- Icon "Yêu thích" -->
                     </div>
                     </div>
                     <div class="product-info">
                         <div class="left-column">
-                            <div class="description">{{product.Name}}</div>
+                            <div class="description" routerLink="/product/{{product.Id}}">{{product.Name}}</div>
                             <div class="price">{{product.Price | number}}đ</div>
                         </div>
                         <div class="right-column">

@@ -1,207 +1,269 @@
+
 /* Header Styles */
 header {
-    background-color: #fff;
-    border-bottom: 1px solid #ccc;
-    font-family: 'Roboto', sans-serif;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-  }
-  
+  background-color: #fff;
+  border-bottom: 1px solid #ccc;
+  font-family: 'Roboto', sans-serif;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  width: 100%;
+  max-width: 12rem;
+  height: auto;
+  object-fit: contain;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+}
+
+/* Chặn tương tác với main khi menu mở */
+.navbar.active ~ main {
+  pointer-events: none;
+}
+
+.top-menu {
+  opacity: 1;
+}
+
+.top-menu,
+.main-menu {
+  list-style-type: none;
+  display: flex;
+  justify-content: flex-start;
+  margin: 0;
+  padding: 0;
+}
+
+.top-menu li,
+.main-menu li {
+  margin: 0 0.75rem;
+}
+
+.top-menu a,
+.main-menu a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+  cursor: pointer;
+}
+
+.top-menu a i {
+  margin-right: 0.3rem;
+  font-size: 1rem;
+}
+
+.main-menu a {
+  position: relative;
+  font-size: 0.9rem;
+  color: #000;
+  padding: 0.75rem 0;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.top-menu a:hover,
+.main-menu a:hover {
+  color: #957C56;
+  transition: color 0.3s ease;
+}
+
+/* Hamburger Button */
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.hamburger .bar {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background-color: #333;
+  margin: 5px 0;
+  transition: all 0.3s ease;
+}
+
+/* Close Button */
+.close-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #333;
+  cursor: pointer;
+  padding: 0.5rem;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+}
+
+/* Right Icon (ẩn hoàn toàn trên desktop) */
+.right-icon {
+  display: none;
+}
+
+/* Menu Container */
+.menu-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+
+/* Responsive Design */
+@media (max-width: 1200px) {
   .header-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.5rem 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
+    padding: 0.5rem 1rem;
+    position: relative;
   }
-  
+
   .logo {
-    display: flex;
-    align-items: center;
+    order: 2;
+    flex: 1;
+    justify-content: center;
   }
-  
-  .logo img {
-    width: 100%;
-    max-width: 12rem;
-    height: auto;
-    object-fit: contain;
-  }
-  
+
   .navbar {
-    display: flex;
-    align-items: center;
+    order: 1;
+    width: auto;
   }
-  
-  .top-menu,
-  .main-menu {
-    list-style-type: none;
+
+  .top-menu {
+    opacity: 0;
+    order: 1;
+  }
+
+  .right-icon {
     display: flex;
-    justify-content: flex-start;
+    order: 3;
+    list-style-type: none;
     margin: 0;
     padding: 0;
   }
-  
-  .top-menu li,
-  .main-menu li {
-    margin: 0 0.75rem;
+
+  .right-icon li {
+    margin: 0 0.5rem;
   }
-  
-  .top-menu a,
-  .main-menu a {
+
+  .right-icon a {
     display: flex;
     align-items: center;
     text-decoration: none;
     color: #333;
-    cursor: pointer;
+    font-size: 0;
   }
-  
-  .top-menu a i {
-    margin-right: 0.3rem;
-    font-size: 1rem;
+
+  .right-icon a i {
+    font-size: 1.2rem;
+    margin-right: 0;
   }
-  
-  .main-menu a {
-    position: relative;
-    font-size: 0.9rem;
-    color: #000;
-    padding: 0.75rem 0;
-    font-weight: 500;
-    text-transform: uppercase;
-  }
-  
-  .top-menu a:hover,
-  .main-menu a:hover {
+
+  .right-icon a:hover {
     color: #957C56;
     transition: color 0.3s ease;
   }
-  
-  /* Hamburger Button */
+
   .hamburger {
-    display: none; /* Ẩn trên desktop */
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-  }
-  
-  .hamburger .bar {
     display: block;
-    width: 25px;
-    height: 3px;
-    background-color: #333;
-    margin: 5px 0;
-    transition: all 0.3s ease;
   }
-  /* Close Button */
-.close-btn {
-    display: none;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: #333;
-    cursor: pointer;
-    padding: 0.5rem;
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-  }
-  /* Menu Container */
+
   .menu-container {
-    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 350px;
+    height: 100vh;
+    background-color: #fff;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    border-right: 1px solid #ccc;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    z-index: 1002;
+    align-items: flex-start;
+  }
+
+  .navbar.active .menu-container {
+    transform: translateX(0);
+  }
+
+  .navbar.active .menu-container {
+    max-height: 100vh;
+  }
+
+  .close-btn {
+    display: block;
+  }
+
+  .top-menu,
+  .main-menu {
     flex-direction: column;
-    align-items: flex-end;
+    width: 100%;
+    text-align: left;
+    margin-top: 20px;
+    padding: 1rem;
   }
-  
-  /* Responsive Design */
-  @media (max-width: 1200px) {
-    .header-container {
-      padding: 0.5rem 1rem;
-      position: relative;
-    }
-    
-    .logo{
-        order: 2;
-        flex: 1;
-        justify-content: center;    
-    }
-    .navbar {
-        order: 1;
-        width: auto;
-    }
-    
-    
-    .hamburger {
-      display: block; /* Hiện nút hamburger trên mobile */
-    }
-  
-    .menu-container {
-        position: fixed; /* Đặt cố định để trượt từ bên trái */
-        top: 0; /* Bắt đầu từ đỉnh màn hình */
-        left: 0; /* Trượt từ bên trái */
-        width: 250px; /* Chiều rộng menu */
-        height: 100vh; /* Chiếm toàn bộ chiều cao màn hình */
-        background-color: #fff;
-        transform: translateX(-100%); /* Ẩn menu ngoài màn hình bên trái */
-        transition: transform 0.3s ease; /* Hiệu ứng trượt mượt mà */
-        border-right: 1px solid #ccc;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-        z-index: 1001; /* Đảm bảo menu nằm trên header */
-        align-items: flex-start;
-    }
-    /* Hiện menu khi nút hamburger được kích hoạt */
-    .navbar.active .menu-container {
-        transform: translatex(0); /* Trượt menu vào màn hình */
-    }
-    /* Hiện menu khi nút hamburger được kích hoạt */
-    .navbar.active .menu-container {
-      max-height: 100vh; /* Chiều cao tối đa đủ để chứa menu */
-    }
-    .close-btn {
-        display: block;
-      }
-    .top-menu,
-    .main-menu {
-      flex-direction: column;
-      width: 100%;
-      text-align: left;
-      padding: 1rem;
-    }
-  
-    .top-menu li,
-    .main-menu li {
-      margin: 0.5rem 0;
-    }
-  
-    .logo img {
-      max-width: 10rem;
-    }
+
+  .top-menu li,
+  .main-menu li {
+    margin: 0.5rem 0;
   }
-  
-  @media (max-width: 480px) {
+
+  .logo img {
+    max-width: 10rem;
+  }
+}
+
+@media (max-width: 480px) {
     .main-menu a {
       font-size: 0.8rem;
       padding: 0.5rem 0;
     }
-  
+
     .top-menu a i {
       font-size: 0.9rem;
     }
-  
+
+    .right-icon a i {
+      font-size: 1rem;
+    }
+
     .menu-container {
-      width: 200px; /* Giảm chiều rộng trên màn hình nhỏ hơn */
+      width: 200px;
     }
   }
-  
+
   /*********************************************************************************************************************************/
   /* Main Styles */
   main {
+    position: relative;
     font-family: Arial, sans-serif;
     background-color: #FFFFFF;
     margin-top: 0; /* Xóa margin-top vì header sticky đã chiếm chỗ */
     padding-top: 1rem; /* Thêm padding-top để tránh nội dung bị che bởi header sticky */
     min-height: calc(100vh - 8rem); /* Đảm bảo main đủ cao để footer không đè lên khi nội dung ngắn */
+    z-index: 1;
   }
   
   /* Banner Styles */
@@ -310,17 +372,22 @@ header {
   /* Thanh ngang khi hover */
   .hover-bar {
     position: absolute;
-    bottom: 4%;
-    left: 0;
     width: 100%;
-    height: 15%;
+    height: 10%px;
+    margin-top: 1px;
     background-color: #ffffff;
-    opacity: 0;
     transition: opacity 0.3s ease;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 1rem;
+  }
+  .hover-bar a{
+    width: 30px;
+    height: 20px;
+    font-size: 20px;
+    color: #000;
+    padding: 10px;
   }
   
   .item:hover .hover-bar {
@@ -365,7 +432,7 @@ header {
   .product-info {
     display: flex;
     justify-content: space-between;
-    margin-top: 1rem;
+    margin-top: 3rem;
     padding: 0.5rem 0;
   }
   

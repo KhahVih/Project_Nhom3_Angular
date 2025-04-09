@@ -57,13 +57,13 @@ export class HomeComponent implements OnInit, AfterViewInit{
   //
   ngOnInit(): void {
     this.LoadProduct();
-    this.startSlideshow();
+    //this.startSlideshow();
   }
 
   ngAfterViewInit() {
     // Lấy danh sách các slide sau khi view được khởi tạo
-    this.slides = Array.from(document.querySelectorAll('.slide')) as HTMLElement[];
-    this.startSlideshow();
+    // this.slides = Array.from(document.querySelectorAll('.slide')) as HTMLElement[];
+    // this.startSlideshow();
   }
 
   // Loading sản phẩm 
@@ -94,7 +94,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
     this.currentIndex = (this.currentIndex - 1 + this.slides.length) % this.slides.length;
     this.slides[this.currentIndex].classList.add('active');
   }
-
+  
   toggleMenu() {
     const navbarElement = this.navbar.nativeElement;
     navbarElement.classList.toggle('active');
