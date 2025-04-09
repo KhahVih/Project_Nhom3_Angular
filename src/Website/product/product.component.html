@@ -1,0 +1,176 @@
+<!--Star Header-->
+<header>
+    <div class="header-container">
+      <div class="logo">
+        <a routerLink="/home">
+          <img src="https://chamygaby.vn/thumbs/205x69x2/upload/photo/logo-1260.png" alt="Chamy Gaby Logo">
+        </a>
+      </div>
+      <nav class="navbar" #navbar>
+        <!-- Nút hamburger -->
+        <button class="hamburger" (click)="toggleMenu()" aria-label="Toggle Menu">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+        <!-- Menu -->
+        <div class="menu-container">
+            <button class="close-btn" (click)="toggleMenu()" aria-label="Close Menu">✕</button>
+            <ul class="top-menu">
+                <li><a routerLink="/login"><i class="fas fa-user"></i> LOGIN</a></li>
+                <li><a routerLink="/search"><i class="fas fa-search"></i> Tìm kiếm</a></li>
+                <li><a routerLink="/cart"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
+            </ul>
+            <ul class="main-menu">
+                <li><a routerLink="/product">SẢN PHẨM MỚI</a></li>
+                <li><a routerLink="/sale">SẢN PHẨM GIẢM GIÁ</a></li>
+                <li><a routerLink="/collections">BỘ SƯU TẬP</a></li>
+                <li><a routerLink="/recruitment">TUYỂN DỤNG</a></li>
+                <li><a routerLink="/policy">CHÍNH SÁCH</a></li>
+                <li><a routerLink="/stores">HỆ THỐNG CỬA HÀNG</a></li>
+            </ul>
+        </div>
+      </nav>
+    </div>
+</header>
+<!--End Header-->
+
+<!--Star main-->
+<main>
+    <!-- Banner for "Sản phẩm mới" -->
+    <div class="banner" *ngIf="selectedCategory === 'Sản phẩm mới'">
+        <img src="https://chamygaby.vn/thumbs/1920x984x1/upload/photo/20241228-135838-7778.jpg" 
+            alt="Sản phẩm mới banner" 
+            class="banner-image">
+    </div>
+
+    <div class="container">
+        <div class="layout">
+            <!-- Category sidebar -->
+            <div class="sidebar">
+                <div class="category-section">
+                    <div class="category-header">
+                        <h3>CATEGORY</h3>
+                    </div>
+                    <div class="category-item">
+                        <div class="category-item-header" (click)="toggleNewProduct()">
+                            <span class="category-title">SẢN PHẨM MỚI</span>
+                            <span class="toggle-icon">{{ isNewProductExpanded ? '−' : '+' }}</span>
+                        </div>
+                        <ul class="subcategory-list" [class.active]="isNewProductExpanded">
+                            <li *ngFor="let category of categories" (click)="selectCategory(category)">
+                                {{ category }}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="category-item">
+                        <div class="category-item-header" (click)="toggleSale()">
+                            <span class="category-title">SALE OFF TO 70%</span>
+                            <span class="toggle-icon">{{ isSaleExpanded ? '−' : '+' }}</span>
+                        </div>
+                        <ul class="subcategory-list" [class.active]="isSaleExpanded">
+                            <li (click)="selectDiscount('Sản Phẩm Sale 70%')">Sản Phẩm Sale 70%</li>
+                            <li (click)="selectDiscount('Sản Phẩm Sale 50%')">Sản Phẩm Sale 50%</li>
+                            <li (click)="selectDiscount('Sản Phẩm Sale 30%')">Sản Phẩm Sale 30%</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main content -->
+            <div class="main-content">
+                <div class="header-section">
+                    <h2>Danh Sách Sản Phẩm</h2>
+                    <!-- <select class="sort-select" (change)="onSortChange($event)">
+                        <option *ngFor="let option of sortOptions" 
+                                [value]="option" 
+                                [selected]="option === selectedSort">
+                            {{ option }}
+                        </option>
+                    </select> -->
+                </div>
+                <!-- Loading state -->
+                <div class="loading" *ngIf="isLoading">
+                    <p>Đang tải dữ liệu...</p>
+                </div>
+
+                <!-- Error state -->
+                <div class="error" *ngIf="error">
+                    <p>{{ error }}</p>
+                </div>
+
+                <!-- Product list -->
+                <div class="product-list">
+                    <div class="product-item" *ngFor="let product of products" routerLink="/product/{{product.Id}}">
+                        <div class="product-image">
+                            <img [src]="product.Images[0].Link" [alt]="product.Name" class="thumbnail">
+                        </div>
+                        <div class="product-info">
+                            <h3>{{ product.Name }}</h3>
+                            <p class="price">Giá: {{ product.Price | number }} VNĐ</p>
+                            <!-- <p class="date">Ngày tạo: {{ product.createdAt | date:'dd/MM/yyyy HH:mm' }}</p> -->
+                            <p class="code">Mã SP: {{ product.PosCode }}</p>
+                            <!-- <p class="description">{{ product.description }}</p> -->
+                            <!-- <p class="stats">Đã bán: {{ product.sold }} | Lượt xem: {{ product.views }}</p> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!--End Main-->
+<!--Star Footer-->
+<footer>
+    <div class="footer-container">
+      <div class="footer-column column-1">
+        <img src="https://chamygaby.vn/thumbs/222x75x2/upload/photo/logo3-3546.png" alt="Chamy Gaby Logo" class="footer-logo">
+        <p>CÔNG TY TNHH ĐẦU TƯ & PHÁT TRIỂN THƯƠNG MẠI CHAMY</p>
+        <p>GPKD số 0109617697, Đăng ký ngày: 04-05-2021</p>
+        <p>Nơi cấp: Sở Kế hoạch và Đầu tư Thành phố Hà Nội</p>
+        <p>Địa chỉ: Tầng 12 tòa nhà Licogi 13, Số 164 Khuất Duy Tiến, Phường Nhân Chính, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam</p>
+        <p>Email: <a href="mailto:Ducpham.ms@gmail.com">{{email}}</a></p>
+        <p>Điện thoại: <a href="tel:0978833688">0978833688</a></p>
+        <div class="social-links">
+          <a href="#">Chamy Gaby</a>
+          <a href="#">Chamy Gaby</a>
+          <a href="#">Chamy Gaby</a>
+          <a href="#">Chamy Gaby</a>
+        </div>
+        <p class="copyright">Copyright © 2024 CHAMY GABY. Designed by <a href="https://nina.vn">Nina.vn</a></p>
+      </div>
+      <div class="footer-column column-2">
+        <h3>Danh mục</h3>
+        <ul>
+          <li><a href="#">Sản phẩm mới</a></li>
+          <li><a href="#">Sản phẩm giảm giá</a></li>
+          <li><a href="#">Bộ sưu tập</a></li>
+          <li><a href="#">Tuyển dụng</a></li>
+          <li><a href="#">Chính sách</a></li>
+          <li><a href="#">Hệ thống cửa hàng</a></li>
+        </ul>
+      </div>
+      <div class="footer-column column-3">
+        <h3>Chính sách & Hỗ trợ</h3>
+        <ul>
+          <li><a href="#">Điều khoản và quy định chung</a></li>
+          <li><a href="#">Chính sách bảo mật thông tin</a></li>
+          <li><a href="#">Phương thức thanh toán</a></li>
+          <li><a href="#">Chính sách vận chuyển và kiểm hàng</a></li>
+          <li><a href="#">Chính sách bảo hành và đổi trả</a></li>
+        </ul>
+      </div>
+      <div class="footer-column column-4">
+        <h3>Đăng ký nhận tin</h3>
+        <p>Điền thông tin của bạn để liên hệ nhận ưu đãi từ chúng tôi!</p>
+        <form>
+          <label for="phone">Điện thoại</label><br>
+          <input type="text" id="phone" name="phone" placeholder="Số điện thoại"><br>
+          <label for="email">Email</label><br>
+          <input type="email" id="email" name="email" placeholder="Email"><br>
+          <button type="submit">Gửi liên hệ</button>
+        </form>
+      </div>
+    </div>
+</footer>
+<!--End Footer-->
