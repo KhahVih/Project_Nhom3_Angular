@@ -1,3 +1,4 @@
+import { Comment } from "./CommentDTO";
 import { Image } from "./ImageDTO";
 import { ProductCategory } from "./ProductCategoryDTO";
 
@@ -14,4 +15,5 @@ export interface Product {
     Count: number;
     Images: Image [];
     ProductCategorys: ProductCategory [];
+    Comments: Comment [];
 }

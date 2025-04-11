@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Product } from '../../Models/ProductDTO';
 import { ProductService } from '../../Service/Product.Service';
+import { FormsModule } from '@angular/forms';
 
 export interface Review {
   image: string;
@@ -13,16 +14,16 @@ export interface Review {
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 
-export class HomeComponent implements OnInit, AfterViewInit{
+export class HomeComponent implements OnInit{
   @ViewChild('reviewSlider') reviewSlider!: ElementRef; // Reference to the slider element
   @ViewChild('navbar', {static: false}) navbar!: ElementRef;
 
-  constructor(private productService: ProductService){}
+  constructor(private productService: ProductService, private router: Router){}
 
   email: string = 'Ducpham.ms@gmail.com';
   products: Product [] = [];
@@ -47,7 +48,8 @@ export class HomeComponent implements OnInit, AfterViewInit{
     }
   ];
   duplicatedReviews: Review[] = [];
-
+  isSearchVisible: boolean = false; // Trạng thái ẩn/hiện thanh tìm kiếm
+  searchQuery: string = ''; // Từ khóa tìm kiếm
   page: number = 1;
   // slider
   slides: HTMLElement [] = [];
@@ -58,12 +60,6 @@ export class HomeComponent implements OnInit, AfterViewInit{
   ngOnInit(): void {
     this.LoadProduct();
     //this.startSlideshow();
-  }
-
-  ngAfterViewInit() {
-    // Lấy danh sách các slide sau khi view được khởi tạo
-    // this.slides = Array.from(document.querySelectorAll('.slide')) as HTMLElement[];
-    // this.startSlideshow();
   }
 
   // Loading sản phẩm 
@@ -87,6 +83,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
     this.currentIndex = (this.currentIndex + 1) % this.slides.length;
     // Thêm class active cho slide tiếp theo
     this.slides[this.currentIndex].classList.add('active');
+    console.log('CurrentIndex: ',this.currentIndex);
   }
   // prevslide
   prevSlide() {
@@ -99,4 +96,29 @@ export class HomeComponent implements OnInit, AfterViewInit{
     const navbarElement = this.navbar.nativeElement;
     navbarElement.classList.toggle('active');
   }
+
+  // Bật/tắt thanh tìm kiếm
+  toggleSearch() {
+    this.isSearchVisible = !this.isSearchVisible;
+    if (!this.isSearchVisible) {
+      this.searchQuery = ''; // Reset từ khóa khi đóng
+    }
+  }
+
+  // Xử lý tìm kiếm
+  onSearch() {
+    if (this.searchQuery.trim()) {
+      // Điều hướng tới trang /search với query param
+      this.router.navigate(['/search'], { queryParams: { q: this.searchQuery } });
+      this.toggleSearch(); // Ẩn thanh tìm kiếm sau khi tìm
+    } else {
+      alert('Vui lòng nhập từ khóa tìm kiếm!');
+    }
+  }
+  onSearchChange() {
+    if (this.searchQuery.trim()) {
+      this.router.navigate(['/search'], { queryParams: { q: this.searchQuery } });
+    }
+  }
+
 }

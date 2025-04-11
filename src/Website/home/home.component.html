@@ -18,7 +18,22 @@
           <button class="close-btn" (click)="toggleMenu()" aria-label="Close Menu">✕</button>
           <ul class="top-menu">
               <li><a routerLink="/login"><i class="fas fa-user"></i> LOGIN</a></li>
-              <li><a routerLink="/search"><i class="fas fa-search"></i> Tìm kiếm</a></li>
+              <li><a (click)="toggleSearch()"><i class="fas fa-search"></i> Tìm kiếm</a></li>
+              <!-- Thanh tìm kiếm, ẩn mặc định -->
+              <div class="search-bar" *ngIf="isSearchVisible">
+                <form (ngSubmit)="onSearch()">
+                  <input
+                    type="text"
+                    [(ngModel)]="searchQuery"
+                    name="searchQuery"
+                    placeholder="Nhập từ khóa tìm kiếm..."
+                    class="search-input"
+                  />
+                  <button type="submit" class="search-button">
+                    <i class="fas fa-search"></i>
+                  </button>
+                </form>
+              </div>
               <li><a routerLink="/cart"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
           </ul>
           <ul class="main-menu">
@@ -33,7 +48,24 @@
     </nav>
     <ul class="right-icon">
       <li><a routerLink="/login"><i class="fas fa-user"></i> LOGIN</a></li>
-      <li><a routerLink="/search"><i class="fas fa-search"></i> Tìm kiếm</a></li>
+      <li><a (click)="toggleSearch()"><i class="fas fa-search"></i> Tìm kiếm</a></li>
+      <!-- Thanh tìm kiếm, ẩn mặc định -->
+      <div class="search-bar" *ngIf="isSearchVisible">
+        <form (ngSubmit)="onSearch()">
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            (ngModelChange)="onSearchChange()"
+            name="searchQuery"
+            placeholder="Nhập từ khóa tìm kiếm..."
+            class="search-input"
+          />
+          <button type="submit" class="search-button">
+            <i class="fas fa-search"></i>
+          </button>
+        </form>
+        <button (click)="toggleSearch()" class="close-button">Đóng</button>
+      </div>
       <li><a routerLink="/cart"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
     </ul>
   </div>
@@ -43,7 +75,7 @@
 <!--Star Main-->
 <main>
     <!--banner-->
-    <div class="banner">
+    <div #banner class="banner">
         <div class="slide active" style="background-image: url('https://chamygaby.vn/thumbs/1024x525x1/upload/photo/20250305-095056-8248.jpg')"></div>
         <div class="slide" style="background-image: url('https://chamygaby.vn/thumbs/1024x525x1/upload/photo/20250305-095533-1129.jpg')"></div>
         <div class="slide" style="background-image: url('https://chamygaby.vn/thumbs/1024x525x1/upload/photo/20250305-095102-2157.jpg')"></div>

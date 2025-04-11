@@ -3,10 +3,14 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Product } from '../../Models/ProductDTO';
 import { ProductService } from '../../Service/Product.Service';
-
+import { Category } from '../../Models/CategoryDTO';
+import { Categoryservice } from '../../Service/Category.Service';
+import { FormsModule } from '@angular/forms'
+import { SaleService } from '../../Service/Sale.Service';
+import { Sale } from '../../Models/SaleDTO';
 @Component({
   selector: 'app-product',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './product.component.html',
   styleUrl: './product.component.css'
 })
@@ -17,37 +21,23 @@ export class ProductComponent implements OnInit{
   filteredProducts: Product[] = [];
   isLoading: boolean = false;
   error: string | null = null;
-  categories: string[] = [
-    "Tất cả",
-    "VEST/ BLAZER",
-    "JUMPSUIT",
-    "CHÂN VÁY",
-    "ÁO KIỂU",
-    "VÁY/ ĐẦM",
-    "SƠ MI",
-    "SET ÁO + QUẦN",
-    "SET ÁO KHOÁC + VÁY",
-    "SET ÁO DÀI",
-    "SET ÁO + CV",
-    "QUẦN SHORT",
-    "QUẦN DÀI"
-  ];
+  categories: Category [] = [];
   selectedCategory: string = "Sản phẩm mới";
-  sortOptions: string[] = [
-    "Mới nhất",
-    "Giá: Thấp đến Cao",
-    "Giá: Cao đến Thấp",
-    "Bán chạy nhất"
-  ];
-  selectedSort: string = "Mới nhất";
   isNewProductExpanded: boolean = true;
-  isSaleExpanded: boolean = false;
+  isSaleExpanded: boolean = true;
 
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService, 
+    private categoryService: Categoryservice,
+    private saleService: SaleService,
+  ) {}
 
   ngOnInit(): void {
     this.loadProducts();
+    this.loadCategory();
+    this.loadSale();
   }
+  //laodproduct
   page: number = 1
   loadProducts(): void {
     this.isLoading = true;
@@ -56,60 +46,80 @@ export class ProductComponent implements OnInit{
       console.log('Response: ', data);
     })
   }
-
-  // filterProducts(): void {
-  //   this.filteredProducts = this.products.filter(product => {
-  //     if (this.selectedCategory === "Sản phẩm mới") {
-  //       const createdAt = new Date(product.CreatedAt);
-  //       const now = new Date();
-  //       const diffTime = Math.abs(now.getTime() - createdAt.getTime());
-  //       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  //       return diffDays <= 30; // Sản phẩm mới trong vòng 30 ngày
-  //     }
-  //     return product.ProductCategorys === this.selectedCategory || this.selectedCategory === "Tất cả";
-  //   });
-  //   this.sortProducts();
-  // }
-
-  // sortProducts(): void {
-  //   switch (this.selectedSort) {
-  //     case "Mới nhất":
-  //       this.filteredProducts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-  //       break;
-  //     case "Giá: Thấp đến Cao":
-  //       this.filteredProducts.sort((a, b) => a.price - b.price);
-  //       break;
-  //     case "Giá: Cao đến Thấp":
-  //       this.filteredProducts.sort((a, b) => b.price - a.price);
-  //       break;
-  //     case "Bán chạy nhất":
-  //       this.filteredProducts.sort((a, b) => b.sold - a.sold);
-  //       break;
-  //   }
-  // }
-
-  selectCategory(category: string): void {
-    this.selectedCategory = category;
-    //this.filterProducts();
+  //loadsale
+  sales: Sale [] = [];
+  loadSale(): void{
+    this.saleService.GetSale().subscribe(data =>{
+      this.sales = data;
+      console.log('Sale: ', data);
+    });
+  }
+  //getproductsaleid
+  GetProductSaleId(Id: number){
+    this.productService.GetProductSaleId(Id, this.page).subscribe(data =>{
+      this.products = data.Products;
+      console.log('Response: ', data);
+    });
+  }
+  //getproductcategoryId
+  GetProductCategoryId(Id: number){
+    this.productService.GetProductCategoryId(Id, this.page).subscribe(data =>{
+      this.products = data.Products;
+      console.log('Response: ', data);
+    })
+  }
+  //loadcategory
+  loadCategory(): void{
+    this.categoryService.GetCategories().subscribe(data => {
+      this.categories = data;
+      console.log('category: ', data);
+    });
+  }
+  //
+  selectSort: any = 1;
+  sortProducts(): void {
+    if(this.selectSort == 1){
+      this.loadProducts();
+    }
+    if( this.selectSort == 2){
+      this.productService.GetProductNew(this.page).subscribe(data =>{
+        this.products = data.Products;
+        this.page = data.TotalPages;
+        console.log('Response: ', data);
+      });
+    }
+    if( this.selectSort == 3){
+      this.productService.GetProductOld(this.page).subscribe(data =>{
+        this.products = data.Products;
+        this.page = data.TotalPages;
+        console.log('Response: ', data);
+      });
+    }
+    if( this.selectSort == 4){
+      this.productService.GetProductPriceASC(this.page).subscribe(data =>{
+        this.products = data.Products;
+        this.page = data.TotalPages;  
+        console.log('Response: ', data);
+      });
+    }
+    if( this.selectSort == 5){
+      this.productService.GetProductPriceASDC(this.page).subscribe(data =>{
+        this.products = data.Products;
+        this.page = data.TotalPages;
+        console.log('Response: ', data);
+      });
+    }
+    
   }
 
-  // onSortChange(event: Event): void {
-  //   const selectElement = event.target as HTMLSelectElement;
-  //   this.selectedSort = selectElement.value;
-  //   this.sortProducts();
-  // }
 
-  toggleNewProduct(): void {
+
+  toggleCategory(): void {
     this.isNewProductExpanded = !this.isNewProductExpanded;
   }
 
   toggleSale(): void {
     this.isSaleExpanded = !this.isSaleExpanded;
-  }
-
-  selectDiscount(discount: string): void {
-    // Logic để điều hướng hoặc lọc sản phẩm theo mức giảm giá
-    console.log(`Selected discount: ${discount}`);
   }
 
   toggleMenu() {

@@ -21,6 +21,10 @@ export class ProductService {
   GetProductId(Id: number): Observable<any>{
     return this.http.get<any>(`${this.productsUrl}/GetProduct/${Id}`)
   }
+  // Lấy danh sách sản phẩm theo danh mục 
+  GetProductCategoryId(Id: number, page: number): Observable<any>{
+    return this.http.get<any>(`${this.productsUrl}/GetProductCategory/${Id}?page=${page}`)
+  }
   // Lấy danh sách sản phẩm đã xuất 
   GetProductIsPuslish(page: number): Observable<any>{
     return this.http.get<any>(`${this.productsUrl}/GetProductIsPuslish?page=${page}`)
@@ -30,7 +34,7 @@ export class ProductService {
     return this.http.get<any>(`${this.productsUrl}/GetProductNoPuslish?page=${page}`)
   }
   // Lấy danh sách sản phẩm theo sale Id 
-  GetProductSaleId(page: number, Id: number): Observable<any>{
+  GetProductSaleId(Id: number, page: number): Observable<any>{
     return this.http.get<any>(`${this.productsUrl}/GetProductSale/${Id}?page=${page}`)
   }
   // Lấy danh sách sản phẩm mới 
@@ -50,7 +54,7 @@ export class ProductService {
     return this.http.get<any>(`${this.productsUrl}/GetProductPriceASDC?page=${page}`)
   }
   // Tìm kiếm sản phẩm theo Name và PosCode 
-  GetProductSearch(page: number, name: string): Observable<any>{
+  GetProductSearch(name: string, page: number): Observable<any>{
     return this.http.get<any>(`${this.productsUrl}/SearchProduct/${name}?page=${page}`)
   }
   // Thêm sản phẩm 
@@ -67,6 +71,15 @@ export class ProductService {
     return this.http.delete<void>(url).pipe(
       catchError(this.handleError<void>('deleteProduct'))
     );
+  }
+  // 🎨 Lấy danh sách màu sắc
+  getColor(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.productsUrl}/GetColor`);
+  }
+
+  // 📏 Lấy danh sách kích thước
+  getSize(): Observable<any[]> {
+      return this.http.get<any[]>(`${this.productsUrl}/GetSize`);
   }
   // Xử lý lỗi
   private handleError<T>(operation = 'operation', result?: T) {

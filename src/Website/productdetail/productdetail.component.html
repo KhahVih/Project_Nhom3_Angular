@@ -1,1 +1,256 @@
-<p>productdetail works!</p>
+<!--Star Header-->
+<header>
+    <div class="header-container">
+      <div class="logo">
+        <a routerLink="/home">
+          <img src="https://chamygaby.vn/thumbs/205x69x2/upload/photo/logo-1260.png" alt="Chamy Gaby Logo">
+        </a>
+      </div>
+      <nav class="navbar" #navbar>
+        <!-- Nút hamburger -->
+        <button class="hamburger" (click)="toggleMenu()" aria-label="Toggle Menu">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+        <!-- Menu -->
+        <div class="menu-container">
+            <button class="close-btn" (click)="toggleMenu()" aria-label="Close Menu">✕</button>
+            <ul class="top-menu">
+                <li><a routerLink="/login"><i class="fas fa-user"></i> LOGIN</a></li>
+                <li><a routerLink="/search"><i class="fas fa-search"></i> Tìm kiếm</a></li>
+                <li><a routerLink="/cart"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
+            </ul>
+            <ul class="main-menu">
+                <li><a routerLink="/product">SẢN PHẨM MỚI</a></li>
+                <li><a routerLink="/sale">SẢN PHẨM GIẢM GIÁ</a></li>
+                <li><a routerLink="/collections">BỘ SƯU TẬP</a></li>
+                <li><a routerLink="/recruitment">TUYỂN DỤNG</a></li>
+                <li><a routerLink="/policy">CHÍNH SÁCH</a></li>
+                <li><a routerLink="/stores">HỆ THỐNG CỬA HÀNG</a></li>
+            </ul>
+        </div>
+      </nav>
+      <ul class="right-icon">
+        <li><a routerLink="/login"><i class="fas fa-user"></i> LOGIN</a></li>
+        <li><a routerLink="/search"><i class="fas fa-search"></i> Tìm kiếm</a></li>
+        <li><a routerLink="/cart"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
+      </ul>
+    </div>
+</header>
+<!--End Header-->
+<!--Start Main-->
+<main>
+    <div class="container" *ngIf="product">
+      <div class="product-images">
+        <!-- Danh sách thumbnail -->
+        <div class="thumbnail-images">
+          <img
+            *ngFor="let image of product.Images"
+            [src]="image.Link"
+            (click)="selectImage(image.Link)"
+            (mouseover)="previewImage(image.Link)"
+            alt="{{ product.Name }}"
+            class="thumbnail"
+          />
+        </div>
+        <!-- Hình ảnh chính -->
+        <img [src]="selectedImage" alt="{{ product.Name }}" class="main-image" />
+      </div>
+  
+      <div class="product-info">
+        <h1>{{ product.Name }}</h1>
+        <p>Mã sản phẩm: {{ product.PosCode || 'N/A' }}</p>
+        <p>Lượt xem: {{ product.Count || 0 }}</p>
+        <p class="price">{{ product.Price | number }}đ</p>
+  
+        <div class="availability">
+          <p>Số lượng còn lại: {{ product.Count }}</p>
+        </div>
+  
+        <div class="color-selection" *ngIf="colors && colors.length > 0">
+          <label>Màu:</label>
+          <div class="option-container">
+            <div
+              *ngFor="let color of colors"
+              class="option-box"
+              [class.selected]="selectcolor === color.Id"
+              (click)="selectColor(color)">
+              {{ color.Name }}
+              <span class="checkmark" *ngIf="selectcolor === color.Id">✔</span>
+            </div>
+          </div>
+        </div>
+  
+        <div class="size-selection" *ngIf="sizes && sizes.length > 0">
+          <label>Size:</label>
+          <div class="option-container">
+            <div
+              *ngFor="let size of sizes"
+              class="option-box"
+              [class.selected]="selectsize === size.Id"
+              (click)="selectSize(size)">
+              {{ size.Name }}
+              <span class="checkmark" *ngIf="selectsize === size.Id">✔</span>
+            </div>
+          </div>
+        </div>
+  
+        <div class="quantity-selection">
+          <label for="quantity">Số lượng:</label>
+          <div class="quantity-controls">
+            <button 
+              (click)="decreaseQuantity()" 
+              [disabled]="quantity <= 1" 
+              class="quantity-btn">-</button>
+            <span class="quantity-display">{{ quantity }}</span>
+            <button 
+              (click)="increaseQuantity()" 
+              [disabled]="quantity >= availableQuantity" 
+              class="quantity-btn">+</button>
+          </div>
+        </div>
+  
+        <button class="add-to-cart" (click)="AddToCart(product)">THÊM VÀO GIỎ</button>
+        <button class="buy-now">MUA NGAY</button>
+  
+        <p class="description">{{ product.Description || 'No description available.' }}</p>
+  
+        <div class="policies">
+          <div class="policy-item">
+            <span>Điều khoản và quy định chung</span>
+            <span class="plus-icon">+</span>
+          </div>
+          <hr>
+          <div class="policy-item">
+            <span>Chính sách bảo mật thông tin</span>
+            <span class="plus-icon">+</span>
+          </div>
+          <hr>
+          <div class="policy-item">
+            <span>Phương thức thanh toán</span>
+            <span class="plus-icon">+</span>
+          </div>
+          <hr>
+          <div class="policy-item">
+            <span>Chính sách vận chuyển và kiểm hàng</span>
+            <span class="plus-icon">+</span>
+          </div>
+          <hr>
+          <div class="policy-item">
+            <span>Chính sách bảo hành và đổi trả</span>
+            <span class="plus-icon">+</span>
+          </div>
+        </div>
+  
+        <!-- Tabs được đưa xuống cuối -->
+        <div class="tabs">
+          <div class="tab-headers">
+            <button
+              class="tab-button"
+              [class.active]="activeTab === 'comments'"
+              (click)="setActiveTab('comments')"
+            >
+              Bình luận
+            </button>
+            <button
+              class="tab-button"
+              [class.active]="activeTab === 'related'"
+              (click)="setActiveTab('related')"
+            >
+              Sản phẩm cùng loại
+            </button>
+          </div>
+  
+          <div class="tab-content" *ngIf="activeTab === 'comments'">
+            <div class="comment-list">
+              <div class="comment" *ngFor="let comment of product.Comments">
+                <div class="comment-rating">
+                  <label>Đánh giá: </label>
+                  <span *ngFor="let star of (comment.Vote ? getStars(comment.Vote) : [])" 
+                        class="star" 
+                        [class.filled]="star <= (comment.Vote ?? 0)">★</span>
+                  <br>
+                  <p class="comment-text">Mô tả: {{ comment.Description }}</p>
+                  <span class="comment-date">{{ comment.CreatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+                </div>
+              </div>
+              <p *ngIf="product.Comments.length === 0">Chưa có bình luận nào.</p>
+            </div>
+          </div>
+  
+          <div class="tab-content" *ngIf="activeTab === 'related'">
+            <div class="related-products" *ngIf="relatedProducts.length > 0; else noRelated">
+              <div class="related-product" *ngFor="let relatedProduct of relatedProducts" routerLink="/product/{{relatedProduct.Id}}">
+                <img 
+                  [src]="relatedProduct.Images[0].Link || 'assets/placeholder.jpg'" 
+                  alt="{{ relatedProduct.Name }}" 
+                  class="related-image">
+                <p class="related-name">{{ relatedProduct.Name }}</p>
+                <p class="related-price">{{ relatedProduct.Price | number }}đ</p>
+              </div>
+            </div>
+            <ng-template #noRelated>
+              <p>Không có sản phẩm cùng loại.</p>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <!--End Main-->
+
+<!--Star Footer-->
+<footer>
+    <div class="footer-container">
+      <div class="footer-column column-1">
+        <img src="https://chamygaby.vn/thumbs/222x75x2/upload/photo/logo3-3546.png" alt="Chamy Gaby Logo" class="footer-logo">
+        <p>CÔNG TY TNHH ĐẦU TƯ & PHÁT TRIỂN THƯƠNG MẠI CHAMY</p>
+        <p>GPKD số 0109617697, Đăng ký ngày: 04-05-2021</p>
+        <p>Nơi cấp: Sở Kế hoạch và Đầu tư Thành phố Hà Nội</p>
+        <p>Địa chỉ: Tầng 12 tòa nhà Licogi 13, Số 164 Khuất Duy Tiến, Phường Nhân Chính, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam</p>
+        <p>Email: <a href="mailto:Ducpham.ms@gmail.com">{{email}}</a></p>
+        <p>Điện thoại: <a href="tel:0978833688">0978833688</a></p>
+        <div class="social-links">
+          <a href="#">Chamy Gaby</a>
+          <a href="#">Chamy Gaby</a>
+          <a href="#">Chamy Gaby</a>
+          <a href="#">Chamy Gaby</a>
+        </div>
+        <p class="copyright">Copyright © 2024 CHAMY GABY. Designed by <a href="https://nina.vn">Nina.vn</a></p>
+      </div>
+      <div class="footer-column column-2">
+        <h3>Danh mục</h3>
+        <ul>
+          <li><a href="#">Sản phẩm mới</a></li>
+          <li><a href="#">Sản phẩm giảm giá</a></li>
+          <li><a href="#">Bộ sưu tập</a></li>
+          <li><a href="#">Tuyển dụng</a></li>
+          <li><a href="#">Chính sách</a></li>
+          <li><a href="#">Hệ thống cửa hàng</a></li>
+        </ul>
+      </div>
+      <div class="footer-column column-3">
+        <h3>Chính sách & Hỗ trợ</h3>
+        <ul>
+          <li><a href="#">Điều khoản và quy định chung</a></li>
+          <li><a href="#">Chính sách bảo mật thông tin</a></li>
+          <li><a href="#">Phương thức thanh toán</a></li>
+          <li><a href="#">Chính sách vận chuyển và kiểm hàng</a></li>
+          <li><a href="#">Chính sách bảo hành và đổi trả</a></li>
+        </ul>
+      </div>
+      <div class="footer-column column-4">
+        <h3>Đăng ký nhận tin</h3>
+        <p>Điền thông tin của bạn để liên hệ nhận ưu đãi từ chúng tôi!</p>
+        <form>
+          <label for="phone">Điện thoại</label><br>
+          <input type="text" id="phone" name="phone" placeholder="Số điện thoại"><br>
+          <label for="email">Email</label><br>
+          <input type="email" id="email" name="email" placeholder="Email"><br>
+          <button type="submit">Gửi liên hệ</button>
+        </form>
+      </div>
+    </div>
+</footer>
+<!--End Footer-->

@@ -31,9 +31,14 @@
             </ul>
         </div>
       </nav>
+      <ul class="right-icon">
+        <li><a routerLink="/login"><i class="fas fa-user"></i> LOGIN</a></li>
+        <li><a routerLink="/search"><i class="fas fa-search"></i> Tìm kiếm</a></li>
+        <li><a routerLink="/cart"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
+      </ul>
     </div>
 </header>
-<!--End Header-->
+  <!--End Header-->
 
 <!--Star main-->
 <main>
@@ -53,13 +58,13 @@
                         <h3>CATEGORY</h3>
                     </div>
                     <div class="category-item">
-                        <div class="category-item-header" (click)="toggleNewProduct()">
+                        <div class="category-item-header" (click)="toggleCategory()">
                             <span class="category-title">SẢN PHẨM MỚI</span>
                             <span class="toggle-icon">{{ isNewProductExpanded ? '−' : '+' }}</span>
                         </div>
                         <ul class="subcategory-list" [class.active]="isNewProductExpanded">
-                            <li *ngFor="let category of categories" (click)="selectCategory(category)">
-                                {{ category }}
+                            <li *ngFor="let category of categories" (click)="GetProductCategoryId(category.Id)">
+                                {{ category.Name }}
                             </li>
                         </ul>
                     </div>
@@ -69,9 +74,7 @@
                             <span class="toggle-icon">{{ isSaleExpanded ? '−' : '+' }}</span>
                         </div>
                         <ul class="subcategory-list" [class.active]="isSaleExpanded">
-                            <li (click)="selectDiscount('Sản Phẩm Sale 70%')">Sản Phẩm Sale 70%</li>
-                            <li (click)="selectDiscount('Sản Phẩm Sale 50%')">Sản Phẩm Sale 50%</li>
-                            <li (click)="selectDiscount('Sản Phẩm Sale 30%')">Sản Phẩm Sale 30%</li>
+                            <li *ngFor="let sale of sales" (click)="GetProductSaleId(sale.Id)">{{sale.Name}}</li>
                         </ul>
                     </div>
                 </div>
@@ -81,37 +84,28 @@
             <div class="main-content">
                 <div class="header-section">
                     <h2>Danh Sách Sản Phẩm</h2>
-                    <!-- <select class="sort-select" (change)="onSortChange($event)">
-                        <option *ngFor="let option of sortOptions" 
-                                [value]="option" 
-                                [selected]="option === selectedSort">
-                            {{ option }}
-                        </option>
-                    </select> -->
+                    <select class="sort-select" [(ngModel)] = "selectSort" (change)="sortProducts()">
+                        <option value="1">Mặc định</option>
+                        <option value="2">Mới nhất</option>
+                        <option value="3">Cũ nhất</option>
+                        <option value="4">Giá tăng dần</option>
+                        <option value="5">Giá giảm dần</option>
+                    </select>
                 </div>
                 <!-- Loading state -->
                 <div class="loading" *ngIf="isLoading">
                     <p>Đang tải dữ liệu...</p>
                 </div>
-
-                <!-- Error state -->
-                <div class="error" *ngIf="error">
-                    <p>{{ error }}</p>
-                </div>
-
                 <!-- Product list -->
                 <div class="product-list">
-                    <div class="product-item" *ngFor="let product of products" routerLink="/product/{{product.Id}}">
-                        <div class="product-image">
+                    <div class="product-card" *ngFor="let product of products" routerLink="/product/{{product.Id}}">
+                        <div class="product-card-image">
                             <img [src]="product.Images[0].Link" [alt]="product.Name" class="thumbnail">
                         </div>
-                        <div class="product-info">
-                            <h3>{{ product.Name }}</h3>
-                            <p class="price">Giá: {{ product.Price | number }} VNĐ</p>
-                            <!-- <p class="date">Ngày tạo: {{ product.createdAt | date:'dd/MM/yyyy HH:mm' }}</p> -->
-                            <p class="code">Mã SP: {{ product.PosCode }}</p>
-                            <!-- <p class="description">{{ product.description }}</p> -->
-                            <!-- <p class="stats">Đã bán: {{ product.sold }} | Lượt xem: {{ product.views }}</p> -->
+                        <div class="product-card-content">
+                            <h3 class="product-title">{{ product.Name }}</h3>
+                            <p class="product-price">Giá: {{ product.Price | number }} VNĐ</p>
+                            <p class="product-code">Mã SP: {{ product.PosCode }}</p>
                         </div>
                     </div>
                 </div>
