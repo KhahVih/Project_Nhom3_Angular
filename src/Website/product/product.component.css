@@ -35,6 +35,42 @@ header {
   display: flex;
   align-items: center;
 }
+.search-bar {
+  position: absolute;
+  top: 90%; /* Điều chỉnh tùy vị trí menu */
+  left: 70%;
+  right: 0;
+  width: 250px;
+  background: #fff;
+  border: 1px solid #f85353;
+  box-shadow: 0 2px 5px rgba(219, 55, 55, 0.1);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 1;
+  transform: translateY(-10px);
+  transition: opacity 0.3s, transform 0.3s;
+  border-radius: 20px;
+}
+
+.search-input {
+  padding: 8px;
+  width: 100%;
+  border: 0px solid #f85353;
+  border-radius: 20px;
+  font-size: 14px;
+}
+.search-bar.ng-enter,
+.search-bar.ng-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+.search-bar.ng-enter-active,
+.search-bar.ng-leave-active {
+  opacity: 1;
+  transform: translateY(0);
+}
 
 /* Chặn tương tác với main khi menu mở */
 .navbar.active ~ main {

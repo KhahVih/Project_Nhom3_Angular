@@ -42,8 +42,8 @@ header {
   right: 0;
   width: 250px;
   background: #fff;
-  border: 0px solid #fff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f85353;
+  box-shadow: 0 2px 5px rgba(219, 55, 55, 0.1);
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -55,25 +55,11 @@ header {
 }
 
 .search-input {
-  flex: 1;
   padding: 8px;
-  border: 0px solid #fff;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
+  width: 100%;
+  border: 0px solid #f85353;
+  border-radius: 20px;
   font-size: 14px;
-}
-
-.search-button{
-  padding: 8px 12px;
-  border: none;
-  background: #007bff;
-  color: #fff;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.search-button:hover{
-  opacity: 0.9;
 }
 .search-bar.ng-enter,
 .search-bar.ng-leave-to {

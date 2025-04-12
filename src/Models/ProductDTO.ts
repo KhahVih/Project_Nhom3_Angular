@@ -1,6 +1,8 @@
+import { Color } from "./ColorDTO";
 import { Comment } from "./CommentDTO";
 import { Image } from "./ImageDTO";
 import { ProductCategory } from "./ProductCategoryDTO";
+import { Size } from "./SizeDTO";
 
 export interface Product {
     Id: number;
@@ -13,7 +15,12 @@ export interface Product {
     IsPublish: boolean;
     IsNew: boolean;
     Count: number;
+    Sale?: number;
+    SaleName?: string;
+    DiscountPercentage?: number;
     Images: Image [];
     ProductCategorys: ProductCategory [];
     Comments: Comment [];
+    Colors: Color [];
+    Sizes: Size [];
 }

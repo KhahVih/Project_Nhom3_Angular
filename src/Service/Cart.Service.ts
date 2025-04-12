@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { CartItem } from "../Models/CartDTO";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Injectable } from "@angular/core";
+import { Product } from "../Models/ProductDTO";
 
 @Injectable({
     providedIn: 'root'
@@ -33,34 +34,36 @@ export class CartService {
     removeFromCart(cartItemId: number): Observable<any> {
         return this.http.delete(`${this.apiUrl}/${cartItemId}`);
     }
-
-    // 🎨 Lấy danh sách màu sắc
-    getColor(): Observable<any[]> {
-        return this.http.get<any[]>(`${this.apiUrl}/GetColor`);
+    // Hàm phụ để cập nhật số lượng trong localStorage
+    updateLocalQuantity(cartItemId: number, newQuantity: number): void {
+      let cart = this.getCartFromLocal();
+      const itemIndex = cart.findIndex((item) => item.Id === cartItemId);
+      if (itemIndex !== -1) {
+        // Cập nhật số lượng và FinalPrice
+        cart[itemIndex].Quantity = newQuantity > 0 ? newQuantity : 1; // Đảm bảo số lượng không nhỏ hơn 1
+        cart[itemIndex].FinalPrice = cart[itemIndex].UnitPrice * cart[itemIndex].Quantity;
+        this.saveCartToLocal(cart);
+        console.log(`Updated quantity for cart item ${cartItemId} to ${newQuantity} in localStorage`);
+      } else {
+        console.warn(`Cart item ${cartItemId} not found in localStorage`);
+      }
     }
-
-    // 📏 Lấy danh sách kích thước
-    getSize(): Observable<any[]> {
-        return this.http.get<any[]>(`${this.apiUrl}/GetSize`);
-    }
-
     // Lấy giỏ hàng từ local storage
-  getCartFromLocal(): CartItem[] {
-    const cart = localStorage.getItem('cart');
-    return cart ? JSON.parse(cart) : [];
-  }
+    getCartFromLocal(): CartItem[] {
+      const cart = localStorage.getItem('cart');
+      return cart ? JSON.parse(cart) : [];
+    }
+    // Lưu giỏ hàng vào local storage
+    saveCartToLocal(cart: CartItem[]): void {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
 
-  // Lưu giỏ hàng vào local storage
-  saveCartToLocal(cart: CartItem[]): void {
-    localStorage.setItem('cart', JSON.stringify(cart));
-  }
+    // Xóa giỏ hàng trong local storage
+    clearCartFromLocal(): void {
+      localStorage.removeItem('cart');
+    }
 
-  // Xóa giỏ hàng trong local storage
-  clearCartFromLocal(): void {
-    localStorage.removeItem('cart');
-  }
-
-  checkOut(checkOutData: CartItem): Observable<any>{
-    return this.http.post(`${this.checkoutapi}`, checkOutData);
-  }
+    checkOut(checkOutData: CartItem): Observable<any>{
+      return this.http.post(`${this.checkoutapi}`, checkOutData);
+    }
 }

@@ -3,6 +3,7 @@ export interface CartItem {
     CustomerId: number | null;
     ProductId: number;
     ProductName: string; 
+    ProductImage?: string;
     Quantity: number;
     ColorId?: number;
     ColorName?: string

@@ -1,32 +1,35 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProductService } from '../../Service/Product.Service';
 import { Product } from '../../Models/ProductDTO';
-import { Image } from '../../Models/ImageDTO';
 import { Color } from '../../Models/ColorDTO';
 import { Size } from '../../Models/SizeDTO';
 import { CustomerService } from '../../Service/Customer.Service';
 import { CartItem } from '../../Models/CartDTO';
 import { CartService } from '../../Service/Cart.Service';
-import { buffer } from 'stream/consumers';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-productdetail',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './productdetail.component.html',
   styleUrl: './productdetail.component.css'
 })
 export class ProductdetailComponent implements OnInit{
   @ViewChild('navbar', {static: false}) navbar!: ElementRef;
+  isSearchVisible: boolean = false; // Trạng thái ẩn/hiện thanh tìm kiếm
+  searchQuery: string = ''; // Từ khóa tìm kiếm
   email: string = 'Ducpham.ms@gmail.com';
   constructor(
     private productService: ProductService, 
     private router: ActivatedRoute, 
     private customerService: CustomerService,
     private cartService: CartService,
+    private route: Router
   ){}
   @Input() product: Product | undefined;
+  categoryname: string = '';
   selectedImage: string = ''; // Biến lưu URL của ảnh chính
   colors: Color [] = []; // color
   sizes: Size [] = []; // size
@@ -43,8 +46,8 @@ export class ProductdetailComponent implements OnInit{
 
   ngOnInit(): void {
     this.loadProduct();
-    this.loadColor();
-    this.loadSize();
+    // this.loadColor();
+    // this.loadSize();
     // Gán availableQuantity từ product.Count
     if (this.product && this.product.Count >= 0) {
       this.availableQuantity = this.product.Count;
@@ -62,7 +65,11 @@ export class ProductdetailComponent implements OnInit{
     const ProductId = Number(this.router.snapshot.paramMap.get('id'));
     this.productService.GetProductId(ProductId).subscribe(data =>{
       this.product = data;
-      this.categoryId = this.product?.ProductCategorys[0].CategoryId || 0// Lấy category đầu tiên
+      // Lấy màu và size từ product
+      this.colors = this.product?.Colors || [];
+      this.sizes = this.product?.Sizes || [];
+      this.categoryId = this.product?.ProductCategorys[0].CategoryId || 0 ;// Lấy category đầu tiên
+      this.categoryname = this.product?.ProductCategorys[0].CategoryName || '';
       this.availableQuantity = this.product?.Count || 0
       this.selectedImage = this.product?.Images[0].Link || ''; // Gán ảnh mặc định là ảnh đầu tiên trong danh sách khi component khởi tạo
       console.log('Product: ',data);
@@ -93,6 +100,9 @@ export class ProductdetailComponent implements OnInit{
     }
     // Lấy thông tin user từ authService
     const CustomerId = this.customerService.getCustomerId(); // Giả sử trả về { id: number } hoặc null nếu chưa đăng nhập
+    const productImage = product.Images && product.Images.length > 0 
+    ? product.Images[0].Link 
+    : 'assets/images/no-image.png'; // fallback ảnh mặc định nếu không có ảnh
     // Lấy ColorId và SizeId từ lựa chọn của người dùng
     // const selectedColorId = this.selectcolor.length > 0 ? this.selectcolor[0] : 0; // Lấy màu đầu tiên nếu có
     // const selectedSizeId = this.selectsize.length > 0 ? this.selectsize[0] : 0;     // Lấy kích thước đầu tiên nếu có
@@ -101,13 +111,14 @@ export class ProductdetailComponent implements OnInit{
       CustomerId: CustomerId ? +CustomerId: null, // Nếu chưa đăng nhập thì dùng ID = 0
       ProductId: product.Id,
       ProductName: product.Name,
+      ProductImage: productImage,
       Quantity: this.quantity,
       ColorId: this.selectcolor || 0,
       ColorName: this.colors.find(c => c.Id === this.selectcolor)?.Name || '', // Lấy từ danh sách colors
       SizeId: this.selectsize || 0,
       SizeName: this.sizes.find(s => s.Id === this.selectsize)?.Name || '', // Lấy từ danh sách sizes
       UnitPrice: product.Price || 0,
-      FinalPrice: 0, // Có thể tính lại dựa trên Sale từ backend
+      FinalPrice: product.Price, 
     };
     if (CustomerId) {
       // Nếu đã đăng nhập, gọi API để thêm vào giỏ hàng
@@ -233,6 +244,26 @@ export class ProductdetailComponent implements OnInit{
         this.relatedProducts = data.Products;
         console.log(data);
       });
+    }
+  }
+
+  // Bật/tắt thanh tìm kiếm
+  toggleSearch() {
+    this.isSearchVisible = !this.isSearchVisible;
+    if (!this.isSearchVisible) {
+      this.searchQuery = ''; // Reset từ khóa khi đóng
+    }
+  }
+
+  // Xử lý tìm kiếm
+  onSearch() {
+    if (this.searchQuery.trim()) {
+      // Điều hướng tới trang /search với query param
+      this.route.navigate(['/search'], { queryParams: { q: this.searchQuery } });
+      this.searchQuery = '';
+      this.toggleSearch(); // Ẩn thanh tìm kiếm sau khi tìm
+    } else {
+      alert('Vui lòng nhập từ khóa tìm kiếm!');
     }
   }
 }

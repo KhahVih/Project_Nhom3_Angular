@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Product } from '../../Models/ProductDTO';
 import { ProductService } from '../../Service/Product.Service';
 import { Category } from '../../Models/CategoryDTO';
@@ -16,9 +16,10 @@ import { Sale } from '../../Models/SaleDTO';
 })
 export class ProductComponent implements OnInit{
   @ViewChild('navbar', {static: false}) navbar!: ElementRef;
+  isSearchVisible: boolean = false; // Trạng thái ẩn/hiện thanh tìm kiếm
+  searchQuery: string = ''; // Từ khóa tìm kiếm
   email: string = 'Ducpham.ms@gmail.com';
   products: Product[] = [];
-  filteredProducts: Product[] = [];
   isLoading: boolean = false;
   error: string | null = null;
   categories: Category [] = [];
@@ -30,6 +31,7 @@ export class ProductComponent implements OnInit{
     private productService: ProductService, 
     private categoryService: Categoryservice,
     private saleService: SaleService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -125,5 +127,25 @@ export class ProductComponent implements OnInit{
   toggleMenu() {
     const navbarElement = this.navbar.nativeElement;
     navbarElement.classList.toggle('active');
+  }
+
+  // Bật/tắt thanh tìm kiếm
+  toggleSearch() {
+    this.isSearchVisible = !this.isSearchVisible;
+    if (!this.isSearchVisible) {
+      this.searchQuery = ''; // Reset từ khóa khi đóng
+    }
+  }
+
+  // Xử lý tìm kiếm
+  onSearch() {
+    if (this.searchQuery.trim()) {
+      // Điều hướng tới trang /search với query param
+      this.router.navigate(['/search'], { queryParams: { q: this.searchQuery } });
+      this.searchQuery = '';
+      this.toggleSearch(); // Ẩn thanh tìm kiếm sau khi tìm
+    } else {
+      alert('Vui lòng nhập từ khóa tìm kiếm!');
+    }
   }
 }

@@ -110,6 +110,7 @@ export class HomeComponent implements OnInit{
     if (this.searchQuery.trim()) {
       // Điều hướng tới trang /search với query param
       this.router.navigate(['/search'], { queryParams: { q: this.searchQuery } });
+      this.searchQuery = '';
       this.toggleSearch(); // Ẩn thanh tìm kiếm sau khi tìm
     } else {
       alert('Vui lòng nhập từ khóa tìm kiếm!');

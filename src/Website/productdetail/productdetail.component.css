@@ -35,6 +35,42 @@ header {
     display: flex;
     align-items: center;
   }
+  .search-bar {
+    position: absolute;
+    top: 90%; /* Điều chỉnh tùy vị trí menu */
+    left: 70%;
+    right: 0;
+    width: 250px;
+    background: #fff;
+    border: 1px solid #f85353;
+    box-shadow: 0 2px 5px rgba(219, 55, 55, 0.1);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 1;
+    transform: translateY(-10px);
+    transition: opacity 0.3s, transform 0.3s;
+    border-radius: 20px;
+  }
+  
+  .search-input {
+    padding: 8px;
+    width: 100%;
+    border: 0px solid #f85353;
+    border-radius: 20px;
+    font-size: 14px;
+  }
+  .search-bar.ng-enter,
+  .search-bar.ng-leave-to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  .search-bar.ng-enter-active,
+  .search-bar.ng-leave-active {
+    opacity: 1;
+    transform: translateY(0);
+  }
   
   /* Chặn tương tác với main khi menu mở */
   .navbar.active ~ main {
@@ -439,7 +475,6 @@ main {
     font-family: Arial, sans-serif;
     background-color: #FFFFFF;
     margin-top: 0;
-    padding-top: 1rem;
     min-height: calc(100vh - 8rem);
     z-index: 1;
 }
@@ -449,6 +484,22 @@ main {
     max-width: 1200px;
     margin: 20px auto;
     padding: 0 15px; /* Thêm padding để tránh sát mép trên mobile */
+}
+
+.title-top{
+  display: flex;
+  background-color: transparent;
+  height: 50px;
+  align-items: center;
+}
+.title{
+ margin-left: 100px;
+}
+.title-top a{
+  text-decoration: none;
+  margin-left: 5px;
+  font-size: 18px;
+  color: #000;
 }
 
 .product-images {
@@ -602,7 +653,9 @@ hr {
     margin-top: 20px;
     width: 100%; /* Chiếm toàn bộ chiều rộng */
 }
-
+.quantity-btn{
+  margin: 10px;
+}
 .tab-headers {
     display: flex;
     gap: 5px; /* Giảm gap để các nút sát nhau hơn */
@@ -611,7 +664,7 @@ hr {
 }
 
 .tab-button {
-    flex: 1; /* Các nút chiếm đều không gian */
+    /* Các nút chiếm đều không gian */
     padding: 12px 20px;
     border: 1px solid #ccc;
     border-bottom: none; /* Xóa viền dưới để nối liền với tab-content khi active */
