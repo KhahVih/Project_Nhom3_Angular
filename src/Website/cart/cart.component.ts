@@ -5,6 +5,9 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CartItem } from '../../Models/CartDTO';
 import { CartService } from '../../Service/Cart.Service';
 import { CustomerService } from '../../Service/Customer.Service';
+import { AddressService } from '../../Service/Address.Service';
+import { CheckOut } from '../../Models/CheckOutDTO';
+import { nextTick } from 'process';
 
 @Component({
   selector: 'app-cart',
@@ -21,10 +24,14 @@ export class CartComponent implements OnInit{
   constructor(
     private router: Router, 
     private cartService: CartService,
-    private authService: CustomerService
+    private authService: CustomerService,
+    private addressService: AddressService,
   ){}
   ngOnInit(): void {
     this.loadCartItems();
+    this.addressService.getProvinces().subscribe(data => {
+      this.provinces = data;
+    });
   }
   
   loadCartItems() {
@@ -58,13 +65,34 @@ export class CartComponent implements OnInit{
     }
   }
 
-  removeItem(item: CartItem): void {
-    this.cartItems = this.cartItems.filter((i) => i.Id !== item.Id);
-    this.cartService.removeFromCart(item.Id).subscribe({
-      next: () => console.log(`Removed item ${item.Id}`),
-      error: (err) => console.error('Error removing item:', err)
-    });
+  removeItem(CartId: number): void {
+    const CustomerId = this.authService.getCustomerId();
+    if(CustomerId){
+      this.cartService.deleteCartIteam(CartId).subscribe(data =>{
+        console.log('Delete CartItemId: ', CartId);
+        console.log(data);
+      });
+    }
+    else{
+      // Trường hợp chưa đăng nhập: Xóa item khỏi localStorage
+      this.cartItems = this.cartItems.filter((i) => i.Id !== CartId);
+      this.cartService.removeLocalCartId(CartId);
+    }
   }
+
+  increaseQuantity(item: CartItem): void {
+    item.Quantity++;
+    item.FinalPrice = item.FinalPrice * item.Quantity; // Cập nhật FinalPrice
+    this.cartService.updateLocalQuantity(item.Id, item.Quantity); // Cập nhật localStorage
+}
+
+decreaseQuantity(item: CartItem): void {
+    if (item.Quantity > 1) { // Đảm bảo số lượng không nhỏ hơn 1
+        item.Quantity--;
+        item.FinalPrice = item.FinalPrice * item.Quantity; // Cập nhật FinalPrice
+        this.cartService.updateLocalQuantity(item.Id, item.Quantity); // Cập nhật localStorage
+    }
+}
   
   toggleMenu() {
     const navbarElement = this.navbar.nativeElement;
@@ -90,5 +118,111 @@ export class CartComponent implements OnInit{
     } else {
       alert('Vui lòng nhập từ khóa tìm kiếm!');
     }
+  }
+  // Lấy thông tin tỉnh thành, Quận Huyện, Phường Xã.
+  provinces: any[] = []; // tỉnh thành phố 
+  districts: any[] = []; // quận huyện 
+  wards: any[] = []; // phường xã 
+  selectedProvinceCode: number = 0;
+  selectedDistrictCode: number = 0;
+  selectedWardCode: number = 0;
+
+  onProvinceChange() {
+    if (this.selectedProvinceCode) {
+      this.addressService.getDistricts(this.selectedProvinceCode).subscribe(data => {
+        this.districts = data.districts;
+        console.log(this.selectedProvinceCode);
+        this.wards = []; // reset khi đổi tỉnh
+      });
+    }
+  }
+
+  onDistrictChange() {
+    if (this.selectedDistrictCode) {
+      this.addressService.getWards(this.selectedDistrictCode).subscribe(data => {
+        this.wards = data.wards;
+        console.log(this.selectedDistrictCode);
+      });
+    }
+  }
+
+  // getSelectedAddress() {
+  //   const province = this.provinces.find(p => p.code === +this.selectedProvinceCode)?.name;
+  //   const district = this.districts.find(d => d.code === +this.selectedDistrictCode)?.name;
+  //   const ward = this.wards.find(w => w.code === +this.selectedWardCode)?.name;
+
+  //   return { province, district, ward };
+  // }
+  //
+  checkoutForm: {
+    CustomerName: string;
+    Email: string;
+    Province: string;
+    District: string;
+    Wards: string;
+    Address: string;
+    Phone: string;
+    Note: string;
+  } = {
+    CustomerName: '',
+    Address: '', 
+    Phone: '' ,
+    Email: '', 
+    Province: '', 
+    District: '', 
+    Wards: '',
+    Note: '',
+  };
+  checkout(){
+    const CustomerId = this.authService.getCustomerId();
+    console.log('Selected codes:', this.selectedProvinceCode, this.selectedDistrictCode, this.selectedWardCode);
+    if (this.cartItems.length === 0) {
+      alert('Giỏ hàng trống!');
+      return;
+    }
+    if (!this.checkoutForm.Address || !this.checkoutForm.Phone || !this.checkoutForm.CustomerName ) {
+      alert('Vui lòng nhập đầy đủ thông tin giao hàng!');
+      return;
+    }
+    
+    const checkout: CheckOut = {
+      CustomerId: CustomerId ? +CustomerId : null,
+      CustomerName: this.checkoutForm.CustomerName,
+      Email: this.checkoutForm.Email,
+      Province: this.provinces.find(p => p.code == this.selectedProvinceCode)?.name,
+      District: this.districts.find(d => d.code == this.selectedDistrictCode)?.name,
+      Wards: this.wards.find(w => w.code == this.selectedWardCode)?.name,
+      Address: this.checkoutForm.Address,
+      Phone: this.checkoutForm.Phone,
+      Note: this.checkoutForm.Note,
+      CartItems: this.cartItems
+    };
+    console.log('CheckOut: ', checkout);
+    this.cartService.checkOut(checkout).subscribe({
+      next: (response) => {
+        alert('Đơn hàng đã được tạo thành công! Mã đơn hàng: ' + response.orderId);
+        if (CustomerId) {
+          this.cartItems = []; // Xóa giỏ hàng trên giao diện nếu đã đăng nhập
+          this.loadCartItems(); // Tải lại từ API
+        } else {
+          this.cartService.removeCartFromLocal(); // Xóa localStorage nếu chưa đăng nhập
+          this.loadCartItems();
+          this.resetForm();
+        }
+      }
+    });
+  }
+  resetForm(){
+    this.checkoutForm = {
+      CustomerName: '',
+      Address: '', 
+      Phone: '' ,
+      Email: '', 
+      Province: '', 
+      District: '', 
+      Wards: '',
+      Note: '',
+    };
+
   }
 }

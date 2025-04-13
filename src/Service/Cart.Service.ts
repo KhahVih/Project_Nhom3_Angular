@@ -1,8 +1,9 @@
 import { HttpClient } from "@angular/common/http";
 import { CartItem } from "../Models/CartDTO";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, identity, Observable } from "rxjs";
 import { Injectable } from "@angular/core";
 import { Product } from "../Models/ProductDTO";
+import { CheckOut } from "../Models/CheckOutDTO";
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +15,7 @@ export class CartService {
     cart$ = this.cartSubject.asObservable(); // Observable để theo dõi giỏ hàng
 
     constructor(private http: HttpClient) { }
-
+  // API 
     // 🛒 Thêm sản phẩm vào giỏ hàng
     addToCart(cartItem: CartItem): Observable<CartItem> {
         return this.http.post<CartItem>(this.apiUrl, cartItem);
@@ -29,29 +30,46 @@ export class CartService {
     updateCartItem(cartItemId: number, quantity: number): Observable<any> {
         return this.http.put(`${this.apiUrl}/${cartItemId}`, { quantity });
     }
+    // Delete 
+    deleteCartIteam(Id: number): Observable<any>{
+      return this.http.delete(`${this.apiUrl}/${Id}`)
+    }
 
-    // ❌ Xóa sản phẩm khỏi giỏ hàng
-    removeFromCart(cartItemId: number): Observable<any> {
-        return this.http.delete(`${this.apiUrl}/${cartItemId}`);
-    }
-    // Hàm phụ để cập nhật số lượng trong localStorage
-    updateLocalQuantity(cartItemId: number, newQuantity: number): void {
-      let cart = this.getCartFromLocal();
-      const itemIndex = cart.findIndex((item) => item.Id === cartItemId);
-      if (itemIndex !== -1) {
-        // Cập nhật số lượng và FinalPrice
-        cart[itemIndex].Quantity = newQuantity > 0 ? newQuantity : 1; // Đảm bảo số lượng không nhỏ hơn 1
-        cart[itemIndex].FinalPrice = cart[itemIndex].UnitPrice * cart[itemIndex].Quantity;
-        this.saveCartToLocal(cart);
-        console.log(`Updated quantity for cart item ${cartItemId} to ${newQuantity} in localStorage`);
-      } else {
-        console.warn(`Cart item ${cartItemId} not found in localStorage`);
-      }
-    }
+    //local 
     // Lấy giỏ hàng từ local storage
     getCartFromLocal(): CartItem[] {
       const cart = localStorage.getItem('cart');
       return cart ? JSON.parse(cart) : [];
+    }
+    // Cập nhật số lượng sản phẩm trong localStorage
+    updateLocalQuantity(cartItemId: number, newQuantity: number): void {
+      let cart = this.getCartFromLocal();
+      const itemIndex = cart.findIndex((item) => item.Id === cartItemId);
+      
+      if (itemIndex !== -1) {
+          // Cập nhật số lượng (đảm bảo số lượng tối thiểu là 1)
+          cart[itemIndex].Quantity = Math.max(1, newQuantity);
+          // Cập nhật FinalPrice
+          cart[itemIndex].FinalPrice = cart[itemIndex].UnitPrice * cart[itemIndex].Quantity;
+          this.saveCartToLocal(cart);
+          console.log(`Updated quantity for cart item ${cartItemId} to ${cart[itemIndex].Quantity} in localStorage`);
+      } else {
+          console.warn(`Cart item ${cartItemId} not found in localStorage`);
+      }
+    }
+    // Xóa 1 sản phẩm duy nhất khỏi giỏ hàng trong localStorage
+    removeLocalCartId(cartItemId: number): void {
+      let cart = this.getCartFromLocal();
+      const itemIndex = cart.findIndex((item) => item.Id === cartItemId);
+      
+      if (itemIndex !== -1) {
+          // Xóa chỉ mục tìm thấy
+          cart.splice(itemIndex, 1);
+          this.saveCartToLocal(cart);
+          console.log(`Removed CartId ${cartItemId} from localStorage`);
+      } else {
+          console.warn(`Cart item ${cartItemId} not found in localStorage`);
+      }
     }
     // Lưu giỏ hàng vào local storage
     saveCartToLocal(cart: CartItem[]): void {
@@ -59,11 +77,11 @@ export class CartService {
     }
 
     // Xóa giỏ hàng trong local storage
-    clearCartFromLocal(): void {
+    removeCartFromLocal(): void {
       localStorage.removeItem('cart');
     }
 
-    checkOut(checkOutData: CartItem): Observable<any>{
+    checkOut(checkOutData: CheckOut): Observable<any>{
       return this.http.post(`${this.checkoutapi}`, checkOutData);
     }
 }

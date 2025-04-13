@@ -43,7 +43,7 @@ export class ProductdetailComponent implements OnInit{
   newCommentVote: number = 0; // Điểm đánh giá (sao)
   newCommentText: string = ''; // Nội dung bình luận
   submitting: boolean = false; // Trạng thái gửi
-
+  DiscountPercentage: number = 0;
   ngOnInit(): void {
     this.loadProduct();
     // this.loadColor();
@@ -68,12 +68,14 @@ export class ProductdetailComponent implements OnInit{
       // Lấy màu và size từ product
       this.colors = this.product?.Colors || [];
       this.sizes = this.product?.Sizes || [];
+      this.DiscountPercentage = this.product?.DiscountPercentage || 0;
       this.categoryId = this.product?.ProductCategorys[0].CategoryId || 0 ;// Lấy category đầu tiên
       this.categoryname = this.product?.ProductCategorys[0].CategoryName || '';
       this.availableQuantity = this.product?.Count || 0
       this.selectedImage = this.product?.Images[0].Link || ''; // Gán ảnh mặc định là ảnh đầu tiên trong danh sách khi component khởi tạo
       console.log('Product: ',data);
       this.loadRelatedProducts();
+      
     });
   }
   //load color
@@ -92,6 +94,7 @@ export class ProductdetailComponent implements OnInit{
       console.log('Size: ',data)
     });
   }
+
   // Add To Cart
   AddToCart(product: Product){
     if (this.selectcolor === null || this.selectsize === null) {
@@ -103,9 +106,10 @@ export class ProductdetailComponent implements OnInit{
     const productImage = product.Images && product.Images.length > 0 
     ? product.Images[0].Link 
     : 'assets/images/no-image.png'; // fallback ảnh mặc định nếu không có ảnh
-    // Lấy ColorId và SizeId từ lựa chọn của người dùng
-    // const selectedColorId = this.selectcolor.length > 0 ? this.selectcolor[0] : 0; // Lấy màu đầu tiên nếu có
-    // const selectedSizeId = this.selectsize.length > 0 ? this.selectsize[0] : 0;     // Lấy kích thước đầu tiên nếu có
+
+    const discount = this.DiscountPercentage || 0;
+    const unitPrice = product.Price || 0;
+    const priceAfterDiscount = unitPrice * (1 - discount / 100);
     const cartItem: CartItem = {
       Id: 0,
       CustomerId: CustomerId ? +CustomerId: null, // Nếu chưa đăng nhập thì dùng ID = 0
@@ -118,7 +122,7 @@ export class ProductdetailComponent implements OnInit{
       SizeId: this.selectsize || 0,
       SizeName: this.sizes.find(s => s.Id === this.selectsize)?.Name || '', // Lấy từ danh sách sizes
       UnitPrice: product.Price || 0,
-      FinalPrice: product.Price, 
+      FinalPrice: priceAfterDiscount * this.quantity, // áp dụng nếu sản có giảm giá  
     };
     if (CustomerId) {
       // Nếu đã đăng nhập, gọi API để thêm vào giỏ hàng
@@ -134,22 +138,37 @@ export class ProductdetailComponent implements OnInit{
         }
       });
     } else {
-      // Nếu chưa đăng nhập, lưu vào localStorage
       let cart = this.cartService.getCartFromLocal();
-      const existingItem = cart.find(item =>
-        item.ProductId === cartItem.ProductId &&
-        item.ColorId === cartItem.ColorId &&
-        item.SizeId === cartItem.SizeId
-      );
-      if (existingItem) {
-        existingItem.Quantity += cartItem.Quantity;
-      } else {
-        cart.push(cartItem);
-      }
-      this.cartService.saveCartToLocal(cart);
-      // this.loadCartItems(); // Cập nhật giao diện
-      alert('Sản phẩm đã được thêm vào giỏ hàng !');
-      console.log('Cart: ',cart);
+
+        // Tìm sản phẩm đã tồn tại dựa trên ProductId, ColorId, SizeId
+        const existingItem = cart.find(item =>
+            item.ProductId === cartItem.ProductId &&
+            item.ColorId === cartItem.ColorId &&
+            item.SizeId === cartItem.SizeId
+        );
+
+        if (existingItem) {
+            // Nếu sản phẩm đã tồn tại, tăng Quantity và cập nhật FinalPrice
+            existingItem.Quantity += cartItem.Quantity;
+            existingItem.FinalPrice = priceAfterDiscount * existingItem.Quantity; // GIÁ SAU KHI GIẢM
+            console.log(`Updated quantity for item ${existingItem.Id} to ${existingItem.Quantity}`);
+        } else {
+            // Nếu sản phẩm chưa tồn tại, tạo Id duy nhất và thêm mới
+            const maxId = cart.length > 0 ? Math.max(...cart.map((i) => i.Id)) : 0;
+            const newId = maxId + 1;
+            const newItem = {
+                ...cartItem,
+                Id: newId,
+                FinalPrice: priceAfterDiscount * cartItem.Quantity // GIÁ SAU KHI GIẢM
+            };
+            cart.push(newItem);
+        }
+
+        // Lưu giỏ hàng vào localStorage
+        this.cartService.saveCartToLocal(cart);
+        // Thông báo cho người dùng
+        alert('Sản phẩm đã được thêm vào giỏ hàng!');
+        console.log('Cart:', cart);
     }
   }
 

@@ -77,77 +77,119 @@
       <div class="container">
         <!-- Thông báo khi giỏ hàng trống -->
         <div *ngIf="cartItems?.length === 0" class="empty-cart">
-          <p>Giỏ hàng của bạn đang trống!</p>
-          <a routerLink="/product" class="btn btn-primary">Tiếp tục mua sắm</a>
+          <i class="fas fa-shopping-cart empty-cart-icon"></i>
+          <p>Không tồn tại sản phẩm nào trong giỏ hàng !</p>
+          <a routerLink="/" class="btn btn-custom">Về trang chủ</a>
         </div>
-      
         <!-- Hiển thị giỏ hàng khi có sản phẩm -->
-        <div *ngIf="cartItems.length > 0" class="cart-content">
-          <!-- Bảng danh sách sản phẩm -->
-          <table class="cart-table">
-            <thead>
-              <tr>
-                <th>Sản phẩm</th>
-                <th>Đơn giá</th>
-                <th>Màu sắc</th>
-                <th>Kích thước</th>
-                <th>Số lượng</th>
-                <th>Tổng</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of cartItems; let i = index">
-                <td>
-                  <div class="product-info">
-                    <img
-                      [src]="item.ProductImage || 'assets/images/default-product.jpg'"
-                      alt="{{ item.ProductName }}"
-                      class="product-image"
-                    />
-                    <span>{{ item.ProductName }}</span>
-                  </div>
-                </td>
-                <td>{{ item.UnitPrice | currency: 'VND':'symbol':'1.0-0' }}</td>
-                <td>{{ item.ColorName || 'Không chọn' }}</td>
-                <td>{{ item.SizeName || 'Không chọn' }}</td>
-                <td>
-                  <input
-                    type="number"
-                    min="1"
-                    [(ngModel)]="item.Quantity"
-                    
-                    class="quantity-input"
-                  />
-                </td>
-                <td>{{ item.FinalPrice | currency: 'VND':'symbol':'1.0-0' }}</td>
-                <td>
-                  <button
-                    class="remove-btn"
-                    (click)="removeItem(item)"
-                    title="Xóa sản phẩm"
-                  >
-                    Xóa
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-      
-          <!-- Tổng hợp giỏ hàng -->
-          <!-- <div class="cart-summary">
-            <div class="summary-details">
-              <h3>Tổng cộng</h3>
-              <p>
-                Tổng tiền:
-                <span>{{ calculateTotal() | currency: 'VND':'symbol':'1.0-0' }}</span>
-              </p>
-              <button class="btn btn-checkout" (click)="proceedToCheckout()">
-                Tiến hành thanh toán
-              </button>
-              <a routerLink="/product" class="btn btn-continue">Tiếp tục mua sắm</a>
+        <div class="cart-main" *ngIf="cartItems.length > 0">
+          <div class="cart-table">
+              <h4>GIỎ HÀNG CỦA BẠN:  </h4>
+              <hr>
+              <table class="cart-table">
+                  <thead>
+                      <tr>
+                          <th>Hình Ảnh</th>
+                          <th>Tên Sản Phẩm</th>
+                          <th>Số lượng</th>
+                          <th>Thành Tiền</th>
+                          <th></th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr *ngFor="let item of cartItems; let i = index">
+                          <td data-label="Hình Ảnh">
+                              <div class="product-info-image">
+                                  <img
+                                      [src]="item.ProductImage || 'assets/images/default-product.jpg'"
+                                      alt="{{ item.ProductName }}"
+                                      class="product-image"
+                                  />
+                                  <span (click)="removeItem(item.Id)">Xóa</span>
+                              </div>
+                          </td>
+                          <td data-label="Tên Sản Phẩm">
+                              <div class="product-info">
+                                  <a routerLink="/product/{{item.ProductId}}"><h5>{{item.ProductName}}</h5></a>
+                                  <div class="color-size-cart">
+                                      <p>Màu: {{item.ColorName}}</p>
+                                      <p>Size: {{item.SizeName}}</p>
+                                  </div>
+                              </div>
+                          </td>
+                          <td data-label="Số lượng">
+                              <div class="quantity-control">
+                                  <button class="quantity-btn decrease" (click)="decreaseQuantity(item)">-</button>
+                                  <input
+                                      type="text"
+                                      [(ngModel)]="item.Quantity"
+                                      class="quantity-input"
+                                      readonly
+                                  />
+                                  <button class="quantity-btn increase" (click)="increaseQuantity(item)">+</button>
+                              </div>
+                          </td>
+                          <td data-label="Thành Tiền">{{ item.FinalPrice * item.Quantity | currency: 'VND':'symbol':'1.0-0' }}</td>
+                      </tr>
+                  </tbody>
+              </table>
+              <!-- <div class="price-bottom" *ngFor="let items of cartItems; let i = index">
+                <div class="price-unitprice">
+                  <p>Giá Gốc: </p>
+                  <p>{{ items.UnitPrice * items.Quantity | currency: 'VND':'symbol':'1.0-0' }}</p>
+                </div>
+                <div class="price-sale">
+                  <p>Giảm Giá: </p>
+                  <p>-{{ items.FinalPrice * items.Quantity | currency: 'VND':'symbol':'1.0-0' }}</p>
+                </div>
+                <div class="price-final">
+                  <p>Tổng Thanh Toán: </p>
+                  <p>{{ items.FinalPrice * items.Quantity | currency: 'VND':'symbol':'1.0-0' }}</p>
+                </div>
+              </div> -->
+          </div>
+          <!--Check-Out-->
+          <div class="checkout">
+            <div class="checkout-header">
+              <h4>HÌNH THỨC THANH TOÁN: </h4>
+              <hr>
+              <div class="payment">
+                <input type="radio" class="input-payment" name="payment" id="payment">
+                <p>Thanh Toán Khi Nhận Hàng </p>
+              </div>
             </div>
-          </div> -->
+            <div class="from-checkout">
+              <h4>THÔNG TIN GIAO HÀNG: </h4>
+              <hr>
+              <form action="" class="form-info">
+                <div class="form-header">
+                  <input type="text" [(ngModel)]="checkoutForm.CustomerName" name="fullname" id="fullname" placeholder="Họ tên">
+                  <input type="text" [(ngModel)]="checkoutForm.Phone" name="phone" id="phone" placeholder="Điện thoại">
+                </div>
+                <input type="text" [(ngModel)]="checkoutForm.Email" name="email" id="email" placeholder="Email">
+                <div class="form-address">
+                  <select [(ngModel)]="selectedProvinceCode" name="province" (change)="onProvinceChange()" >
+                    <option value="" selected>Tỉnh/thành phố</option>
+                    <option *ngFor="let p of provinces" [value]="p.code">{{ p.name }}</option>
+                  </select>
+                
+                  <select [(ngModel)]="selectedDistrictCode" name="district" (change)="onDistrictChange()">
+                    <option value="" selected>Quận/huyện</option>
+                    <option *ngFor="let d of districts" [value]="d.code">{{ d.name }}</option>
+                  </select>
+                
+                  <select [(ngModel)]="selectedWardCode" name="wards">
+                    <option value="" selected>Phường/xã</option>
+                    <option *ngFor="let w of wards" [value]="w.code">{{ w.name }}</option>
+                  </select>
+                </div>
+                <input type="text" [(ngModel)]="checkoutForm.Address" name="address" id="address" class="address" placeholder="Địa chỉ">
+                <input type="text" [(ngModel)]="checkoutForm.Note" name="note" id="note" class="note" placeholder="Yêu cầu khác (không bắt buộc)">
+
+                <button type="submit" class="btn-checkout" (click)="checkout()">Thanh Toán </button>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
   </main>

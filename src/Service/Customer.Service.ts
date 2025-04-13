@@ -43,22 +43,22 @@ export class CustomerService {
         return this.http.post<any>(`https://localhost:7194/api/Login/login`, loginData);
     }
     // Lưu customerId vào localStorage
-  saveCustomerId(customerId: number): void {
-    localStorage.setItem('CustomerId', customerId.toString());
-  }
-  //luu customername
-  saveCustomerName(Name: string): void{
-    localStorage.setItem('CustomerName', Name.toString());
-  }
-  // Lấy customerId từ localStorage
-  getCustomerId(): string | null {
-    return localStorage.getItem('CustomerId');
-  }
-  getCustomerName():string | null{
-    return localStorage.getItem('CustomerName');
-  }
-  // Xóa customerId khỏi localStorage (đăng xuất)
-  logout(): void {
-    localStorage.removeItem('CustomerId');
-  }
+    saveCustomerId(customerId: number): void {
+      localStorage.setItem('CustomerId', customerId.toString());
+    }
+    //luu customername
+    saveCustomerName(Name: string): void{
+      localStorage.setItem('CustomerName', Name.toString());
+    }
+    // Lấy customerId từ localStorage
+    getCustomerId(): string | null {
+      return localStorage.getItem('CustomerId');
+    }
+    getCustomerName():string | null{
+      return localStorage.getItem('CustomerName');
+    }
+    // Xóa customerId khỏi localStorage (đăng xuất)
+    logout(): void {
+      localStorage.removeItem('CustomerId');
+    }
 }
