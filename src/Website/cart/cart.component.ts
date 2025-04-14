@@ -7,7 +7,6 @@ import { CartService } from '../../Service/Cart.Service';
 import { CustomerService } from '../../Service/Customer.Service';
 import { AddressService } from '../../Service/Address.Service';
 import { CheckOut } from '../../Models/CheckOutDTO';
-import { nextTick } from 'process';
 
 @Component({
   selector: 'app-cart',

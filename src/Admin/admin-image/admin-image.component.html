@@ -1,0 +1,139 @@
+<div class="container">
+    <!-- Sidebar Menu -->
+    <div class="sidebar" (mouseover)="openMenu()" (mouseleave)="closeMenu()" [class.expanded]="isMenu">
+      <!-- Logo -->
+      <div class="logo" *ngIf="isMenu">
+        METRONIC
+        <span class="collapse-icon">«</span>
+      </div>
+      <div class="menu" *ngIf="isMenu" style="color: #fff;">
+        <h6>CHỨC NĂNG</h6>
+      </div>
+      <ul>
+        <li class="has-dropdown">
+          <details *ngIf="isMenu">
+            <summary>Chăm sóc khách hàng</summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/admin/contact">Quản lý yêu cầu</a></li>
+              <li><a routerLink="/admin/customer">Quản lý người dùng</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown" *ngIf="isAdmin">
+          <details *ngIf="isMenu">
+            <summary>Quản lý đơn hàng</summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/admin/order">Quản lý đơn hàng được duyệt</a></li>
+              <li><a routerLink="/admin/order">Quản lý đơn hàng</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown">
+          <details *ngIf="isMenu">
+            <summary>Sản Phẩm</summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/admin/product">Quản lý sản phẩm</a></li>
+              <li><a routerLink="/admin/category">Quản lý danh mục</a></li>
+              <li><a routerLink="/admin/image">Quản lý hình ảnh</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown" *ngIf="isAdmin">
+          <details *ngIf="isMenu">
+            <summary>Bộ sưu tập </summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/admin/blog">Danh sách Blog</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown" *ngIf="isAdmin">
+          <details *ngIf="isMenu">
+            <summary>Bình luận</summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/admin/comment">Danh sách bình luận</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown" *ngIf="isAdmin">
+          <details *ngIf="isMenu">
+            <summary>Phân quyền </summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/user">Nhân sự</a></li>
+              <li><a routerLink="/nhomquyen">Nhóm quyền</a></li>
+              <li><a routerLink="/role">Quyền</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown">
+          <details *ngIf="isMenu">
+            <summary>Gửi thông báo tự động </summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/history">Thông báo tự động</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown">
+          <details *ngIf="isMenu">
+            <summary>Lịch sử</summary>
+            <ul class="drop-menu">
+              <li><a routerLink="">Thông tin lịch sử hệ thống</a></li>
+            </ul>
+          </details>
+        </li>
+        <li *ngIf="isMenu"><button class="update-btn" (click)="logout()">Đăng xuất</button></li>
+      </ul>
+    </div>
+  
+    <!-- Nội dung chính -->
+    <div class="main-content">
+  
+      <!-- Tiêu đề và nút -->
+      <div class="header">
+        <div class="header-content">
+          <h2>Kho dữ liệu ảnh sản phẩm<span class="sub-header">Trang chủ</span></h2>
+          <button class="add-btn" (click)="ShowUpload()">Thêm Ảnh Mới</button>
+        </div>
+      </div>
+      <h6>Tổng số ảnh: {{totalImages}}</h6>
+  
+      <!-- Popup Upload Image -->
+      <div class="overlay" *ngIf="showUploadImage" (click)="CloseUpload()"></div>
+      <div *ngIf="showUploadImage" class="upload-image">
+        <div class="upload-header">
+          <h2>Thêm Ảnh Mới</h2>
+  
+          <button class="close-btn" (click)="CloseUpload()">x</button>
+        </div>
+        <div class="upload-body">
+          <label class="bold">Chọn ảnh</label>
+          <input id="file" type="file" (change)="onFileSelected($event)" accept="image/*" multiple>
+        </div>
+        <div class="upload-footer">
+          <button class="close" (click)="CloseUpload()">Đóng</button>
+          <button class="btn-upload" (click)="uploadImages()" [disabled]="selectedFiles.length === 0">Upload</button>
+        </div>
+      </div>
+  
+      <!-- Danh sách ảnh -->
+      <table class="image-list" *ngIf="images.length > 0; else noImages">
+        <thead>
+          <tr>
+            <th>Ảnh</th>
+            <th>Link ảnh</th>
+            <th>Tên ảnh</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let image of images">
+            <td><img [src]="image.Link" [alt]="image.Name"></td>
+            <td>{{image.Link}}</td>
+            <td>{{image.Name}}</td>
+          </tr>
+        </tbody>
+      </table>
+  
+      <ng-template #noImages>
+        <p>No images available.</p>
+      </ng-template>
+    </div>
+  </div>

@@ -5,6 +5,16 @@ import { ProductComponent } from '../Website/product/product.component';
 import { ProductdetailComponent } from '../Website/productdetail/productdetail.component';
 import { CartComponent } from '../Website/cart/cart.component';
 import { SearchComponent } from '../Website/search/search.component';
+import { Component } from '@angular/core';
+import { AdminHomeComponent } from '../Admin/admin-home/admin-home.component';
+import { AdminContactComponent } from '../Admin/admin-contact/admin-contact.component';
+import { AdminLoginComponent } from '../Admin/admin-login/admin-login.component';
+import { AdminCustomerComponent } from '../Admin/admin-customer/admin-customer.component';
+import { AdminOrderComponent } from '../Admin/admin-order/admin-order.component';
+import { AdminCategoryComponent } from '../Admin/admin-category/admin-category.component';
+import { AdminImageComponent } from '../Admin/admin-image/admin-image.component';
+import { AdminCommentComponent } from '../Admin/admin-comment/admin-comment.component';
+import { AdminBlogComponent } from '../Admin/admin-blog/admin-blog.component';
 
 export const routes: Routes = [
     {path: '', component: HomeComponent},
@@ -13,4 +23,13 @@ export const routes: Routes = [
     {path: 'product/:id', component: ProductdetailComponent},
     {path: 'cart', component: CartComponent},
     {path: 'search', component: SearchComponent},
+    {path: 'admin/home', component: AdminHomeComponent },
+    {path: 'admin/contact', component: AdminContactComponent},
+    {path: 'admin/login', component: AdminLoginComponent},
+    {path: 'admin/customer',component: AdminCustomerComponent},
+    {path: 'admin/order', component: AdminOrderComponent},
+    {path: 'admin/category', component: AdminCategoryComponent},
+    {path: 'admin/image', component: AdminImageComponent},
+    {path: 'admin/comment', component: AdminCommentComponent},
+    {path: 'admin/blog', component: AdminBlogComponent}
 ];

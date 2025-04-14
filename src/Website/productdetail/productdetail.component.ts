@@ -72,7 +72,7 @@ export class ProductdetailComponent implements OnInit{
       this.categoryId = this.product?.ProductCategorys[0].CategoryId || 0 ;// Lấy category đầu tiên
       this.categoryname = this.product?.ProductCategorys[0].CategoryName || '';
       this.availableQuantity = this.product?.Count || 0
-      this.selectedImage = this.product?.Images[0].Link || ''; // Gán ảnh mặc định là ảnh đầu tiên trong danh sách khi component khởi tạo
+      this.selectedImage = this.product?.Images[1].Link || ''; // Gán ảnh mặc định là ảnh đầu tiên trong danh sách khi component khởi tạo
       console.log('Product: ',data);
       this.loadRelatedProducts();
       

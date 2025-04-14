@@ -1,0 +1,277 @@
+<div class="container">
+    <!-- Sidebar Menu -->
+    <div class="sidebar" (mouseover)="openMenu()" (mouseleave)="closeMenu()" [class.expanded]="isMenu">
+      <!-- Logo -->
+      <div class="logo" *ngIf="isMenu">
+        METRONIC
+        <span class="collapse-icon">«</span>
+      </div>
+      <div class="menu" *ngIf="isMenu" style="color: #fff;">
+        <h6>CHỨC NĂNG</h6>
+      </div>
+      <ul>
+        <li class="has-dropdown">
+          <details *ngIf="isMenu">
+            <summary>Chăm sóc khách hàng</summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/admin/contact">Quản lý yêu cầu</a></li>
+              <li><a routerLink="/admin/customer">Quản lý người dùng</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown" *ngIf="isAdmin">
+          <details *ngIf="isMenu">
+            <summary>Quản lý đơn hàng</summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/admin/order">Quản lý đơn hàng được duyệt</a></li>
+              <li><a routerLink="/admin/order">Quản lý đơn hàng</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown">
+          <details *ngIf="isMenu">
+            <summary>Sản Phẩm</summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/admin/product">Quản lý sản phẩm</a></li>
+              <li><a routerLink="/admin/category">Quản lý danh mục</a></li>
+              <li><a routerLink="/admin/image">Quản lý hình ảnh</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown" *ngIf="isAdmin">
+          <details *ngIf="isMenu">
+            <summary>Bộ sưu tập </summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/admin/blog">Danh sách Blog</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown" *ngIf="isAdmin">
+          <details *ngIf="isMenu">
+            <summary>Bình luận</summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/admin/comment">Danh sách bình luận</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown" *ngIf="isAdmin">
+          <details *ngIf="isMenu">
+            <summary>Phân quyền </summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/user">Nhân sự</a></li>
+              <li><a routerLink="/nhomquyen">Nhóm quyền</a></li>
+              <li><a routerLink="/role">Quyền</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown">
+          <details *ngIf="isMenu">
+            <summary>Gửi thông báo tự động </summary>
+            <ul class="drop-menu">
+              <li><a routerLink="">Thông báo tự động</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown">
+          <details *ngIf="isMenu">
+            <summary>Lịch sử</summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/history">Thông tin lịch sử hệ thống</a></li>
+            </ul>
+          </details>
+        </li>
+        <li *ngIf="isMenu"><button class="update-btn" (click)="logout()">Đăng xuất</button></li>
+      </ul>
+    </div>
+  
+    <!-- Nội dung chính -->
+    <div class="main-content">
+      <!-- Tiêu đề và nút -->
+      <div class="header">
+        <div class="header-content">
+          <h2>Danh Sách Khách Hàng<span class="sub-header">Trang chủ</span></h2>
+        </div>
+      </div>
+      <div class="button-btn">
+        <button class="update-btn" (click)="openAddModal()">Thêm Khách Hàng</button>
+        <button class="update-btn" (click)="openChangePasswordModal()" style="margin-left: 20px;">Đổi Mật Khẩu</button>
+      </div>
+
+  
+      <!-- <table class="table">
+        <thead>
+          <tr>
+            <th>Tên Đăng Nhập</th>
+            <th>Họ Tên</th>
+            <th>Email</th>
+            <th>Địa Chỉ</th>
+            <th>Số Điện Thoại</th>
+            <th>Giới Tính</th>
+            <th>Hành Động</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let customer of customers">
+            <td>{{ customer.Username }}</td>
+            <td>{{ customer.Fullname }}</td>
+            <td>{{ customer.Email }}</td>
+            <td>{{ customer.Address }}</td>
+            <td>{{ customer.Phone }}</td>
+            <td>{{ customer.Gender ? 'Nam' : 'Nữ' }}</td>
+            <td>
+              <button class="btn btn-warning me-2" (click)="editCustomer(customer)">Sửa</button>
+              <button class="btn btn-danger" (click)="deleteCustomer(customer.Id)">Xóa</button>
+            </td>
+          </tr>
+        </tbody>
+      </table> -->
+  
+      <div class="table-content">
+        <div class="table-header-row">
+          <div>Tên Đăng Nhập </div>
+          <div>Họ Tên</div>
+          <div>Email</div>
+          <div>Địa Chỉ</div>
+          <div>Số Điện Thoại </div>
+          <div>Giới Tính</div>
+          <div>Hành Động</div>
+        </div>
+        <div class="table-row" *ngFor="let customer of customers">
+          <div>{{ customer.Username }}</div>
+          <div>{{ customer.Fullname }}</div>
+          <div>{{ customer.Email }}</div>
+          <div>{{ customer.Address }}</div>
+          <div>{{ customer.Phone}}</div>
+          <div>{{  customer.Gender ? 'Nam' : 'Nữ'  }}</div>
+          <div>
+            <button class="edit-btn" (click)="editCustomer(customer)">Sửa</button>
+            <button class="delete-btn" (click)="deleteCustomer(customer.Id)">Xóa</button>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Modal Thêm Khách Hàng -->
+      <div class="overlay" *ngIf="showAddModal" (click)="closeAddModal()"></div>
+      <div class="add-customer-modal" *ngIf="showAddModal">
+        <div class="modal-header">
+          <h3>Thêm Khách Hàng</h3>
+          <button class="close-btn" (click)="closeAddModal()">×</button>
+        </div>
+        <div class="modal-body">
+          <form (ngSubmit)="addCustomer()">
+            <div class="form-group">
+              <label class="bold">Tên Đăng Nhập:</label>
+              <input class="form-control" [(ngModel)]="newCustomer.Username" name="username" />
+            </div>
+            <div class="form-group">
+              <label class="bold">Họ Tên:</label>
+              <input class="form-control" [(ngModel)]="newCustomer.Fullname" name="fullname" />
+            </div>
+            <div class="form-group">
+              <label class="bold">Email:</label>
+              <input class="form-control" type="email" [(ngModel)]="newCustomer.Email" name="email" />
+            </div>
+            <div class="form-group">
+              <label class="bold">Mật Khẩu:</label>
+              <input class="form-control" type="password" [(ngModel)]="newCustomer.Password" name="password" />
+            </div>
+            <div class="form-group">
+              <label class="bold">Địa Chỉ:</label>
+              <input class="form-control" [(ngModel)]="newCustomer.Address" name="address" required />
+            </div>
+            <div class="form-group">
+              <label class="bold">Số Điện Thoại:</label>
+              <input class="form-control" [(ngModel)]="newCustomer.Phone" name="phone" />
+            </div>
+            <div class="form-group">
+              <label class="bold">Giới Tính:</label>
+              <select class="form-control" [(ngModel)]="newCustomer.Gender" name="gender">
+                <option [value]="true">Nam</option>
+                <option [value]="false">Nữ</option>
+              </select>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="cancel-btn" (click)="closeAddModal()">Hủy</button>
+              <button type="submit" class="submit-btn">
+                Thêm
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+  
+      <!-- Modal Chỉnh Sửa Khách Hàng -->
+      <div class="overlay" *ngIf="selectedCustomer" (click)="closeEditModal()"></div>
+      <div class="edit-customer-modal" *ngIf="selectedCustomer">
+        <div class="modal-header">
+          <h3>Chỉnh Sửa Khách Hàng</h3>
+          <button class="close-btn" (click)="closeEditModal()">×</button>
+        </div>
+        <div class="modal-body">
+          <form (ngSubmit)="updateCustomer()">
+            <div class="form-group">
+              <label class="bold">Tên Đăng Nhập:</label>
+              <input class="form-control" [(ngModel)]="selectedCustomer.Username" name="username" />
+            </div>
+            <div class="form-group">
+              <label class="bold">Họ Tên:</label>
+              <input class="form-control" [(ngModel)]="selectedCustomer.Fullname" name="fullname" />
+            </div>
+            <div class="form-group">
+              <label class="bold">Email:</label>
+              <input class="form-control" type="email" [(ngModel)]="selectedCustomer.Email" name="email" />
+            </div>
+            <div class="form-group">
+              <label class="bold">Địa Chỉ:</label>
+              <input class="form-control" [(ngModel)]="selectedCustomer.Address" name="address" required />
+            </div>
+            <div class="form-group">
+              <label class="bold">Số Điện Thoại:</label>
+              <input class="form-control" [(ngModel)]="selectedCustomer.Phone" name="phone" />
+            </div>
+            <div class="form-group">
+              <label class="bold">Giới Tính:</label>
+              <select class="form-control" [(ngModel)]="selectedCustomer.Gender" name="gender">
+                <option [value]="true">Nam</option>
+                <option [value]="false">Nữ</option>
+              </select>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="cancel-btn" (click)="closeEditModal()">Hủy</button>
+              <button type="submit" class="submit-btn">Cập Nhật</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- Modal Đổi Mật Khẩu -->
+      <div class="overlay" *ngIf="showChangePasswordModal" (click)="closeChangePasswordModal()"></div>
+      <div class="change-password-modal" *ngIf="showChangePasswordModal">
+        <div class="modal-header">
+          <h3>Đổi Mật Khẩu</h3>
+          <button class="close-btn" (click)="closeChangePasswordModal()">×</button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label class="bold">Email:</label>
+              <input class="form-control" type="email" [(ngModel)]="changePasswordRequest.Email" name="email" required />
+            </div>
+            <div class="form-group">
+              <label class="bold">Mật Khẩu Cũ:</label>
+              <input class="form-control" type="password" [(ngModel)]="changePasswordRequest.OldPassword"
+                name="oldPassword" required />
+            </div>
+            <div class="form-group">
+              <label class="bold">Mật Khẩu Mới:</label>
+              <input class="form-control" type="password" [(ngModel)]="changePasswordRequest.NewPassword"
+                name="newPassword" required />
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="cancel-btn" (click)="closeChangePasswordModal()">Hủy</button>
+              <button type="submit" class="submit-btn" (click)="changePassword()">Đổi</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

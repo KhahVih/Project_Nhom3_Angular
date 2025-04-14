@@ -1,0 +1,134 @@
+<div class="container mt-4">
+    <!-- Sidebar Menu -->
+    <div class="sidebar" (mouseover)="openMenu()" (mouseleave)="closeMenu()" [class.expanded]="isMenu">
+      <!-- Logo -->
+      <div class="logo" *ngIf="isMenu">
+        METRONIC
+        <span class="collapse-icon">«</span>
+      </div>
+      <div class="menu" *ngIf="isMenu" style="color: #fff;">
+        <h6>CHỨC NĂNG</h6>
+      </div>
+      <ul>
+        <li class="has-dropdown">
+          <details *ngIf="isMenu">
+            <summary>Chăm sóc khách hàng</summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/admin/contact">Quản lý yêu cầu</a></li>
+              <li><a routerLink="/admin/customer">Quản lý người dùng</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown" *ngIf="isAdmin">
+          <details *ngIf="isMenu">
+            <summary>Quản lý đơn hàng</summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/admin/order">Quản lý đơn hàng được duyệt</a></li>
+              <li><a routerLink="/admin/order">Quản lý đơn hàng</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown">
+          <details *ngIf="isMenu">
+            <summary>Sản Phẩm</summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/admin/productlist">Quản lý sản phẩm</a></li>
+              <li><a routerLink="/admin/category">Quản lý danh mục</a></li>
+              <li><a routerLink="/admin/image">Quản lý hình ảnh</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown" *ngIf="isAdmin">
+          <details *ngIf="isMenu">
+            <summary>Bộ sưu tập </summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/admin/blog">Danh sách Blog</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown" *ngIf="isAdmin">
+          <details *ngIf="isMenu">
+            <summary>Bình luận</summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/admin/comment">Danh sách bình luận</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown" *ngIf="isAdmin">
+          <details *ngIf="isMenu">
+            <summary>Phân quyền </summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/user">Nhân sự</a></li>
+              <li><a routerLink="/nhomquyen">Nhóm quyền</a></li>
+              <li><a routerLink="/role">Quyền</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown">
+          <details *ngIf="isMenu">
+            <summary>Gửi thông báo tự động </summary>
+            <ul class="drop-menu">
+              <li><a routerLink="">Thông báo tự động</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown">
+          <details *ngIf="isMenu">
+            <summary>Lịch sử</summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/history">Thông tin lịch sử hệ thống</a></li>
+            </ul>
+          </details>
+        </li>
+        <li *ngIf="isMenu"><button class="update-btn" (click)="logout()">Đăng xuất</button></li>
+      </ul>
+    </div>
+  
+    <div class="main-content">
+  
+      <!-- Tiêu đề và nút -->
+      <div class="header">
+        <div class="header-content">
+          <h2>Quản lý danh mục <span class="sub-header">Trang chủ</span></h2>
+        </div>
+      </div>
+      <!-- thanh them danh muc -->
+      <div class="filter-section">
+        <input type="text" class="search-input" [(ngModel)]="newCategory.Name" placeholder="Nhập tên danh mục...">
+        <button class="btn btn-success" (click)="addCategory()">Thêm</button>
+      </div>
+  
+      <!-- Danh sách danh mục -->
+      <table class="table table-bordered text-center">
+  
+        <thead class="table-d">
+          <tr class="table-dd">
+            <th>ID</th>
+            <th>Tên danh mục</th>
+            <th>Hành động</th>
+          </tr>
+        </thead>
+  
+        <tbody>
+          <tr *ngFor="let cat of category">
+            <td>{{ cat.Id }}</td>
+            <td>
+              <span *ngIf="editCategoryId !== cat.Id">{{ cat.Name }}</span>
+              <input *ngIf="editCategoryId === cat.Id" [(ngModel)]="cat.Name" class="form-control" />
+            </td>
+            <td>
+              <button *ngIf="editCategoryId !== cat.Id" class="btn btn-warning btn-sm"
+                (click)="startEditing(cat.Id, cat.Name)">✏️ Sửa</button>
+              <button *ngIf="editCategoryId === cat.Id" class="btn btn-primary btn-sm"
+                (click)="updateCategory(cat.Id, cat.Name)">💾 Lưu</button>
+              <button *ngIf="editCategoryId === cat.Id" class="btn btn-secondary btn-sm" (click)="cancelEdit()">❌
+                Hủy</button>
+              <button *ngIf="editCategoryId !== cat.Id" class="btn btn-danger btn-sm" (click)="deleteCategory(cat.Id)">🗑️
+                Xóa</button>
+            </td>
+          </tr>
+        </tbody>
+  
+      </table>
+    </div>
+  </div>

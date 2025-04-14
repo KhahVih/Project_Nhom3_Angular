@@ -1,0 +1,231 @@
+<div class="container">
+    <!-- Sidebar Menu -->
+    <div class="sidebar" (mouseover)="openMenu()" (mouseleave)="closeMenu()" [class.expanded]="isMenu">
+      <!-- Logo -->
+      <div class="logo" *ngIf="isMenu">
+        METRONIC
+        <span class="collapse-icon">«</span>
+      </div>
+      <div class="menu" *ngIf="isMenu" style="color: #fff;">
+        <h6>CHỨC NĂNG</h6>
+      </div>
+      <ul>
+        <li class="has-dropdown">
+          <details *ngIf="isMenu">
+            <summary>Chăm sóc khách hàng</summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/admin/contact">Quản lý yêu cầu</a></li>
+              <li><a routerLink="/admin/customer">Quản lý người dùng</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown" *ngIf="isAdmin">
+          <details *ngIf="isMenu">
+            <summary>Quản lý đơn hàng</summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/admin/order">Quản lý đơn hàng được duyệt</a></li>
+              <li><a routerLink="/admin/order">Quản lý đơn hàng</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown">
+          <details *ngIf="isMenu">
+            <summary>Sản Phẩm</summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/admin/product">Quản lý sản phẩm</a></li>
+              <li><a routerLink="/admin/category">Quản lý danh mục</a></li>
+              <li><a routerLink="/admin/image">Quản lý hình ảnh</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown" *ngIf="isAdmin">
+          <details *ngIf="isMenu">
+            <summary>Bộ sưu tập </summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/admin/blog">Danh sách Blog</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown" *ngIf="isAdmin">
+          <details *ngIf="isMenu">
+            <summary>Bình luận</summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/admin/comment">Danh sách bình luận</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown" *ngIf="isAdmin">
+          <details *ngIf="isMenu">
+            <summary>Phân quyền </summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/user">Nhân sự</a></li>
+              <li><a routerLink="/nhomquyen">Nhóm quyền</a></li>
+              <li><a routerLink="/role">Quyền</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown">
+          <details *ngIf="isMenu">
+            <summary>Gửi thông báo tự động </summary>
+            <ul class="drop-menu">
+              <li><a routerLink="">Thông báo tự động</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown">
+          <details *ngIf="isMenu">
+            <summary>Lịch sử</summary>
+            <ul class="drop-menu">
+              <li><a routerLink="/history">Thông tin lịch sử hệ thống</a></li>
+            </ul>
+          </details>
+        </li>
+        <li *ngIf="isMenu"><button class="update-btn" (click)="logout()">Đăng xuất</button></li>
+      </ul>
+    </div>
+  
+    <!-- Nội dung chính -->
+    <div class="main-content">
+      <div class="comment-section">
+        <!-- Form thêm hoặc chỉnh sửa bình luận -->
+        <!-- <div class="add-comment-section" *ngIf="showAddForm">
+          <div class="add-comment-content">
+            <h3>{{ isEditing ? 'Edit Comment' : 'Add Comment' }}</h3>
+            <form (ngSubmit)="isEditing ? updateComment() : addComment()" class="comment-form">
+              <div class="form-group">
+                <label for="productId">Product:</label>
+                <input type="number" id="productId" [(ngModel)]="newComment.ProductId" name="productId">
+              </div>
+              <div class="form-group">
+                <label>Vote (1-5):</label>
+                <div class="star-rating">
+                  <span *ngFor="let star of [1, 2, 3, 4, 5]" class="star"
+                    [class.selected]="newComment.Vote !== null && newComment.Vote !== undefined && newComment.Vote >= star"
+                    (click)="setVote(star)">
+                    ★
+                  </span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" [(ngModel)]="newComment.Description" name="description" required></textarea>
+              </div>
+              <div class="form-group">
+                <label for="customerId">Customer ID:</label>
+                <input type="number" id="customerId" [(ngModel)]="newComment.CustomerId" name="customerId">
+              </div>
+              <div class="form-group checkbox-group">
+                <input type="checkbox" id="isShow" [(ngModel)]="newComment.IsShow" name="isShow">
+                <label for="isShow">Show Comment</label>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="submit-btn" [disabled]="!newComment.Description">
+                  {{ isEditing ? 'Update Comment' : 'Add Comment' }}
+                </button>
+                <button type="button" class="cancel-btn" (click)="closeAddForm()">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div> -->
+  
+        <!--  -->
+  
+        <div class="modal" *ngIf="showAddForm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3>{{ isEditing ? 'Edit Comment' : 'Add Comment' }}</h3>
+              <span class="close-btn">×</span>
+            </div>
+  
+            <form (ngSubmit)="isEditing ? updateComment() : addComment()">
+              <div class="form-group">
+                <label for="productId">Product:</label>
+                <input type="number" id="productId" [(ngModel)]="newComment.ProductId" name="productId">
+              </div>
+  
+              <div class="form-group">
+                <label>Vote (1-5):</label>
+                <div class="star-rating">
+                  <span *ngFor="let star of [1, 2, 3, 4, 5]" class="star"
+                    [class.selected]="newComment.Vote !== null && newComment.Vote !== undefined && newComment.Vote >= star"
+                    (click)="setVote(star)">
+                    ★
+                  </span>
+                </div>
+              </div>
+  
+              <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" [(ngModel)]="newComment.Description" name="description" required></textarea>
+              </div>
+              <div class="form-group">
+                <label for="customerId">Customer ID:</label>
+                <input type="number" id="customerId" [(ngModel)]="newComment.CustomerId" name="customerId">
+              </div>
+              <div class="form-group checkbox-group">
+                <input type="checkbox" id="isShow" [(ngModel)]="newComment.IsShow" name="isShow">
+                <label for="isShow">Show Comment</label>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="submit-btn" [disabled]="!newComment.Description">
+                  {{ isEditing ? 'Update Comment' : 'Add Comment' }}
+                </button>
+                <button type="button" class="cancel-btn" (click)="closeAddForm()">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+  
+        <!-- Danh sách bình luận -->
+        <div class="comment-list-section">
+          <!-- Tiêu đề và nút -->
+          <div class="header">
+            <div class="header-content">
+              <h2>Comment<span class="sub-header">Trang chủ</span></h2>
+              <button class="add-btn" (click)="toggleAddForm()">Add comment</button>
+            </div>
+          </div>
+  
+          <table class="comment-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Vote</th>
+                <th>Description</th>
+                <th>Sản Phẩm</th>
+                <th>Khách Hàng</th>
+                <th>Created At</th>
+                <th>Is Show</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let comment of comments">
+                <td>{{ comment.Id }}</td>
+                <td>
+                  <div class="star-display">
+                    <span *ngFor="let star of [1, 2, 3, 4, 5]" class="star"
+                      [class.selected]="comment.Vote !== null && comment.Vote !== undefined && comment.Vote >= star">
+                      ★
+                    </span>
+                  </div>
+                </td>
+                <td>{{ comment.Description }}</td>
+                <td>{{ comment.ProductName }}</td>
+                <td>{{ comment.CustomerName }}</td>
+                <td>{{ comment.CreatedAt | date }}</td>
+                <td>{{ comment.IsShow ? 'Yes' : 'No' }}</td>
+                <td>
+                  <div class="comment-actions">
+                    <button class="edit-btn" (click)="editComment(comment)">Edit</button>
+                    <button class="delete-btn" (click)="deleteComment(comment.Id)">Delete</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="comments.length === 0" class="no-data">No comments available.</div>
+        </div>
+      </div>
+    </div>
+  </div>
