@@ -40,9 +40,8 @@ header {
   top: 90%; /* Điều chỉnh tùy vị trí menu */
   left: 70%;
   right: 0;
-  width: 250px;
+  width: 100%;
   background: #fff;
-  border: 1px solid #f85353;
   box-shadow: 0 2px 5px rgba(219, 55, 55, 0.1);
   z-index: 1000;
   display: flex;
@@ -57,9 +56,17 @@ header {
 .search-input {
   padding: 8px;
   width: 100%;
-  border: 0px solid #f85353;
+  border: 1px solid #f85353;
   border-radius: 20px;
   font-size: 14px;
+  outline: none; /* Ngăn trình duyệt thêm viền xanh */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Khi focus vào input */
+.search-input:focus {
+  border-color: #f85353; /* Giữ nguyên màu viền */
+  box-shadow: 0 0 5px rgba(248, 83, 83, 0.5); /* Hiệu ứng ánh sáng màu đỏ */
 }
 .search-bar.ng-enter,
 .search-bar.ng-leave-to {
