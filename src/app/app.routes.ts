@@ -15,6 +15,9 @@ import { AdminCategoryComponent } from '../Admin/admin-category/admin-category.c
 import { AdminImageComponent } from '../Admin/admin-image/admin-image.component';
 import { AdminCommentComponent } from '../Admin/admin-comment/admin-comment.component';
 import { AdminBlogComponent } from '../Admin/admin-blog/admin-blog.component';
+import { RecruitmentComponent } from '../Website/recruitment/recruitment.component';
+import { PolicyComponent } from '../Website/policy/policy.component';
+import { StoresystemComponent } from '../Website/storesystem/storesystem.component';
 
 export const routes: Routes = [
     {path: '', component: HomeComponent},
@@ -23,6 +26,9 @@ export const routes: Routes = [
     {path: 'product/:id', component: ProductdetailComponent},
     {path: 'cart', component: CartComponent},
     {path: 'search', component: SearchComponent},
+    {path:  'recruitment',component: RecruitmentComponent},
+    {path: 'policy', component: PolicyComponent},
+    {path: 'stores', component: StoresystemComponent},
     {path: 'admin/home', component: AdminHomeComponent },
     {path: 'admin/contact', component: AdminContactComponent},
     {path: 'admin/login', component: AdminLoginComponent},
@@ -31,5 +37,6 @@ export const routes: Routes = [
     {path: 'admin/category', component: AdminCategoryComponent},
     {path: 'admin/image', component: AdminImageComponent},
     {path: 'admin/comment', component: AdminCommentComponent},
-    {path: 'admin/blog', component: AdminBlogComponent}
+    {path: 'admin/blog', component: AdminBlogComponent},
+    
 ];
