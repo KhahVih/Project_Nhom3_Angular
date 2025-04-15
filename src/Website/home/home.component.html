@@ -17,7 +17,15 @@
       <div class="menu-container">
           <button class="close-btn" (click)="toggleMenu()" aria-label="Close Menu">✕</button>
           <ul class="top-menu">
-              <li><a routerLink="/login"><i class="fas fa-user"></i> LOGIN</a></li>
+              <li *ngIf="!isLoggedIn"><a routerLink="/login"><i class="fas fa-user"></i> LOGIN</a></li>
+              <li *ngIf="isLoggedIn" class="user-menu">
+                <div class="user-dropdown">
+                  <a routerLink="/profile"><i class="fas fa-user"></i>{{customerName}}</a>
+                  <div class="dropdown-content">
+                    <a (click)="logout()">Đăng xuất</a>
+                  </div>
+                </div>
+              </li>
               <li><a (click)="toggleSearch()"><i class="fas fa-search"></i> Tìm kiếm</a></li>
               <!-- Thanh tìm kiếm, ẩn mặc định -->
               <div class="search-bar" *ngIf="isSearchVisible">
@@ -44,7 +52,15 @@
       </div>
     </nav>
     <ul class="right-icon">
-      <li><a routerLink="/login"><i class="fas fa-user"></i> LOGIN</a></li>
+      <li *ngIf="!isLoggedIn"><a routerLink="/login"><i class="fas fa-user"></i> LOGIN</a></li>
+      <li *ngIf="isLoggedIn" class="user-menu">
+        <div class="user-dropdown">
+          <a routerLink="/profile"><i class="fas fa-user"></i>{{customerName}}</a>
+          <div class="dropdown-content">
+            <a (click)="logout()">Đăng xuất</a>
+          </div>
+        </div>
+      </li>
       <li><a (click)="toggleSearch()"><i class="fas fa-search"></i> Tìm kiếm</a></li>
       <!-- Thanh tìm kiếm, ẩn mặc định -->
       <div class="search-bar" *ngIf="isSearchVisible">
@@ -52,7 +68,6 @@
           <input
             type="text"
             [(ngModel)]="searchQuery"
-            (ngModelChange)="onSearchChange()"
             name="searchQuery"
             placeholder="Nhập từ khóa tìm kiếm..."
             class="search-input"
@@ -84,6 +99,7 @@
                 <a class="item" *ngFor="let product of products">
                     <div class="image-container">
                     <img [src]="product.Images[0].Link" alt="{{product.Name}}" routerLink="/product/{{product.Id}}"> <!-- Use the first image -->
+                    <!-- <img  class="hover-image" [src]="product.Images[1].Link" alt="{{product.Name}}" routerLink="/product/{{product.Id}}"> -->
                     <div class="hover-bar">
                         <a href=""><i class="fa-solid fa-eye"></i></a> <!-- Icon "Xem chi tiết" -->
                         <a href=""><i class="fa-solid fa-bag-shopping"></i></a> <!-- Icon "Thêm vào giỏ" -->

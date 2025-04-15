@@ -28,6 +28,7 @@ export class CartComponent implements OnInit{
   ){}
   ngOnInit(): void {
     this.loadCartItems();
+    this.checkLoginStatus();
     this.addressService.getProvinces().subscribe(data => {
       this.provinces = data;
     });
@@ -223,5 +224,24 @@ decreaseQuantity(item: CartItem): void {
       Note: '',
     };
 
+  }
+
+  // kiểm tra login 
+  isLoggedIn: boolean = false;
+  customerName: string | null = null;
+  // Kiểm tra người dùng đã đăng nhập chưa
+  checkLoginStatus(): void {
+    const customerId = localStorage.getItem('CustomerId');
+    const customerName = localStorage.getItem('CustomerName');
+    this.isLoggedIn = !!customerId;
+    this.customerName = customerName;
+  }
+
+  // Đăng xuất
+  logout(): void {
+    localStorage.removeItem('CustomerId');
+    localStorage.removeItem('CustomerName');
+    this.isLoggedIn = false;
+    this.router.navigate(['/home']);
   }
 }

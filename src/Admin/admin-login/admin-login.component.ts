@@ -28,7 +28,7 @@ export class AdminLoginComponent {
   
   //admin
   onSubmit() {
-    this.login.login(this.loginData).subscribe({
+    this.login.loginAdmin(this.loginData).subscribe({
       next: (response) => {
         this.login.saveUser(response);
         console.log(response);

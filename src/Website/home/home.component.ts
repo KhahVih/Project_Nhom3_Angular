@@ -59,6 +59,7 @@ export class HomeComponent implements OnInit{
   //
   ngOnInit(): void {
     this.LoadProduct();
+    this.checkLoginStatus();
     //this.startSlideshow();
   }
 
@@ -121,5 +122,22 @@ export class HomeComponent implements OnInit{
       this.router.navigate(['/search'], { queryParams: { q: this.searchQuery } });
     }
   }
+  // kiểm tra login 
+  isLoggedIn: boolean = false;
+  customerName: string | null = null;
+  // Kiểm tra người dùng đã đăng nhập chưa
+  checkLoginStatus(): void {
+    const customerId = localStorage.getItem('CustomerId');
+    const customerName = localStorage.getItem('CustomerName');
+    this.isLoggedIn = !!customerId;
+    this.customerName = customerName;
+  }
 
+  // Đăng xuất
+  logout(): void {
+    localStorage.removeItem('CustomerId');
+    localStorage.removeItem('CustomerName');
+    this.isLoggedIn = false;
+    this.router.navigate(['/home']);
+  }
 }

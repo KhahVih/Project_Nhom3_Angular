@@ -2,13 +2,15 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { Customer } from "../Models/CustomerDTO";
+import { LoginDTO } from "../Models/LoginDTO";
+import { Router } from "@angular/router";
 
 @Injectable({
     providedIn: 'root'
   })
 export class CustomerService {
     private apiUrl = 'https://localhost:7194/api/Customer';
-    constructor(private http: HttpClient){}
+    constructor(private http: HttpClient, private router: Router){}
     // Lấy danh sách khách hàng
     getCustomer(): Observable<Customer[]>{
         return this.http.get<Customer[]>(this.apiUrl);
@@ -38,8 +40,7 @@ export class CustomerService {
         return this.http.put(`${this.apiUrl}/change-password`, request);
     }
 
-    login(username: string, password: string): Observable<any>{
-        const loginData = { username, password };
+    login(loginData: LoginDTO): Observable<any>{
         return this.http.post<any>(`https://localhost:7194/api/Login/login`, loginData);
     }
     // Lưu customerId vào localStorage
@@ -60,5 +61,8 @@ export class CustomerService {
     // Xóa customerId khỏi localStorage (đăng xuất)
     logout(): void {
       localStorage.removeItem('CustomerId');
+      localStorage.removeItem('CustomerName');
+      this.router.navigate(['/home']);
     }
+
 }

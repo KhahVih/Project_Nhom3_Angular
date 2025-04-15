@@ -1,72 +1,94 @@
 <!--Star Header-->
 <header>
-    <div class="header-container">
-      <div class="logo">
-        <a routerLink="/home">
-          <img src="https://chamygaby.vn/thumbs/205x69x2/upload/photo/logo-1260.png" alt="Chamy Gaby Logo">
-        </a>
-      </div>
-      <nav class="navbar" #navbar>
-        <!-- Nút hamburger -->
-        <button class="hamburger" (click)="toggleMenu()" aria-label="Toggle Menu">
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-        </button>
-        <!-- Menu -->
-        <div class="menu-container">
-            <button class="close-btn" (click)="toggleMenu()" aria-label="Close Menu">✕</button>
-            <ul class="top-menu">
-                <li><a routerLink="/login"><i class="fas fa-user"></i> LOGIN</a></li>
-                <li><a (click)="toggleSearch()"><i class="fas fa-search"></i> Tìm kiếm</a></li>
-                <!-- Thanh tìm kiếm, ẩn mặc định -->
-                <div class="search-bar" *ngIf="isSearchVisible">
-                  <form (ngSubmit)="onSearch()">
-                    <input
-                      type="text"
-                      [(ngModel)]="searchQuery"
-                      name="searchQuery"
-                      placeholder="Nhập từ khóa tìm kiếm..."
-                      class="search-input"
-                    />
-                  </form>
-                </div>
-                <li><a routerLink="/cart"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
-            </ul>
-            <ul class="main-menu">
-                <li><a routerLink="/product">SẢN PHẨM MỚI</a></li>
-                <li><a routerLink="/sale">SẢN PHẨM GIẢM GIÁ</a></li>
-                <li><a routerLink="/collections">BỘ SƯU TẬP</a></li>
-                <li><a routerLink="/recruitment">TUYỂN DỤNG</a></li>
-                <li><a routerLink="/policy">CHÍNH SÁCH</a></li>
-                <li><a routerLink="/stores">HỆ THỐNG CỬA HÀNG</a></li>
-            </ul>
-        </div>
-      </nav>
-      <ul class="right-icon">
-        <li><a routerLink="/login"><i class="fas fa-user"></i> LOGIN</a></li>
-        <li><a (click)="toggleSearch()"><i class="fas fa-search"></i> Tìm kiếm</a></li>
-        <!-- Thanh tìm kiếm, ẩn mặc định -->
-        <div class="search-bar" *ngIf="isSearchVisible">
-          <form (ngSubmit)="onSearch()">
-            <input
-              type="text"
-              [(ngModel)]="searchQuery"
-              (ngModelChange)="onSearchChange()"
-              name="searchQuery"
-              placeholder="Nhập từ khóa tìm kiếm..."
-              class="search-input"
-            />
-          </form>
-        </div>
-        <li><a routerLink="/cart"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
-      </ul>
+  <div class="header-container">
+    <div class="logo">
+      <a routerLink="/home">
+        <img src="https://chamygaby.vn/thumbs/205x69x2/upload/photo/logo-1260.png" alt="Chamy Gaby Logo">
+      </a>
     </div>
-  </header>
-  <!--End Header-->
+    <nav class="navbar" #navbar>
+      <!-- Nút hamburger -->
+      <button class="hamburger" (click)="toggleMenu()" aria-label="Toggle Menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+      <!-- Menu -->
+      <div class="menu-container">
+          <button class="close-btn" (click)="toggleMenu()" aria-label="Close Menu">✕</button>
+          <ul class="top-menu">
+              <li *ngIf="!isLoggedIn"><a routerLink="/login"><i class="fas fa-user"></i> LOGIN</a></li>
+              <li *ngIf="isLoggedIn" class="user-menu">
+                <div class="user-dropdown">
+                  <a routerLink="/profile"><i class="fas fa-user"></i>{{customerName}}</a>
+                  <div class="dropdown-content">
+                    <a (click)="logout()">Đăng xuất</a>
+                  </div>
+                </div>
+              </li>
+              <li><a (click)="toggleSearch()"><i class="fas fa-search"></i> Tìm kiếm</a></li>
+              <!-- Thanh tìm kiếm, ẩn mặc định -->
+              <div class="search-bar" *ngIf="isSearchVisible">
+                <form (ngSubmit)="onSearch()">
+                  <input
+                    type="text"
+                    [(ngModel)]="searchQuery"
+                    name="searchQuery"
+                    placeholder="Nhập từ khóa tìm kiếm..."
+                    class="search-input"
+                  />
+                </form>
+              </div>
+              <li><a routerLink="/cart"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
+          </ul>
+          <ul class="main-menu">
+              <li><a routerLink="/product">SẢN PHẨM MỚI</a></li>
+              <li><a routerLink="/sale">SẢN PHẨM GIẢM GIÁ</a></li>
+              <li><a routerLink="/collections">BỘ SƯU TẬP</a></li>
+              <li><a routerLink="/recruitment">TUYỂN DỤNG</a></li>
+              <li><a routerLink="/policy">CHÍNH SÁCH</a></li>
+              <li><a routerLink="/stores">HỆ THỐNG CỬA HÀNG</a></li>
+          </ul>
+      </div>
+    </nav>
+    <ul class="right-icon">
+      <li *ngIf="!isLoggedIn"><a routerLink="/login"><i class="fas fa-user"></i> LOGIN</a></li>
+      <li *ngIf="isLoggedIn" class="user-menu">
+        <div class="user-dropdown">
+          <a routerLink="/profile"><i class="fas fa-user"></i>{{customerName}}</a>
+          <div class="dropdown-content">
+            <a (click)="logout()">Đăng xuất</a>
+          </div>
+        </div>
+      </li>
+      <li><a (click)="toggleSearch()"><i class="fas fa-search"></i> Tìm kiếm</a></li>
+      <!-- Thanh tìm kiếm, ẩn mặc định -->
+      <div class="search-bar" *ngIf="isSearchVisible">
+        <form (ngSubmit)="onSearch()">
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            name="searchQuery"
+            placeholder="Nhập từ khóa tìm kiếm..."
+            class="search-input"
+          />
+        </form>
+      </div>
+      <li><a routerLink="/cart"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
+    </ul>
+  </div>
+</header>
+<!--End Header-->
     <!--Star Main-->
     <main>
+      <div class="main-titel">
+        <div class="titel-header">
+          <a routerLink="/home"> Trang chủ /</a>
+          <a routerLink="/stores" style="color: #999;"> Cửa hàng  </a>
+        </div>
+      </div>
         <div class="container">
+          <!---->
           <div class="store-system">
             <!-- Bên trái: Danh sách cửa hàng -->
             <div class="store-list">
@@ -101,7 +123,7 @@
                       type="text"
                       id="fullName"
                       name="fullName"
-                      [(ngModel)]="contactForm.fullName"
+                      [(ngModel)]="contactForm.Fullname"
                       placeholder="Nhập họ tên"
                       required
                     />
@@ -112,7 +134,7 @@
                       type="tel"
                       id="phone"
                       name="phone"
-                      [(ngModel)]="contactForm.phone"
+                      [(ngModel)]="contactForm.Phonenumber"
                       placeholder="Nhập số điện thoại"
                       required
                     />
@@ -125,7 +147,7 @@
                       type="text"
                       id="address"
                       name="address"
-                      [(ngModel)]="contactForm.address"
+                      [(ngModel)]="contactForm.Address"
                       placeholder="Nhập địa chỉ"
                     />
                   </div>
@@ -135,7 +157,7 @@
                       type="email"
                       id="email"
                       name="email"
-                      [(ngModel)]="contactForm.email"
+                      [(ngModel)]="contactForm.Email"
                       placeholder="Nhập email"
                       required
                     />
@@ -147,7 +169,7 @@
                     type="text"
                     id="subject"
                     name="subject"
-                    [(ngModel)]="contactForm.subject"
+                    [(ngModel)]="contactForm.Title"
                     placeholder="Nhập chủ đề"
                     required
                   />
@@ -157,7 +179,7 @@
                   <textarea
                     id="content"
                     name="content"
-                    [(ngModel)]="contactForm.content"
+                    [(ngModel)]="contactForm.Description"
                     placeholder="Nhập nội dung"
                     rows="5"
                     required

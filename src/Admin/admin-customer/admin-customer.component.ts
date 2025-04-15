@@ -151,7 +151,7 @@ export class AdminCustomerComponent {
 
   logout(){
     this.login.logout();
-    this.router.navigate(['/login']);
+    this.router.navigate(['admin/login']);
   }
   get isAdmin(): boolean{
     return this.login.isAdmin();

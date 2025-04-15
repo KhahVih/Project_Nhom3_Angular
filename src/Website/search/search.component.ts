@@ -39,6 +39,7 @@ export class SearchComponent implements OnInit{
     this.loadProducts();
     this.loadCategory();
     this.loadSale();
+    this.checkLoginStatus();
   }
   //
   loadProducts(){
@@ -156,5 +157,24 @@ export class SearchComponent implements OnInit{
     } else {
       alert('Vui lòng nhập từ khóa tìm kiếm!');
     }
+  }
+
+  // kiểm tra login 
+  isLoggedIn: boolean = false;
+  customerName: string | null = null;
+  // Kiểm tra người dùng đã đăng nhập chưa
+  checkLoginStatus(): void {
+    const customerId = localStorage.getItem('CustomerId');
+    const customerName = localStorage.getItem('CustomerName');
+    this.isLoggedIn = !!customerId;
+    this.customerName = customerName;
+  }
+
+  // Đăng xuất
+  logout(): void {
+    localStorage.removeItem('CustomerId');
+    localStorage.removeItem('CustomerName');
+    this.isLoggedIn = false;
+    this.route.navigate(['/home']);
   }
 }

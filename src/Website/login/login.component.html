@@ -1,0 +1,247 @@
+<!--Star Header-->
+<header>
+    <div class="header-container">
+      <div class="logo">
+        <a routerLink="/home">
+          <img src="https://chamygaby.vn/thumbs/205x69x2/upload/photo/logo-1260.png" alt="Chamy Gaby Logo">
+        </a>
+      </div>
+      <nav class="navbar" #navbar>
+        <!-- Nút hamburger -->
+        <button class="hamburger" (click)="toggleMenu()" aria-label="Toggle Menu">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+        <!-- Menu -->
+        <div class="menu-container">
+            <button class="close-btn" (click)="toggleMenu()" aria-label="Close Menu">✕</button>
+            <ul class="top-menu">
+                <li><a routerLink="/login"><i class="fas fa-user"></i> LOGIN</a></li>
+                <li><a (click)="toggleSearch()"><i class="fas fa-search"></i> Tìm kiếm</a></li>
+                <!-- Thanh tìm kiếm, ẩn mặc định -->
+                <div class="search-bar" *ngIf="isSearchVisible">
+                  <form (ngSubmit)="onSearch()">
+                    <input
+                      type="text"
+                      [(ngModel)]="searchQuery"
+                      name="searchQuery"
+                      placeholder="Nhập từ khóa tìm kiếm..."
+                      class="search-input"
+                    />
+                  </form>
+                </div>
+                <li><a routerLink="/cart"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
+            </ul>
+            <ul class="main-menu">
+                <li><a routerLink="/product">SẢN PHẨM MỚI</a></li>
+                <li><a routerLink="/sale">SẢN PHẨM GIẢM GIÁ</a></li>
+                <li><a routerLink="/collections">BỘ SƯU TẬP</a></li>
+                <li><a routerLink="/recruitment">TUYỂN DỤNG</a></li>
+                <li><a routerLink="/policy">CHÍNH SÁCH</a></li>
+                <li><a routerLink="/stores">HỆ THỐNG CỬA HÀNG</a></li>
+            </ul>
+        </div>
+      </nav>
+      <ul class="right-icon">
+        <li><a routerLink="/login"><i class="fas fa-user"></i> LOGIN</a></li>
+        <li><a (click)="toggleSearch()"><i class="fas fa-search"></i> Tìm kiếm</a></li>
+        <!-- Thanh tìm kiếm, ẩn mặc định -->
+        <div class="search-bar" *ngIf="isSearchVisible">
+          <form (ngSubmit)="onSearch()">
+            <input
+              type="text"
+              [(ngModel)]="searchQuery"
+              (ngModelChange)="onSearchChange()"
+              name="searchQuery"
+              placeholder="Nhập từ khóa tìm kiếm..."
+              class="search-input"
+            />
+          </form>
+        </div>
+        <li><a routerLink="/cart"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
+      </ul>
+    </div>
+  </header>
+  <!--End Header-->
+  <div class="overlay" (click)="toggleMenu()"></div>
+  <!--Star Main-->
+  <main>
+    <div class="main-titel">
+        <div class="titel-header">
+          <a routerLink="/home"> Trang chủ /</a>
+          <a routerLink="/login" style="color: #999;"> {{label}} </a>
+        </div>
+    </div>
+    <!--Form Login -->
+    <div class="container" *ngIf="!isResgiter">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between">
+            <span><strong>Đăng nhập</strong></span>
+            <a href="#" class="text-decoration-none">Quên mật khẩu</a>
+          </div>
+          <div class="card-body">
+            <form (submit)="Login()">
+              <div class="mb-3 input-group">
+                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                <input type="text" class="form-control" [(ngModel)]="loginData.username" name="username" placeholder="Tài khoản" required>
+              </div>
+              <div class="mb-3 input-group">
+                <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                <input type="password" class="form-control" [(ngModel)]="loginData.password" name="password" placeholder="Mật khẩu" required>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <button type="submit" class="btn btn-dark">Đăng nhập</button>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="remember">
+                  <label class="form-check-label" for="remember">
+                    Nhớ mật khẩu
+                  </label>
+                </div>
+              </div>
+            </form>
+            <hr>
+            <p class="text-center">Bạn chưa có tài khoản? <a (click)="goToRegister()" class="text-primary text-decoration-none">Đăng ký</a></p>
+          </div>
+        </div>
+    </div>
+    <div class="container" *ngIf="isResgiter">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+              <span><strong>Đăng Ký </strong></span>
+            </div>
+            <div class="card-body">
+              <form>
+                <label class="form-label">Họ tên</label>
+                <div class="mb-3 input-group">
+                  <span class="input-group-text"><i class="fas fa-user"></i></span>
+                  <input type="text" class="form-control" name="username" placeholder="Nhập họ và tên của bạn" required>
+                </div>
+                <label class="form-label">Tài khoản</label>
+                <div class="mb-3 input-group">
+                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    <input type="text" class="form-control" name="username" placeholder="Nhập tên tài khoản của bạn" required>
+                </div>
+                <label class="form-label">Mật khẩu</label>
+                <div class="mb-3 input-group">
+                  <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                  <input type="password" class="form-control" name="password" placeholder="Nhập mật khẩu (5-15 ký tự)" required>
+                </div>
+                <label class="form-label">Nhập lại mật khẩu</label>
+                <div class="mb-3 input-group">
+                    <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                    <input type="password" class="form-control" name="password" placeholder="Nhập lại mật khẩu" required>
+                </div>
+                <!-- Giới tính -->
+                <div class="mb-3">
+                    <label class="form-label d-block">Giới tính</label>
+                    <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gender" id="male" value="Nam" required>
+                    <label class="form-check-label" for="male">Nam</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gender" id="female" value="Nữ">
+                    <label class="form-check-label" for="female">Nữ</label>
+                    </div>
+                </div>
+            
+                <!-- Ngày sinh -->
+                <div class="mb-3">
+                    <label class="form-label">Ngày sinh</label>
+                    <div class="input-group">
+                    <span class="input-group-text"><i class="fa-solid fa-calendar-days"></i></span>
+                    <input type="date" class="form-control" required>
+                    </div>
+                </div>
+            
+                <!-- Email -->
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <div class="input-group">
+                    <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+                    <input type="email" class="form-control" placeholder="Nhập địa chỉ email của bạn" required>
+                    </div>
+                </div>
+            
+                <!-- Điện thoại -->
+                <div class="mb-3">
+                    <label class="form-label">Điện thoại</label>
+                    <div class="input-group">
+                    <span class="input-group-text"><i class="fa-solid fa-phone"></i></span>
+                    <input type="tel" class="form-control" placeholder="Nhập số điện thoại của bạn" required>
+                    </div>
+                </div>
+                <!-- Địa chỉ -->
+                <div class="mb-3">
+                    <label class="form-label">Địa chỉ</label>
+                    <div class="input-group">
+                    <span class="input-group-text"><i class="fa-solid fa-location-dot"></i></span>
+                    <input type="tel" class="form-control" placeholder="Nhập địa chỉ của bạn" required>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <button type="submit" (click)="onRegisterSuccess()" class="btn btn-dark">Đăng Ký</button>
+                </div>
+              </form>
+            </div>
+        </div>
+    </div>   
+
+  </main>
+  <!--End Main-->
+  
+  <!--Star Footer-->
+  <footer>
+      <div class="footer-container">
+        <div class="footer-column column-1">
+          <img src="https://chamygaby.vn/thumbs/222x75x2/upload/photo/logo3-3546.png" alt="Chamy Gaby Logo" class="footer-logo">
+          <p>CÔNG TY TNHH ĐẦU TƯ & PHÁT TRIỂN THƯƠNG MẠI CHAMY</p>
+          <p>GPKD số 0109617697, Đăng ký ngày: 04-05-2021</p>
+          <p>Nơi cấp: Sở Kế hoạch và Đầu tư Thành phố Hà Nội</p>
+          <p>Địa chỉ: Tầng 12 tòa nhà Licogi 13, Số 164 Khuất Duy Tiến, Phường Nhân Chính, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam</p>
+          <p>Email: <a href="mailto:Ducpham.ms@gmail.com">{{email}}</a></p>
+          <p>Điện thoại: <a href="tel:0978833688">0978833688</a></p>
+          <div class="social-links">
+            <a href="#">Chamy Gaby</a>
+            <a href="#">Chamy Gaby</a>
+            <a href="#">Chamy Gaby</a>
+            <a href="#">Chamy Gaby</a>
+          </div>
+          <p class="copyright">Copyright © 2024 CHAMY GABY. Designed by <a href="https://nina.vn">Nina.vn</a></p>
+        </div>
+        <div class="footer-column column-2">
+          <h3>Danh mục</h3>
+          <ul>
+            <li><a href="#">Sản phẩm mới</a></li>
+            <li><a href="#">Sản phẩm giảm giá</a></li>
+            <li><a href="#">Bộ sưu tập</a></li>
+            <li><a href="#">Tuyển dụng</a></li>
+            <li><a href="#">Chính sách</a></li>
+            <li><a href="#">Hệ thống cửa hàng</a></li>
+          </ul>
+        </div>
+        <div class="footer-column column-3">
+          <h3>Chính sách & Hỗ trợ</h3>
+          <ul>
+            <li><a href="#">Điều khoản và quy định chung</a></li>
+            <li><a href="#">Chính sách bảo mật thông tin</a></li>
+            <li><a href="#">Phương thức thanh toán</a></li>
+            <li><a href="#">Chính sách vận chuyển và kiểm hàng</a></li>
+            <li><a href="#">Chính sách bảo hành và đổi trả</a></li>
+          </ul>
+        </div>
+        <div class="footer-column column-4">
+          <h3>Đăng ký nhận tin</h3>
+          <p>Điền thông tin của bạn để liên hệ nhận ưu đãi từ chúng tôi!</p>
+          <form>
+            <label for="phone">Điện thoại</label><br>
+            <input type="text" id="phone" name="phone" placeholder="Số điện thoại"><br>
+            <label for="email">Email</label><br>
+            <input type="email" id="email" name="email" placeholder="Email"><br>
+            <button type="submit">Gửi liên hệ</button>
+          </form>
+        </div>
+      </div>
+  </footer>
+  <!--End Footer-->
+  

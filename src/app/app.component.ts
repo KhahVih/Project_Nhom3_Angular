@@ -44,7 +44,33 @@ export class AppComponent implements OnInit{
             });
           }
         }
-        
+        else if (url === '/cart') {
+          Action = 'Trang Giỏ Hàng ';
+          Description = 'Người dùng đã truy cập trang giỏ hàng ';
+          this.activityTracker.trackActivity(Action, Description);
+        }
+        else if (url.startsWith('/search')) {
+          const queryParams = this.router.parseUrl(url).queryParams;
+          const query = queryParams['q'];
+          Action = 'Trang Tìm kiếm';
+          Description = `Người dùng đã truy cập trang tìm kiếm sản phẩm: ${query}`;
+          this.activityTracker.trackActivity(Action, Description);
+        }
+        else if (url === '/recruitment') {
+          Action = 'Trang Tuyển dụng ';
+          Description = 'Người dùng đã truy cập trang tuyển dụng';
+          this.activityTracker.trackActivity(Action, Description);
+        }
+        else if (url === '/policy') {
+          Action = 'Trang Chính Sách  ';
+          Description = 'Người dùng đã truy cập trang chính sách';
+          this.activityTracker.trackActivity(Action, Description);
+        }
+        else if (url === '/stores') {
+          Action = 'Trang Hệ Thống Cửa Hàng ';
+          Description = 'Người dùng đã truy cập trang hệ thông cửu hàng';
+          this.activityTracker.trackActivity(Action, Description);
+        }
       });
   }
   // {path: '', component: HomeComponent},
@@ -53,39 +79,8 @@ export class AppComponent implements OnInit{
   //     {path: 'product/:id', component: ProductdetailComponent},
   //     {path: 'cart', component: CartComponent},
   //     {path: 'search', component: SearchComponent},
-//   Products: Product [] = [];
-//   CurrentPage: number = 1;
-//   TotalPages: number = 0;
-//   TotalProduct: number = 0;
-//   constructor(private productsrv: ProductService){}
-//   ngOnInit(): void {
-//     this.loadProducts(this.CurrentPage);
-//   }
-
-//   loadProducts(page: number): void {
-//     this.productsrv.GetProducts(page).subscribe(data => {
-//         this.Products = data.Products;
-//         this.CurrentPage = data.CurrentPage;
-//         this.TotalPages = data.TotalPages;
-//         this.TotalProduct = data.TotalProduct;
-//         console.log('Product: ', this.Products);
-//         console.log('CurrentPage: ', this.CurrentPage);
-//         console.log('TotalPages: ', this.TotalPages);
-//         console.log('TotalProduct: ', this.TotalProduct);
-//     });
-//   } 
-
-//   nextPage(): void {
-//     if (this.CurrentPage < this.TotalPages) {
-//         this.CurrentPage++;
-//         this.loadProducts(this.CurrentPage);
-//     }
-// }
-
-//   previousPage(): void {
-//     if(this.CurrentPage > 1) {
-//         this.CurrentPage--;
-//         this.loadProducts(this.CurrentPage);
-//     }
-//   }
+  //     {path:  'recruitment',component: RecruitmentComponent},
+  //     {path: 'policy', component: PolicyComponent},
+  //     {path: 'stores', component: StoresystemComponent},
+  //     {path: 'login', component: LoginComponent},
 }

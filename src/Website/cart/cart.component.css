@@ -35,50 +35,81 @@ header {
     display: flex;
     align-items: center;
   }
-  .search-bar {
+  
+  .user-dropdown {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+  }
+  .dropdown-content {
+    display: none;
     position: absolute;
-    top: 90%; /* Điều chỉnh tùy vị trí menu */
-    left: 70%;
-    right: 0;
-    width: 210px;
-    background: #fff;
-    border: 1px solid #f85353;
-    box-shadow: 0 2px 5px rgba(219, 55, 55, 0.1);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    opacity: 1;
-    transform: translateY(-10px);
-    transition: opacity 0.3s, transform 0.3s;
-    border-radius: 20px;
+    background-color: white;
+    min-width: 160px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 1;
+    border-radius: 6px;
+    padding: 10px;
   }
   
-  .search-input {
+  .user-dropdown:hover .dropdown-content {
+    display: block;
+  }
+  
+  .dropdown-content a {
+    display: block;
     padding: 8px;
-    width: 100%;
-    border: 1px solid #f85353;
-    border-radius: 20px;
-    font-size: 14px;
-    outline: none; /* Ngăn trình duyệt thêm viền xanh */
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    color: black;
+    text-decoration: none;
   }
   
-  /* Khi focus vào input */
-  .search-input:focus {
-    border-color: #f85353; /* Giữ nguyên màu viền */
-    box-shadow: 0 0 5px rgba(248, 83, 83, 0.5); /* Hiệu ứng ánh sáng màu đỏ */
+  .dropdown-content a:hover {
+    background-color: #f0f0f0;
   }
-  .search-bar.ng-enter,
-  .search-bar.ng-leave-to {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  .search-bar.ng-enter-active,
-  .search-bar.ng-leave-active {
-    opacity: 1;
-    transform: translateY(0);
-  }
+
+  .search-bar {
+  position: absolute;
+  top: 90%; /* Điều chỉnh tùy vị trí menu */
+  left: 70%;
+  right: 0;
+  width: 100%;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(219, 55, 55, 0.1);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 1;
+  transform: translateY(-10px);
+  transition: opacity 0.3s, transform 0.3s;
+  border-radius: 20px;
+}
+
+.search-input {
+  padding: 8px;
+  width: 100%;
+  border: 1px solid #f85353;
+  border-radius: 20px;
+  font-size: 14px;
+  outline: none; /* Ngăn trình duyệt thêm viền xanh */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Khi focus vào input */
+.search-input:focus {
+  border-color: #f85353; /* Giữ nguyên màu viền */
+  box-shadow: 0 0 5px rgba(248, 83, 83, 0.5); /* Hiệu ứng ánh sáng màu đỏ */
+}
+.search-bar.ng-enter,
+.search-bar.ng-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+.search-bar.ng-enter-active,
+.search-bar.ng-leave-active {
+  opacity: 1;
+  transform: translateY(0);
+}
   
   /* Chặn tương tác với main khi menu mở */
   .navbar.active ~ main {
@@ -495,7 +526,7 @@ header {
   
   .title-top{
     display: flex;
-    background-color: aqua;
+    background-color: rgb(255,243,205);
     height: 50px;
     align-items: center;
   }
@@ -744,11 +775,17 @@ header {
 .payment{
   display: flex;
 }
+.input-payment{
+  width: 20px;
+  height: 20px;
+  margin-top: 10px;
+}
 .payment p{
   width: 100%;
   height: 40px;
   background-color: #eee;
-  margin: 0;
+  padding: 10px;
+  margin-left: 10px;
   
 }
 .form-header{
@@ -760,7 +797,7 @@ header {
   margin: 5px;
 }
 #email{
-  width: 97%;
+  width: 98%;
   height: 30px;
   margin: 5px;
 }
@@ -775,12 +812,12 @@ header {
 }
 .address{
   margin: 5px;
-  width: 97%;
+  width: 98%;
   height: 30px;
 }
 .note{
   margin: 5px;
-  width: 97%;
+  width: 98%;
   height: 90px;
 }
 .btn-checkout{
@@ -794,10 +831,19 @@ header {
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 880px) {
     .cart-main {
         padding: 10px;
+        display: flex;
+        flex-direction: column;
     }
+    .cart-table{
+      width: 100%;
+    }
+    .checkout{
+      width: 80%;
+      padding-top: 2rem;
+    }  
 
     .cart-table th,
     .cart-table td {

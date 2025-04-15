@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from '../Website/home/home.component';
-import { LayoutComponent } from '../Website/layout/layout.component';
 import { ProductComponent } from '../Website/product/product.component';
 import { ProductdetailComponent } from '../Website/productdetail/productdetail.component';
 import { CartComponent } from '../Website/cart/cart.component';
@@ -18,6 +17,7 @@ import { AdminBlogComponent } from '../Admin/admin-blog/admin-blog.component';
 import { RecruitmentComponent } from '../Website/recruitment/recruitment.component';
 import { PolicyComponent } from '../Website/policy/policy.component';
 import { StoresystemComponent } from '../Website/storesystem/storesystem.component';
+import { LoginComponent } from '../Website/login/login.component';
 
 export const routes: Routes = [
     {path: '', component: HomeComponent},
@@ -29,6 +29,8 @@ export const routes: Routes = [
     {path:  'recruitment',component: RecruitmentComponent},
     {path: 'policy', component: PolicyComponent},
     {path: 'stores', component: StoresystemComponent},
+    {path: 'login', component: LoginComponent},
+    // Admin ************************************************************************************************************
     {path: 'admin/home', component: AdminHomeComponent },
     {path: 'admin/contact', component: AdminContactComponent},
     {path: 'admin/login', component: AdminLoginComponent},

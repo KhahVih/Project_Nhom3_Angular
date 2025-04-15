@@ -35,19 +35,50 @@ export class ProductComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
-    this.loadProducts();
+    this.loadProducts(this.page);
     this.loadCategory();
     this.loadSale();
+    this.checkLoginStatus();
   }
   //laodproduct
-  page: number = 1
-  loadProducts(): void {
+  page: number = 1;
+  totalPages: number = 0;
+  loadProducts(page: number): void {
     this.isLoading = true;
-    this.productService.GetProducts(this.page).subscribe(data =>{
+    this.productService.GetProducts(page).subscribe(data =>{
       this.products = data.Products;
+      this.totalPages = data.TotalPages;
       console.log('Response: ', data);
+      console.log(this.totalPages)
     })
   }
+  goToPage(p: number): void {
+    if (p < 1 || p > this.totalPages || p === this.page) return;
+    this.page = p;
+    this.loadProducts(this.page);
+  }
+  getPages(): number[] {
+    const pages: number[] = [];
+    for (let i = 1; i <= this.totalPages; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+  prevPage(): void {
+    if (this.page > 1) {
+      this.page--;
+      this.loadProducts(this.page);
+    }
+  }
+  
+  nextPage(): void {
+    if (this.page < this.totalPages) {
+      this.page++;
+      console.log('page: ',this.page)
+      this.loadProducts(this.page);
+    }
+  }
+  
   //loadsale
   sales: Sale [] = [];
   loadSale(): void{
@@ -58,6 +89,7 @@ export class ProductComponent implements OnInit{
   }
   //getproductsaleid
   GetProductSaleId(Id: number){
+    this.page = 1;
     this.productService.GetProductSaleId(Id, this.page).subscribe(data =>{
       this.products = data.Products;
       console.log('Response: ', data);
@@ -65,6 +97,7 @@ export class ProductComponent implements OnInit{
   }
   //getproductcategoryId
   GetProductCategoryId(Id: number){
+    this.page = 1;
     this.productService.GetProductCategoryId(Id, this.page).subscribe(data =>{
       this.products = data.Products;
       console.log('Response: ', data);
@@ -81,9 +114,11 @@ export class ProductComponent implements OnInit{
   selectSort: any = 1;
   sortProducts(): void {
     if(this.selectSort == 1){
-      this.loadProducts();
+      this.page = 1;
+      this.loadProducts(this.page);
     }
     if( this.selectSort == 2){
+      this.page = 1;
       this.productService.GetProductNew(this.page).subscribe(data =>{
         this.products = data.Products;
         this.page = data.TotalPages;
@@ -91,6 +126,7 @@ export class ProductComponent implements OnInit{
       });
     }
     if( this.selectSort == 3){
+      this.page = 1;
       this.productService.GetProductOld(this.page).subscribe(data =>{
         this.products = data.Products;
         this.page = data.TotalPages;
@@ -98,6 +134,7 @@ export class ProductComponent implements OnInit{
       });
     }
     if( this.selectSort == 4){
+      this.page = 1;
       this.productService.GetProductPriceASC(this.page).subscribe(data =>{
         this.products = data.Products;
         this.page = data.TotalPages;  
@@ -105,6 +142,7 @@ export class ProductComponent implements OnInit{
       });
     }
     if( this.selectSort == 5){
+      this.page = 1;
       this.productService.GetProductPriceASDC(this.page).subscribe(data =>{
         this.products = data.Products;
         this.page = data.TotalPages;
@@ -147,5 +185,24 @@ export class ProductComponent implements OnInit{
     } else {
       alert('Vui lòng nhập từ khóa tìm kiếm!');
     }
+  }
+
+  // kiểm tra login 
+  isLoggedIn: boolean = false;
+  customerName: string | null = null;
+  // Kiểm tra người dùng đã đăng nhập chưa
+  checkLoginStatus(): void {
+    const customerId = localStorage.getItem('CustomerId');
+    const customerName = localStorage.getItem('CustomerName');
+    this.isLoggedIn = !!customerId;
+    this.customerName = customerName;
+  }
+
+  // Đăng xuất
+  logout(): void {
+    localStorage.removeItem('CustomerId');
+    localStorage.removeItem('CustomerName');
+    this.isLoggedIn = false;
+    this.router.navigate(['/home']);
   }
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Route, Router, RouterLink } from '@angular/router';
 
@@ -9,12 +9,15 @@ import { Route, Router, RouterLink } from '@angular/router';
   templateUrl: './recruitment.component.html',
   styleUrl: './recruitment.component.css'
 })
-export class RecruitmentComponent {
+export class RecruitmentComponent implements OnInit{
   @ViewChild('navbar', {static: false}) navbar!: ElementRef;
   email: string = 'Ducpham.ms@gmail.com';
   isSearchVisible: boolean = false; // Trạng thái ẩn/hiện thanh tìm kiếm
   searchQuery: string = ''; // Từ khóa tìm kiếm
   constructor(private router: Router){}
+  ngOnInit(): void {
+    this.checkLoginStatus();
+  }
   toggleMenu() {
     const navbarElement = this.navbar.nativeElement;
     navbarElement.classList.toggle('active');
@@ -41,5 +44,24 @@ export class RecruitmentComponent {
     if (this.searchQuery.trim()) {
       this.router.navigate(['/search'], { queryParams: { q: this.searchQuery } });
     }
+  }
+
+  // kiểm tra login 
+  isLoggedIn: boolean = false;
+  customerName: string | null = null;
+  // Kiểm tra người dùng đã đăng nhập chưa
+  checkLoginStatus(): void {
+    const customerId = localStorage.getItem('CustomerId');
+    const customerName = localStorage.getItem('CustomerName');
+    this.isLoggedIn = !!customerId;
+    this.customerName = customerName;
+  }
+
+  // Đăng xuất
+  logout(): void {
+    localStorage.removeItem('CustomerId');
+    localStorage.removeItem('CustomerName');
+    this.isLoggedIn = false;
+    this.router.navigate(['/home']);
   }
 }

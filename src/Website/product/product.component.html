@@ -17,7 +17,15 @@
       <div class="menu-container">
           <button class="close-btn" (click)="toggleMenu()" aria-label="Close Menu">✕</button>
           <ul class="top-menu">
-              <li><a routerLink="/login"><i class="fas fa-user"></i> LOGIN</a></li>
+              <li *ngIf="!isLoggedIn"><a routerLink="/login"><i class="fas fa-user"></i> LOGIN</a></li>
+              <li *ngIf="isLoggedIn" class="user-menu">
+                <div class="user-dropdown">
+                  <a routerLink="/profile"><i class="fas fa-user"></i>{{customerName}}</a>
+                  <div class="dropdown-content">
+                    <a (click)="logout()">Đăng xuất</a>
+                  </div>
+                </div>
+              </li>
               <li><a (click)="toggleSearch()"><i class="fas fa-search"></i> Tìm kiếm</a></li>
               <!-- Thanh tìm kiếm, ẩn mặc định -->
               <div class="search-bar" *ngIf="isSearchVisible">
@@ -44,7 +52,15 @@
       </div>
     </nav>
     <ul class="right-icon">
-      <li><a routerLink="/login"><i class="fas fa-user"></i> LOGIN</a></li>
+      <li *ngIf="!isLoggedIn"><a routerLink="/login"><i class="fas fa-user"></i> LOGIN</a></li>
+      <li *ngIf="isLoggedIn" class="user-menu">
+        <div class="user-dropdown">
+          <a routerLink="/profile"><i class="fas fa-user"></i>{{customerName}}</a>
+          <div class="dropdown-content">
+            <a (click)="logout()">Đăng xuất</a>
+          </div>
+        </div>
+      </li>
       <li><a (click)="toggleSearch()"><i class="fas fa-search"></i> Tìm kiếm</a></li>
       <!-- Thanh tìm kiếm, ẩn mặc định -->
       <div class="search-bar" *ngIf="isSearchVisible">
@@ -136,6 +152,27 @@
                         </div>
                     </div>
                 </div>
+                <!--page-->
+                <nav class="pagination-container" *ngIf="totalPages >= 1">
+                  <ul class="pagination">
+                    <li class="page-item" [class.disabled]="page === 1" (click)="prevPage()">
+                      <a (click)="prevPage()">«</a>
+                    </li>
+                
+                    <li
+                      class="page-item"
+                      *ngFor="let p of getPages()"
+                      [class.active]="page === p"
+                    >
+                      <a (click)="goToPage(p)">{{ p }}</a>
+                    </li>
+                
+                    <li class="page-item" [class.disabled]="page === totalPages" (click)="nextPage()">
+                      <a (click)="nextPage()">»</a>
+                    </li>
+                  </ul>
+                </nav>
+                              
             </div>
         </div>
     </div>
