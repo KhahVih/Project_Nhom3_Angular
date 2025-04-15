@@ -3,7 +3,7 @@ import { LoginDTO } from '../../Models/LoginDTO';
 import { CustomerService } from '../../Service/Customer.Service';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Customer } from '../../Models/CustomerDTO';
 
 @Component({
@@ -22,6 +22,19 @@ export class LoginComponent {
   isResgiter: boolean = false;
   label: string = 'Đăng Nhập';
 
+  formCustomer: any = {
+    fullname: '',
+    username: '',
+    password: '',
+    confirmPassword: '',
+    gender: true,
+    date: '',
+    email: '',
+    phone: '',
+    address: ''
+  };
+
+
   Login(){
     this.customerService.login(this.loginData).subscribe({
       next: (response) => {
@@ -39,11 +52,54 @@ export class LoginComponent {
   }
 
   // Sau khi đăng ký xong, chuyển lại form login
-  onRegisterSuccess() {
+  onRegisterSuccess(form: NgForm) {
+    
+    if(form.invalid){
+      alert('Vui lòng điền đầy đủ thông tin!');
+      return;
+    }
+    
+    if (this.formCustomer.password !== this.formCustomer.confirmPassword) {
+      alert('Mật khẩu không khớp!');
+      return;
+    }
+    const newcustomer: Customer = {
+      Id: 0,
+      Username: this.formCustomer.username,
+      Email: this.formCustomer.email,
+      Password: this.formCustomer.password,
+      Fullname: this.formCustomer.fullname,
+      Gender: this.formCustomer.gender,
+      Address: this.formCustomer.address,
+      Phone: this.formCustomer.phone,
+      IsClone: false,
+      CreatedAt: new Date(),
+      Date: new Date(this.formCustomer.date),
+      CommentCount: 0
+    };
+    this.customerService.addCustomer(newcustomer).subscribe(res =>{
+      alert('Đăng ký thành công!');
+      this.resetForm()
+      console.log('New Customer: ',newcustomer);
+    }, err => {
+      alert('Đăng ký thất bại!');
+    });
     this.isResgiter = false;
     this.label = 'Đăng Nhập';
   }
-
+  resetForm(){
+    this.formCustomer = {
+      fullname: '',
+      username: '',
+      password: '',
+      confirmPassword: '',
+      gender: true,
+      date: '',
+      email: '',
+      phone: '',
+      address: ''
+    };
+  }
   toggleMenu() {
     const navbarElement = this.navbar.nativeElement;
     navbarElement.classList.toggle('active');
