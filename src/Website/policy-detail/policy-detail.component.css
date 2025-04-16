@@ -1,0 +1,167 @@
+.main-title {
+    background-color: #fff3cd;
+    height: 40px;
+    padding: 6px;
+  }
+  
+  .title-header {
+    margin-left: 5%;
+  }
+  
+  .title-header a,
+  .title-header span {
+    text-decoration: none;
+    color: #000000;
+    font-size: 14px;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .policy-title {
+    font-size: 32px;
+    text-align: center;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    color: #000000;
+  }
+  
+  .policy-meta {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  .policy-meta span {
+    margin: 0 10px;
+  }
+  
+  .policy-content {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #000000;
+    margin-bottom: 30px;
+  }
+  
+  .policy-content h2 {
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #000000;
+  }
+  
+  .policy-content p,
+  .policy-content li {
+    margin-bottom: 10px;
+  }
+  
+  .policy-content ul,
+  .policy-content ol {
+    margin-left: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .policy-content a {
+    color: #28a745;
+    text-decoration: none;
+  }
+  
+  .policy-content a:hover {
+    text-decoration: underline;
+  }
+  
+  .policy-share {
+    margin-bottom: 30px;
+  }
+  
+  .policy-share h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #000000;
+  }
+  
+  .share-link {
+    display: inline-block;
+    margin-right: 15px;
+    text-decoration: none;
+    color: #28a745;
+    font-size: 14px;
+  }
+  
+  .share-link i {
+    margin-right: 5px;
+  }
+  
+  .share-link:hover {
+    color: #218838;
+  }
+  
+  .related-policies {
+    margin-bottom: 30px;
+  }
+  
+  .related-policies h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #000000;
+  }
+  
+  .related-policies ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .related-policies li {
+    margin-bottom: 10px;
+  }
+  
+  .related-policies a {
+    color: #28a745;
+    text-decoration: none;
+  }
+  
+  .related-policies a:hover {
+    text-decoration: underline;
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      padding: 15px;
+    }
+  
+    .policy-title {
+      font-size: 24px;
+    }
+  
+    .policy-content {
+      font-size: 14px;
+    }
+  
+    .policy-content h2 {
+      font-size: 18px;
+    }
+  
+    .policy-meta {
+      font-size: 12px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .policy-title {
+      font-size: 20px;
+    }
+  
+    .policy-content {
+      font-size: 13px;
+    }
+  
+    .share-link {
+      display: block;
+      margin-bottom: 10px;
+    }
+  }

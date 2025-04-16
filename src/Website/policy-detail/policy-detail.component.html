@@ -1,0 +1,43 @@
+<div class="main-title">
+    <div class="title-header">
+      <a routerLink="/home">Trang chủ /</a>
+      <a routerLink="/policy">Chính sách /</a>
+      <span *ngIf="policyId && policyDetails[policyId]">{{policyDetails[policyId].title}}</span>
+    </div>
+  </div>
+  <div class="container">
+    <div *ngIf="policyId && policyDetails[policyId]" class="policy-detail">
+      <h1 class="policy-title">{{policyDetails[policyId].title}}</h1>
+      <div class="policy-meta">
+        <span>{{policyDetails[policyId].date}}</span> | <span>{{policyDetails[policyId].views}} Lượt xem</span>
+      </div>
+      <div class="policy-content" [innerHTML]="policyDetails[policyId].description"></div>
+      <div class="policy-share">
+        <h3>Chia sẻ:</h3>
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{getCurrentUrl()}}" target="_blank" class="share-link">
+          <i class="fab fa-facebook-f"></i> Share
+        </a>
+        <a href="https://twitter.com/intent/tweet?url={{getCurrentUrl()}}&text={{policyDetails[policyId].title}}" target="_blank" class="share-link">
+          <i class="fab fa-twitter"></i> Twitter
+        </a>
+        <a href="https://www.messenger.com/share?url={{getCurrentUrl()}}" target="_blank" class="share-link">
+          <i class="fab fa-facebook-messenger"></i> Messenger
+        </a>
+        <a href="#" (click)="copyLink()" class="share-link">
+          <i class="fas fa-link"></i> Copy Link
+        </a>
+      </div>
+      <div class="related-policies">
+        <h3>Bài viết khác:</h3>
+        <ul>
+          <li *ngFor="let related of policyDetails[policyId].related">
+            <a [routerLink]="['/policy', related.id]">{{related.title}} - {{related.date}}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div *ngIf="policyId && !policyDetails[policyId]" class="policy-detail">
+      <h1 class="policy-title">Không tìm thấy chính sách</h1>
+      <p>Xin lỗi, chính sách bạn yêu cầu không tồn tại. Vui lòng quay lại <a routerLink="/policy">trang chính sách</a>.</p>
+    </div>
+  </div>
