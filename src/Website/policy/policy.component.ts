@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { CustomerService } from '../../Service/Customer.Service';
 
 @Component({
   selector: 'app-policy',
@@ -14,7 +15,7 @@ export class PolicyComponent implements OnInit{
   email: string = 'Ducpham.ms@gmail.com';
   isSearchVisible: boolean = false; // Trạng thái ẩn/hiện thanh tìm kiếm
   searchQuery: string = ''; // Từ khóa tìm kiếm
-  constructor(private router: Router){}
+  constructor(private router: Router, private customerService: CustomerService,){}
   
   ngOnInit(): void {
     this.checkLoginStatus();
@@ -52,17 +53,15 @@ export class PolicyComponent implements OnInit{
   customerName: string | null = null;
   // Kiểm tra người dùng đã đăng nhập chưa
   checkLoginStatus(): void {
-    const customerId = localStorage.getItem('CustomerId');
-    const customerName = localStorage.getItem('CustomerName');
+    const customerId = this.customerService.getCustomerId();
+    const customerName = this.customerService.getCustomerName();
     this.isLoggedIn = !!customerId;
     this.customerName = customerName;
   }
 
   // Đăng xuất
   logout(): void {
-    localStorage.removeItem('CustomerId');
-    localStorage.removeItem('CustomerName');
+    this.customerService.logout();
     this.isLoggedIn = false;
-    this.router.navigate(['/home']);
   }
 }

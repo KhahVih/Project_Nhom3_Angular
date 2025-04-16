@@ -18,6 +18,7 @@ import { RecruitmentComponent } from '../Website/recruitment/recruitment.compone
 import { PolicyComponent } from '../Website/policy/policy.component';
 import { StoresystemComponent } from '../Website/storesystem/storesystem.component';
 import { LoginComponent } from '../Website/login/login.component';
+import { ProductsaleComponent } from '../Website/productsale/productsale.component';
 
 export const routes: Routes = [
     {path: '', component: HomeComponent},
@@ -30,6 +31,7 @@ export const routes: Routes = [
     {path: 'policy', component: PolicyComponent},
     {path: 'stores', component: StoresystemComponent},
     {path: 'login', component: LoginComponent},
+    {path: 'sale', component: ProductsaleComponent},
     // Admin ************************************************************************************************************
     {path: 'admin/home', component: AdminHomeComponent },
     {path: 'admin/contact', component: AdminContactComponent},

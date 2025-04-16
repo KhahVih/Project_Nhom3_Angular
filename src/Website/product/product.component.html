@@ -106,9 +106,13 @@
                             <span class="toggle-icon">{{ isNewProductExpanded ? '−' : '+' }}</span>
                         </div>
                         <ul class="subcategory-list" [class.active]="isNewProductExpanded">
-                            <li *ngFor="let category of categories" (click)="GetProductCategoryId(category.Id)">
-                                {{ category.Name }}
-                            </li>
+                          <li 
+                            *ngFor="let category of categories" 
+                            (click)="GetProductCategoryId(category.Id)" 
+                            [class.active]="selectedCategoryId === category.Id"
+                          >
+                            {{ category.Name }}
+                          </li>
                         </ul>
                     </div>
                     <div class="category-item">
@@ -156,7 +160,7 @@
                 <nav class="pagination-container" *ngIf="totalPages >= 1">
                   <ul class="pagination">
                     <li class="page-item" [class.disabled]="page === 1" (click)="prevPage()">
-                      <a (click)="prevPage()">«</a>
+                      <a>«</a>
                     </li>
                 
                     <li
@@ -168,7 +172,7 @@
                     </li>
                 
                     <li class="page-item" [class.disabled]="page === totalPages" (click)="nextPage()">
-                      <a (click)="nextPage()">»</a>
+                      <a>»</a>
                     </li>
                   </ul>
                 </nav>

@@ -145,24 +145,24 @@
                                   <button class="quantity-btn increase" (click)="increaseQuantity(item)">+</button>
                               </div>
                           </td>
-                          <td data-label="Thành Tiền">{{ item.FinalPrice * item.Quantity | currency: 'VND':'symbol':'1.0-0' }}</td>
+                          <td data-label="Thành Tiền">{{ item.UnitPrice | currency: 'VND':'symbol':'1.0-0' }}</td>
                       </tr>
                   </tbody>
               </table>
-              <!-- <div class="price-bottom" *ngFor="let items of cartItems; let i = index">
+              <div class="price-bottom" *ngIf="cartItems.length > 0">
                 <div class="price-unitprice">
                   <p>Giá Gốc: </p>
-                  <p>{{ items.UnitPrice * items.Quantity | currency: 'VND':'symbol':'1.0-0' }}</p>
+                  <p>{{ getTotalOriginalPrice() | currency: 'VND':'symbol':'1.0-0' }}</p>
                 </div>
                 <div class="price-sale">
                   <p>Giảm Giá: </p>
-                  <p>-{{ items.FinalPrice * items.Quantity | currency: 'VND':'symbol':'1.0-0' }}</p>
+                  <p>-{{ getTotalDiscount() | currency: 'VND':'symbol':'1.0-0' }}</p>
                 </div>
                 <div class="price-final">
                   <p>Tổng Thanh Toán: </p>
-                  <p>{{ items.FinalPrice * items.Quantity | currency: 'VND':'symbol':'1.0-0' }}</p>
+                  <p>{{ getTotalFinalPrice() | currency: 'VND':'symbol':'1.0-0' }}</p>
                 </div>
-              </div> -->
+              </div>
           </div>
           <!--Check-Out-->
           <div class="checkout">

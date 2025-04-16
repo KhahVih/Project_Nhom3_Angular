@@ -514,7 +514,7 @@ header {
     font-family: Arial, sans-serif;
     background-color: #FFFFFF;
     margin-top: 0; /* Xóa margin-top vì header sticky đã chiếm chỗ */
-    padding-top: 1rem; /* Thêm padding-top để tránh nội dung bị che bởi header sticky */
+    padding-top: 0; /* Thêm padding-top để tránh nội dung bị che bởi header sticky */
     min-height: calc(100vh - 8rem); /* Đảm bảo main đủ cao để footer không đè lên khi nội dung ngắn */
     z-index: 1;
   }
@@ -632,6 +632,11 @@ header {
     position: absolute;
     left: -15px;
     color: #444;
+}
+
+.subcategory-list li.active {
+  font-weight: bold;
+  color: #ff6600;
 }
 
 /* Banner */

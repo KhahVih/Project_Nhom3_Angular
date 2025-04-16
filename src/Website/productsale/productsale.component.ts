@@ -1,21 +1,22 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { Product } from '../../Models/ProductDTO';
 import { ProductService } from '../../Service/Product.Service';
-import { Category } from '../../Models/CategoryDTO';
 import { Categoryservice } from '../../Service/Category.Service';
-import { FormsModule } from '@angular/forms'
 import { SaleService } from '../../Service/Sale.Service';
-import { Sale } from '../../Models/SaleDTO';
 import { CustomerService } from '../../Service/Customer.Service';
+import { Product } from '../../Models/ProductDTO';
+import { Category } from '../../Models/CategoryDTO';
+import { Sale } from '../../Models/SaleDTO';
+
 @Component({
-  selector: 'app-product',
+  selector: 'app-productsale',
   imports: [CommonModule, RouterLink, FormsModule],
-  templateUrl: './product.component.html',
-  styleUrl: './product.component.css'
+  templateUrl: './productsale.component.html',
+  styleUrl: './productsale.component.css'
 })
-export class ProductComponent implements OnInit{
+export class ProductsaleComponent implements OnInit{
   @ViewChild('navbar', {static: false}) navbar!: ElementRef;
 
   // Trạng thái
@@ -93,7 +94,7 @@ export class ProductComponent implements OnInit{
         this.handleProductResponse(data);
       });
     } else {
-      this.productService.GetProducts(this.page).subscribe(data => {
+      this.productService.GetProductSale(this.page).subscribe(data => {
         this.handleProductResponse(data);
       });
     }

@@ -8,6 +8,7 @@ import { Category } from '../../Models/CategoryDTO';
 import { SaleService } from '../../Service/Sale.Service';
 import { Categoryservice } from '../../Service/Category.Service';
 import { Sale } from '../../Models/SaleDTO';
+import { CustomerService } from '../../Service/Customer.Service';
 
 @Component({
   selector: 'app-search',
@@ -32,6 +33,7 @@ export class SearchComponent implements OnInit{
     private productService: ProductService, 
     private categoryService: Categoryservice,
     private saleService: SaleService,
+    private customerService: CustomerService,
     private route: Router){}
   products: Product [] = [];
   page: number = 1
@@ -164,17 +166,15 @@ export class SearchComponent implements OnInit{
   customerName: string | null = null;
   // Kiểm tra người dùng đã đăng nhập chưa
   checkLoginStatus(): void {
-    const customerId = localStorage.getItem('CustomerId');
-    const customerName = localStorage.getItem('CustomerName');
+    const customerId = this.customerService.getCustomerId();
+    const customerName = this.customerService.getCustomerName();
     this.isLoggedIn = !!customerId;
     this.customerName = customerName;
   }
 
   // Đăng xuất
   logout(): void {
-    localStorage.removeItem('CustomerId');
-    localStorage.removeItem('CustomerName');
+    this.customerService.logout();
     this.isLoggedIn = false;
-    this.route.navigate(['/home']);
   }
 }

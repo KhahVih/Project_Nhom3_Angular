@@ -290,17 +290,15 @@ export class ProductdetailComponent implements OnInit{
   customerName: string | null = null;
   // Kiểm tra người dùng đã đăng nhập chưa
   checkLoginStatus(): void {
-    const customerId = localStorage.getItem('CustomerId');
-    const customerName = localStorage.getItem('CustomerName');
+    const customerId = this.customerService.getCustomerId();
+    const customerName = this.customerService.getCustomerName();
     this.isLoggedIn = !!customerId;
     this.customerName = customerName;
   }
 
   // Đăng xuất
   logout(): void {
-    localStorage.removeItem('CustomerId');
-    localStorage.removeItem('CustomerName');
+    this.customerService.logout();
     this.isLoggedIn = false;
-    this.route.navigate(['/home']);
   }
 }

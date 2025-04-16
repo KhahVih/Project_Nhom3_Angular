@@ -64,7 +64,7 @@ export class CartComponent implements OnInit{
       console.log('Cart Items from local storage:', this.cartItems);
     }
   }
-
+  // xóa cartitem 
   removeItem(CartId: number): void {
     const CustomerId = this.authService.getCustomerId();
     if(CustomerId){
@@ -79,21 +79,34 @@ export class CartComponent implements OnInit{
       this.cartService.removeLocalCartId(CartId);
     }
   }
-
+  // cập nhật số lượng sản phẩm (tăng)
   increaseQuantity(item: CartItem): void {
     item.Quantity++;
     item.FinalPrice = item.FinalPrice * item.Quantity; // Cập nhật FinalPrice
     this.cartService.updateLocalQuantity(item.Id, item.Quantity); // Cập nhật localStorage
-}
-
-decreaseQuantity(item: CartItem): void {
-    if (item.Quantity > 1) { // Đảm bảo số lượng không nhỏ hơn 1
-        item.Quantity--;
-        item.FinalPrice = item.FinalPrice * item.Quantity; // Cập nhật FinalPrice
-        this.cartService.updateLocalQuantity(item.Id, item.Quantity); // Cập nhật localStorage
-    }
-}
+  }
+  // cập nhật số lượng sản phẩm (giảm) 
+  decreaseQuantity(item: CartItem): void {
+      if (item.Quantity > 1) { // Đảm bảo số lượng không nhỏ hơn 1
+          item.Quantity--;
+          item.FinalPrice = item.FinalPrice * item.Quantity; // Cập nhật FinalPrice
+          this.cartService.updateLocalQuantity(item.Id, item.Quantity); // Cập nhật localStorage
+      }
+  }
+  // tổng giá gốc 
+  getTotalOriginalPrice(): number {
+    return this.cartItems.reduce((total, item) => total + item.UnitPrice * item.Quantity, 0);
+  }
+  // tổng giá giảm 
+  getTotalFinalPrice(): number {
+    return this.cartItems.reduce((total, item) => total + item.FinalPrice * item.Quantity, 0);
+  }
+  // tổng tiền 
+  getTotalDiscount(): number {
+    return this.getTotalOriginalPrice() - this.getTotalFinalPrice();
+  }
   
+  // menu nav 
   toggleMenu() {
     const navbarElement = this.navbar.nativeElement;
     navbarElement.classList.toggle('active');
@@ -126,7 +139,7 @@ decreaseQuantity(item: CartItem): void {
   selectedProvinceCode: number = 0;
   selectedDistrictCode: number = 0;
   selectedWardCode: number = 0;
-
+  // tỉnh 
   onProvinceChange() {
     if (this.selectedProvinceCode) {
       this.addressService.getDistricts(this.selectedProvinceCode).subscribe(data => {
@@ -136,7 +149,7 @@ decreaseQuantity(item: CartItem): void {
       });
     }
   }
-
+  // quận huyện 
   onDistrictChange() {
     if (this.selectedDistrictCode) {
       this.addressService.getWards(this.selectedDistrictCode).subscribe(data => {
@@ -145,15 +158,7 @@ decreaseQuantity(item: CartItem): void {
       });
     }
   }
-
-  // getSelectedAddress() {
-  //   const province = this.provinces.find(p => p.code === +this.selectedProvinceCode)?.name;
-  //   const district = this.districts.find(d => d.code === +this.selectedDistrictCode)?.name;
-  //   const ward = this.wards.find(w => w.code === +this.selectedWardCode)?.name;
-
-  //   return { province, district, ward };
-  // }
-  //
+  // checkout form 
   checkoutForm: {
     CustomerName: string;
     Email: string;
@@ -173,6 +178,7 @@ decreaseQuantity(item: CartItem): void {
     Wards: '',
     Note: '',
   };
+  // check out 
   checkout(){
     const CustomerId = this.authService.getCustomerId();
     console.log('Selected codes:', this.selectedProvinceCode, this.selectedDistrictCode, this.selectedWardCode);
@@ -212,6 +218,7 @@ decreaseQuantity(item: CartItem): void {
       }
     });
   }
+  // resetForm 
   resetForm(){
     this.checkoutForm = {
       CustomerName: '',

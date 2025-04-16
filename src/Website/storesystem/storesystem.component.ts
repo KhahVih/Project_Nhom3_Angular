@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Contact } from '../../Models/ContactDTO';
 import { ContactService } from '../../Service/Contact.Service';
+import { CustomerService } from '../../Service/Customer.Service';
 
 @Component({
   selector: 'app-storesystem',
@@ -16,7 +17,7 @@ export class StoresystemComponent implements OnInit{
   email: string = 'Ducpham.ms@gmail.com';
   isSearchVisible: boolean = false; // Trạng thái ẩn/hiện thanh tìm kiếm
   searchQuery: string = ''; // Từ khóa tìm kiếm
-  constructor(private router: Router, private contactService: ContactService){}
+  constructor(private router: Router, private contactService: ContactService, private customerService: CustomerService,){}
   contacts: Contact[] = [];
   // Biến cho form liên hệ
   contactForm: Contact = {
@@ -92,17 +93,15 @@ export class StoresystemComponent implements OnInit{
   customerName: string | null = null;
   // Kiểm tra người dùng đã đăng nhập chưa
   checkLoginStatus(): void {
-    const customerId = localStorage.getItem('CustomerId');
-    const customerName = localStorage.getItem('CustomerName');
+    const customerId = this.customerService.getCustomerId();
+    const customerName = this.customerService.getCustomerName();
     this.isLoggedIn = !!customerId;
     this.customerName = customerName;
   }
 
   // Đăng xuất
   logout(): void {
-    localStorage.removeItem('CustomerId');
-    localStorage.removeItem('CustomerName');
+    this.customerService.logout();
     this.isLoggedIn = false;
-    this.router.navigate(['/home']);
   }
 }

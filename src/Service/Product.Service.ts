@@ -17,6 +17,10 @@ export class ProductService {
   GetProducts(page: number): Observable<any>{
     return this.http.get<any>(`${this.productsUrl}/GetAllProduct?page=${page}`);
   }
+  // Lấy tất cả sản phẩm giảm giá 
+  GetProductSale(page: number): Observable<any>{
+    return this.http.get<any>(`${this.productsUrl}/GetDiscountedProducts?page=${page}`)
+  }
   // Lấy sản phẩm theo Id 
   GetProductId(Id: number): Observable<any>{
     return this.http.get<any>(`${this.productsUrl}/GetProduct/${Id}`)

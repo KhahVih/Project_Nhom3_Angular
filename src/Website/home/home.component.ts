@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { Product } from '../../Models/ProductDTO';
 import { ProductService } from '../../Service/Product.Service';
 import { FormsModule } from '@angular/forms';
+import { CustomerService } from '../../Service/Customer.Service';
 
 export interface Review {
   image: string;
@@ -23,7 +24,10 @@ export class HomeComponent implements OnInit{
   @ViewChild('reviewSlider') reviewSlider!: ElementRef; // Reference to the slider element
   @ViewChild('navbar', {static: false}) navbar!: ElementRef;
 
-  constructor(private productService: ProductService, private router: Router){}
+  constructor(
+    private productService: ProductService, 
+    private router: Router, 
+    private customerService: CustomerService){}
 
   email: string = 'Ducpham.ms@gmail.com';
   products: Product [] = [];
@@ -127,17 +131,15 @@ export class HomeComponent implements OnInit{
   customerName: string | null = null;
   // Kiểm tra người dùng đã đăng nhập chưa
   checkLoginStatus(): void {
-    const customerId = localStorage.getItem('CustomerId');
-    const customerName = localStorage.getItem('CustomerName');
+    const customerId = this.customerService.getCustomerId();
+    const customerName = this.customerService.getCustomerName();
     this.isLoggedIn = !!customerId;
     this.customerName = customerName;
   }
 
   // Đăng xuất
   logout(): void {
-    localStorage.removeItem('CustomerId');
-    localStorage.removeItem('CustomerName');
+    this.customerService.logout();
     this.isLoggedIn = false;
-    this.router.navigate(['/home']);
   }
 }

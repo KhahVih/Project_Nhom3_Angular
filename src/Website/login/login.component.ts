@@ -39,12 +39,13 @@ export class LoginComponent {
     this.customerService.login(this.loginData).subscribe({
       next: (response) => {
         this.customerService.saveCustomerId(response.customer.Id); // Lưu customerId vào localStorage
+        this.customerService.saveCustomerName(response.customer.Fullname);
         alert(response.message);
         this.router.navigate(['/home']); // Chuyển hướng sau khi đăng nhập thành công
       }
     });
   }
-
+  
   // Chuyển sang form đăng ký
   goToRegister() {
     this.isResgiter = true;

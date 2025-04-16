@@ -49,19 +49,19 @@ export class CustomerService {
     }
     //luu customername
     saveCustomerName(Name: string): void{
-      localStorage.setItem('CustomerName', Name.toString());
+      localStorage.setItem('FullName', Name.toString());
     }
     // Lấy customerId từ localStorage
     getCustomerId(): string | null {
       return localStorage.getItem('CustomerId');
     }
     getCustomerName():string | null{
-      return localStorage.getItem('CustomerName');
+      return localStorage.getItem('FullName');
     }
     // Xóa customerId khỏi localStorage (đăng xuất)
     logout(): void {
       localStorage.removeItem('CustomerId');
-      localStorage.removeItem('CustomerName');
+      localStorage.removeItem('FullName');
       this.router.navigate(['/home']);
     }
 
