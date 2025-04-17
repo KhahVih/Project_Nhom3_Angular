@@ -1,4 +1,3 @@
-
 import { Routes } from '@angular/router';
 import { HomeComponent } from '../Website/home/home.component';
 import { ProductComponent } from '../Website/product/product.component';
@@ -28,6 +27,8 @@ import { ProfileComponent } from '../Website/profile/profile.component';
 import { AdminHistoryComponent } from '../Admin/admin-history/admin-history.component';
 import { AdminProductComponent } from '../Admin/admin-product/admin-product.component';
 import { AdminOrderDeliveredComponent } from '../Admin/admin-order-delivered/admin-order-delivered.component';
+import { CollectionsComponent } from '../Website/collections/collections.component';
+import { CollectionsDetailComponent } from '../Website/collections-detail/collections-detail.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -39,12 +40,14 @@ export const routes: Routes = [
   { path: 'recruitment', component: RecruitmentComponent },
   { path: 'recruitment/:id', component: RecruitmentDetailComponent },
   { path: 'policy', component: PolicyComponent },
-  { path: 'policy/:subPolicy', component: PolicyDetailComponent},
+  { path: 'policy/:subPolicy', component: PolicyDetailComponent },
   { path: 'stores', component: StoresystemComponent },
   { path: 'login', component: LoginComponent },
   { path: 'sale', component: ProductsaleComponent },
-  {path: 'profile', component: ProfileComponent},
-  // Admin routes ***************************************************************************************
+  { path: 'collections', component: CollectionsComponent },
+  { path: 'collections/:id', component: CollectionsDetailComponent }, // Thêm route cho CollectionsDetailComponent
+  { path: 'profile', component: ProfileComponent },
+  // Admin routes
   { path: 'admin/home', component: AdminHomeComponent },
   { path: 'admin/contact', component: AdminContactComponent },
   { path: 'admin/login', component: AdminLoginComponent },
@@ -54,12 +57,12 @@ export const routes: Routes = [
   { path: 'admin/image', component: AdminImageComponent },
   { path: 'admin/comment', component: AdminCommentComponent },
   { path: 'admin/blog', component: AdminBlogComponent },
-  {path: 'admin/user', component: AdminUserComponent},
-  {path: 'admin/nhomquyen', component: AdminPermissionComponent},
-  {path: 'admin/role', component: AdminRoleComponent},
-  {path: 'admin/history', component: AdminHistoryComponent},
-  {path: 'admin/product', component: AdminProductComponent},
-  {path: 'admin/orderprocessing', component: AdminOrderDeliveredComponent},
+  { path: 'admin/user', component: AdminUserComponent },
+  { path: 'admin/nhomquyen', component: AdminPermissionComponent },
+  { path: 'admin/role', component: AdminRoleComponent },
+  { path: 'admin/history', component: AdminHistoryComponent },
+  { path: 'admin/product', component: AdminProductComponent },
+  { path: 'admin/orderprocessing', component: AdminOrderDeliveredComponent },
   // Redirect for unmatched routes
   { path: '**', redirectTo: '/home', pathMatch: 'full' }
-]
+];
