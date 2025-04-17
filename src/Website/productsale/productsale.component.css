@@ -73,8 +73,6 @@ header {
     top: 90%; /* Điều chỉnh tùy vị trí menu */
     left: 70%;
     right: 0;
-    width: 100%;
-    background: #fff;
     box-shadow: 0 2px 5px rgba(219, 55, 55, 0.1);
     z-index: 1000;
     display: flex;

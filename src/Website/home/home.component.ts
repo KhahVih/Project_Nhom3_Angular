@@ -20,18 +20,19 @@ export interface Review {
   styleUrl: './home.component.css'
 })
 
-export class HomeComponent implements OnInit{
+export class HomeComponent implements OnInit, AfterViewInit, OnDestroy{
   @ViewChild('reviewSlider') reviewSlider!: ElementRef; // Reference to the slider element
   @ViewChild('navbar', {static: false}) navbar!: ElementRef;
-
+  @ViewChild('banner', { static: false }) banner!: ElementRef;
   constructor(
     private productService: ProductService, 
     private router: Router, 
     private customerService: CustomerService){}
 
-  email: string = 'Ducpham.ms@gmail.com';
-  products: Product [] = [];
-  reviews: Review[] = [
+    email: string = 'Ducpham.ms@gmail.com';
+    products: Product [] = [];
+    productdetail: any;
+    reviews: Review[] = [
     {
       image: 'https://chamygaby.vn/thumbs/140x140x1/upload/news/44144247621264888177368305473686737407652445n-4052.jpg',
       name: 'CHỊ DUYÊN',
@@ -55,6 +56,7 @@ export class HomeComponent implements OnInit{
   isSearchVisible: boolean = false; // Trạng thái ẩn/hiện thanh tìm kiếm
   searchQuery: string = ''; // Từ khóa tìm kiếm
   page: number = 1;
+
   // slider
   slides: HTMLElement [] = [];
   currentIndex: number = 0;
@@ -66,12 +68,26 @@ export class HomeComponent implements OnInit{
     this.checkLoginStatus();
     //this.startSlideshow();
   }
+  ngAfterViewInit(): void {
+    // Lấy tất cả phần tử có class "slide" trong banner
+    this.slides = Array.from(this.banner.nativeElement.querySelectorAll('.slide'));
+    this.startSlideshow(); // Bắt đầu sau khi slides đã được lấy
+  }
 
+  ngOnDestroy(): void {
+    
+  }
   // Loading sản phẩm 
   LoadProduct(){
     this.productService.GetProducts(this.page).subscribe(data =>{
       this.products = data.Products;
       console.log('Response: ', data);
+    })
+  }
+  GetProductDetail(Id: number){
+    this.productService.GetProductId(Id).subscribe(data =>{
+      this.productdetail = data;
+      console.log('ProductDetail: ',data)
     })
   }
 
@@ -81,20 +97,18 @@ export class HomeComponent implements OnInit{
     }, this.intervalTime);
   }
 
-  nextSlide() {
-    // Xóa class active khỏi slide hiện tại
-    this.slides[this.currentIndex].classList.remove('active');
-    // Tăng index, quay lại 0 nếu đến slide cuối
-    this.currentIndex = (this.currentIndex + 1) % this.slides.length;
-    // Thêm class active cho slide tiếp theo
-    this.slides[this.currentIndex].classList.add('active');
-    console.log('CurrentIndex: ',this.currentIndex);
-  }
-  // prevslide
-  prevSlide() {
-    this.slides[this.currentIndex].classList.remove('active');
+  prevSlide(): void {
+    if (this.slides.length === 0) return;
+    this.slides[this.currentIndex]?.classList.remove('active');
     this.currentIndex = (this.currentIndex - 1 + this.slides.length) % this.slides.length;
-    this.slides[this.currentIndex].classList.add('active');
+    this.slides[this.currentIndex]?.classList.add('active');
+  }
+  
+  nextSlide(): void {
+    if (this.slides.length === 0) return;
+    this.slides[this.currentIndex]?.classList.remove('active');
+    this.currentIndex = (this.currentIndex + 1) % this.slides.length;
+    this.slides[this.currentIndex]?.classList.add('active');
   }
   
   toggleMenu() {

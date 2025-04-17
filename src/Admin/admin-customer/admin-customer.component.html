@@ -23,7 +23,7 @@
           <details *ngIf="isMenu">
             <summary>Quản lý đơn hàng</summary>
             <ul class="drop-menu">
-              <li><a routerLink="/admin/order">Quản lý đơn hàng được duyệt</a></li>
+              <li><a routerLink="/admin/orderprocessing">Quản lý đơn hàng được duyệt</a></li>
               <li><a routerLink="/admin/order">Quản lý đơn hàng</a></li>
             </ul>
           </details>
@@ -58,9 +58,9 @@
           <details *ngIf="isMenu">
             <summary>Phân quyền </summary>
             <ul class="drop-menu">
-              <li><a routerLink="/user">Nhân sự</a></li>
-              <li><a routerLink="/nhomquyen">Nhóm quyền</a></li>
-              <li><a routerLink="/role">Quyền</a></li>
+              <li><a routerLink="/admin/user">Nhân sự</a></li>
+              <li><a routerLink="/admin/nhomquyen">Nhóm quyền</a></li>
+              <li><a routerLink="/admin/role">Quyền</a></li>
             </ul>
           </details>
         </li>
@@ -76,7 +76,7 @@
           <details *ngIf="isMenu">
             <summary>Lịch sử</summary>
             <ul class="drop-menu">
-              <li><a routerLink="/history">Thông tin lịch sử hệ thống</a></li>
+              <li><a routerLink="/admin/history">Thông tin lịch sử hệ thống</a></li>
             </ul>
           </details>
         </li>
@@ -91,41 +91,12 @@
         <div class="header-content">
           <h2>Danh Sách Khách Hàng<span class="sub-header">Trang chủ</span></h2>
         </div>
-      </div>
-      <div class="button-btn">
-        <button class="update-btn" (click)="openAddModal()">Thêm Khách Hàng</button>
-        <button class="update-btn" (click)="openChangePasswordModal()" style="margin-left: 20px;">Đổi Mật Khẩu</button>
+        <div class="button-btn">
+          <button class="update-btn" (click)="openAddModal()">Thêm Khách Hàng</button>
+          <button class="update-btn" (click)="openChangePasswordModal()" style="margin-left: 20px;">Đổi Mật Khẩu</button>
+        </div>
       </div>
 
-  
-      <!-- <table class="table">
-        <thead>
-          <tr>
-            <th>Tên Đăng Nhập</th>
-            <th>Họ Tên</th>
-            <th>Email</th>
-            <th>Địa Chỉ</th>
-            <th>Số Điện Thoại</th>
-            <th>Giới Tính</th>
-            <th>Hành Động</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let customer of customers">
-            <td>{{ customer.Username }}</td>
-            <td>{{ customer.Fullname }}</td>
-            <td>{{ customer.Email }}</td>
-            <td>{{ customer.Address }}</td>
-            <td>{{ customer.Phone }}</td>
-            <td>{{ customer.Gender ? 'Nam' : 'Nữ' }}</td>
-            <td>
-              <button class="btn btn-warning me-2" (click)="editCustomer(customer)">Sửa</button>
-              <button class="btn btn-danger" (click)="deleteCustomer(customer.Id)">Xóa</button>
-            </td>
-          </tr>
-        </tbody>
-      </table> -->
-  
       <div class="table-content">
         <div class="table-header-row">
           <div>Tên Đăng Nhập </div>
@@ -149,7 +120,22 @@
           </div>
         </div>
       </div>
-  
+      <!-- PHÂN TRANG -->
+      <div class="pagination" style="display: flex; padding: 1rem; justify-content: center; gap: 6px; flex-wrap: wrap;">
+        <!-- Trang đầu và trước -->
+        <button (click)="prevPage()" [disabled]="page === 1">‹</button>
+    
+        <!-- Danh sách số trang -->
+        <button 
+        *ngFor="let p of visiblePages"
+        [class.active]="page === p"
+        (click)="goToPage(p)">
+        {{ p }}
+        </button>
+    
+        <!-- Trang sau và cuối -->
+        <button (click)="nextPage()" [disabled]="page === totalPages">›</button>
+      </div>
       <!-- Modal Thêm Khách Hàng -->
       <div class="overlay" *ngIf="showAddModal" (click)="closeAddModal()"></div>
       <div class="add-customer-modal" *ngIf="showAddModal">

@@ -19,6 +19,7 @@ export class RecruitmentComponent implements OnInit{
   ngOnInit(): void {
     this.checkLoginStatus();
   }
+  
   toggleMenu() {
     const navbarElement = this.navbar.nativeElement;
     navbarElement.classList.toggle('active');

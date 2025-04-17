@@ -12,11 +12,11 @@ export class CustomerService {
     private apiUrl = 'https://localhost:7194/api/Customer';
     constructor(private http: HttpClient, private router: Router){}
     // Lấy danh sách khách hàng
-    getCustomer(): Observable<Customer[]>{
-        return this.http.get<Customer[]>(this.apiUrl);
+    getCustomer(page: number): Observable<any>{
+        return this.http.get<any>(`${this.apiUrl}/GetCustomer/page${page}`);
     }
     // Lấy khách hàng theo ID
-    getCustomerById(id: number): Observable<Customer> {
+    getCustomerById(id: string): Observable<Customer> {
         return this.http.get<Customer>(`${this.apiUrl}/${id}`);
     }
 

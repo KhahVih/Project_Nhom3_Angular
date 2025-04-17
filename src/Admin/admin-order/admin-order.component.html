@@ -24,7 +24,7 @@
           <details *ngIf="isMenu">
             <summary >Quản lý đơn hàng</summary>
             <ul class="drop-menu" >
-              <li><a routerLink="/admin/order">Quản lý đơn hàng được duyệt</a></li>
+              <li><a routerLink="/admin/orderprocessing">Quản lý đơn hàng được duyệt</a></li>
               <li><a routerLink="/admin/order">Quản lý đơn hàng</a></li>
             </ul>
           </details>
@@ -59,9 +59,9 @@
           <details *ngIf="isMenu">
             <summary >Phân quyền </summary>
             <ul class="drop-menu" >
-              <li><a routerLink="/user">Nhân sự</a></li>
-              <li><a routerLink="/nhomquyen">Nhóm quyền</a></li>
-              <li><a routerLink="/role">Quyền</a></li>
+              <li><a routerLink="/admin/user">Nhân sự</a></li>
+              <li><a routerLink="/admin/nhomquyen">Nhóm quyền</a></li>
+              <li><a routerLink="/admin/role">Quyền</a></li>
             </ul>
           </details>
         </li>
@@ -69,7 +69,7 @@
           <details *ngIf="isMenu">
             <summary >Gửi thông báo tự động </summary>
             <ul class="drop-menu" >
-              <li><a routerLink="/history">Thông báo tự động</a></li>
+              <li><a routerLink="">Thông báo tự động</a></li>
             </ul>
           </details>
         </li>
@@ -77,7 +77,7 @@
           <details *ngIf="isMenu">
             <summary >Lịch sử</summary>
             <ul class="drop-menu" >
-              <li><a routerLink="">Thông tin lịch sử hệ thống</a></li>
+              <li><a routerLink="/admin/history">Thông tin lịch sử hệ thống</a></li>
             </ul>
           </details>
         </li>
@@ -94,8 +94,8 @@
               <h2>Danh sách đơn hàng <span class="sub-header">Trang chủ</span></h2>
             </div>
             <div class="order-management">
-              <h2>Tổng: {{totalOrder}} <span class="approved">Số đơn hàng chờ xử lý: {{pendingOrders}}</span> <span class="pending">Số đơn hàng đã giao: {{deliveredOrders}}</span>
-              </h2>
+              <h5>Tổng: {{totalOrder}} <span class="approved">Số đơn hàng chờ xử lý: {{pendingOrders}}</span> <span class="pending">Số đơn hàng đã giao: {{deliveredOrders}}</span>
+              </h5>
             </div>
           </div>
 
@@ -135,10 +135,27 @@
           </tbody>
           </table>
         </div>
+        <!-- PHÂN TRANG -->
+        <div class="pagination" style="display: flex; padding: 1rem; justify-content: center; gap: 6px; flex-wrap: wrap;">
+          <!-- Trang đầu và trước -->
+          <button (click)="prevPage()" [disabled]="page === 1">‹</button>
+      
+          <!-- Danh sách số trang -->
+          <button 
+          *ngFor="let p of visiblePages"
+          [class.active]="page === p"
+          (click)="goToPage(p)">
+          {{ p }}
+          </button>
+      
+          <!-- Trang sau và cuối -->
+          <button (click)="nextPage()" [disabled]="page === totalPages">›</button>
+        </div>
         <ng-template #noOrders>
         <p>Không có đơn hàng nào.</p>
         </ng-template>
-
+        <div class="overlay" *ngIf="isOrderDeatail"></div>
+        <!-- CHI TIẾT ĐƠN HÀNG -->
         <div class="order-details" *ngIf="isOrderDeatail">
           <div class="order-details-header"> 
             <h5>Thông tin đơn hàng </h5>

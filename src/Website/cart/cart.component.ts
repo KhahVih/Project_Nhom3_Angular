@@ -25,6 +25,7 @@ export class CartComponent implements OnInit{
     private cartService: CartService,
     private authService: CustomerService,
     private addressService: AddressService,
+    private customerService: CustomerService,
   ){}
   ngOnInit(): void {
     this.loadCartItems();
@@ -238,8 +239,8 @@ export class CartComponent implements OnInit{
   customerName: string | null = null;
   // Kiểm tra người dùng đã đăng nhập chưa
   checkLoginStatus(): void {
-    const customerId = localStorage.getItem('CustomerId');
-    const customerName = localStorage.getItem('CustomerName');
+    const customerId = this.customerService.getCustomerId();
+    const customerName = this.customerService.getCustomerName();
     this.isLoggedIn = !!customerId;
     this.customerName = customerName;
   }

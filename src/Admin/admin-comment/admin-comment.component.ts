@@ -1,20 +1,23 @@
 import { Component } from '@angular/core';
-import { LoginService } from '../../Service/Login.Service';
 import { Router, RouterLink } from '@angular/router';
-import { CommentService } from '../../Service/Comment.Service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+
+import { LoginService } from '../../Service/Login.Service';
+import { CommentService } from '../../Service/Comment.Service';
 import { Comment } from '../../Models/CommentDTO';
 
 @Component({
   selector: 'app-admin-comment',
-  imports: [FormsModule,CommonModule,RouterLink],
+  imports: [FormsModule, CommonModule, RouterLink],
   templateUrl: './admin-comment.component.html',
   styleUrl: './admin-comment.component.css'
 })
 export class AdminCommentComponent {
-  // Nhận productId từ component cha
   comments: Comment[] = [];
+  page: number = 1;
+  totalPages: number = 1;
+
   newComment: Comment = {
     Id: 0,
     ProductId: 0,
@@ -22,54 +25,104 @@ export class AdminCommentComponent {
     Description: '',
     CreatedAt: null,
     CustomerId: null,
-    IsShow: true,
+    IsShow: false,
     ProductName: '',
     CustomerName: ''
   };
-  showAddForm: boolean = false; // Hiển thị form mặc định để kiểm tra
+
+  showAddForm: boolean = false;
   isEditing: boolean = false;
-  isMenu = true;
-  openMenu(){
-    this.isMenu = true;
-  }
-  closeMenu(){
-    this.isMenu = false;
-  }
-  constructor(private commentService: CommentService, private login: LoginService, private router: Router) {}
+  isMenu: boolean = true;
+
+  constructor(
+    private commentService: CommentService,
+    private login: LoginService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadComments();
   }
 
+  openMenu(): void {
+    this.isMenu = true;
+  }
+
+  closeMenu(): void {
+    this.isMenu = false;
+  }
+
   loadComments(): void {
-    this.commentService.getComments().subscribe({
-      next: (comments: Comment[]) => {
-        this.comments = comments;
-        console.log(comments);
-      },
-      error: (error) => {
-        console.error('Error fetching comments:', error);
-      }
+    this.commentService.getComments(this.page).subscribe(data => {
+      this.comments = data.Comments;
+      this.totalPages = data.TotalPages;
+      this.updateVisiblePages();
+      console.log('Response: ', data);
     });
   }
-  setVote(star: number): void {
-    this.newComment.Vote = star; // Cập nhật số sao khi người dùng nhấp
+
+  visiblePages: number[] = [];
+  updateVisiblePages(): void {
+    const maxVisible = 5; // Số trang hiển thị tối đa
+    const half = Math.floor(maxVisible / 2);
+    let start = Math.max(1, this.page - half);
+    let end = Math.min(this.totalPages, start + maxVisible - 1);
+
+    if (end - start < maxVisible - 1) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    this.visiblePages = [];
+    for (let i = start; i <= end; i++) {
+      this.visiblePages.push(i);
+    }
   }
+  // Phân trang
+  goToPage(pageNumber: number): void {
+    if (pageNumber >= 1 && pageNumber <= this.totalPages) {
+      this.page = pageNumber;
+      this.loadComments();
+      this.updateVisiblePages()
+    }
+  }
+
+  prevPage(): void {
+    if (this.page > 1) {
+      this.page--;
+      this.loadComments();
+      this.updateVisiblePages()
+    }
+  }
+
+  nextPage(): void {
+    if (this.page < this.totalPages) {
+      this.page++;
+      this.loadComments();
+      this.updateVisiblePages()
+    }
+  }
+
+  setVote(star: number): void {
+    this.newComment.Vote = star;
+  }
+
   toggleAddForm(): void {
     this.showAddForm = !this.showAddForm;
+
     if (!this.showAddForm) {
       this.resetForm();
       this.isEditing = false;
-    } 
-    else if(!this.isEditing){
+    } else if (!this.isEditing) {
       this.resetForm();
     }
   }
+
   closeAddForm(): void {
-    this.resetForm()
+    this.resetForm();
     this.isEditing = false;
     this.showAddForm = false;
   }
+
   addComment(): void {
     this.commentService.createComment(this.newComment).subscribe({
       next: (comment: Comment) => {
@@ -124,7 +177,7 @@ export class AdminCommentComponent {
       });
     }
   }
-  
+
   resetForm(): void {
     this.newComment = {
       Id: 0,
@@ -133,19 +186,18 @@ export class AdminCommentComponent {
       Description: '',
       CreatedAt: null,
       CustomerId: null,
-      IsShow: true,
+      IsShow: false,
       ProductName: '',
       CustomerName: ''
     };
   }
 
-  //
-  logout(){
+  logout(): void {
     this.login.logout();
     this.router.navigate(['admin/login']);
   }
-  get isAdmin(): boolean{
+
+  get isAdmin(): boolean {
     return this.login.isAdmin();
   }
-
 }

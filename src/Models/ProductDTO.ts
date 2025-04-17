@@ -15,6 +15,7 @@ export interface Product {
     IsPublish: boolean;
     IsNew: boolean;
     Count: number;
+    SaleId?: number;
     Sale?: number;
     SaleName?: string;
     DiscountPercentage?: number;

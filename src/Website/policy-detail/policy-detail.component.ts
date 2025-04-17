@@ -1,7 +1,9 @@
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, ActivatedRoute } from '@angular/router';
+import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
+import { CustomerService } from '../../Service/Customer.Service';
+import { FormsModule } from '@angular/forms';
 
 interface PolicyDetail {
   title: string;
@@ -14,7 +16,7 @@ interface PolicyDetail {
 @Component({
   selector: 'app-policy-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './policy-detail.component.html',
   styleUrls: ['./policy-detail.component.css']
 })
@@ -175,6 +177,7 @@ export class PolicyDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router, private customerService: CustomerService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
@@ -183,6 +186,7 @@ export class PolicyDetailComponent implements OnInit {
       this.policyId = params['subPolicy'] || null;
       console.log('Policy ID:', this.policyId);
     });
+    this.checkLoginStatus();
   }
 
   getCurrentUrl(): string {
@@ -202,5 +206,54 @@ export class PolicyDetailComponent implements OnInit {
           alert('Không thể sao chép liên kết. Vui lòng thử lại.');
         });
     }
+  }
+  @ViewChild('navbar', {static: false}) navbar!: ElementRef;
+  email: string = 'Ducpham.ms@gmail.com';
+  isSearchVisible: boolean = false; // Trạng thái ẩn/hiện thanh tìm kiếm
+  searchQuery: string = ''; // Từ khóa tìm kiếm
+  toggleMenu() {
+    const navbarElement = this.navbar.nativeElement;
+    navbarElement.classList.toggle('active');
+  }
+  toggleSearch() {
+    this.isSearchVisible = !this.isSearchVisible;
+    if (!this.isSearchVisible) {
+      this.searchQuery = ''; // Reset từ khóa khi đóng
+    }
+  }
+
+  // Xử lý tìm kiếm
+  onSearch() {
+    if (this.searchQuery.trim()) {
+      // Điều hướng tới trang /search với query param
+      this.router.navigate(['/search'], { queryParams: { q: this.searchQuery } });
+      this.searchQuery = '';
+      this.toggleSearch(); // Ẩn thanh tìm kiếm sau khi tìm
+    } else {
+      alert('Vui lòng nhập từ khóa tìm kiếm!');
+    }
+  }
+  
+  onSearchChange() {
+    if (this.searchQuery.trim()) {
+      this.router.navigate(['/search'], { queryParams: { q: this.searchQuery } });
+    }
+  }
+
+  // kiểm tra login 
+  isLoggedIn: boolean = false;
+  customerName: string | null = null;
+  // Kiểm tra người dùng đã đăng nhập chưa
+  checkLoginStatus(): void {
+    const customerId = this.customerService.getCustomerId();
+    const customerName = this.customerService.getCustomerName();
+    this.isLoggedIn = !!customerId;
+    this.customerName = customerName;
+  }
+
+  // Đăng xuất
+  logout(): void {
+    this.customerService.logout();
+    this.isLoggedIn = false;
   }
 }

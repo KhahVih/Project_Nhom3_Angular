@@ -1,0 +1,224 @@
+<div class="container">
+    <!-- Sidebar Menu -->
+    <div class="sidebar" (mouseover)="openMenu()" (mouseleave)="closeMenu()" [class.expanded]="isMenu">
+        <!-- Logo -->
+        <div class="logo" *ngIf="isMenu">
+            METRONIC
+            <span class="collapse-icon">«</span>
+        </div>
+        <div class="menu" *ngIf="isMenu" style="color: #fff;">
+            <h6> CHỨC NĂNG </h6>
+        </div>
+        <ul>
+            <li class="has-dropdown">
+                <details *ngIf="isMenu">
+                    <summary>Chăm sóc khách hàng</summary>
+                    <ul class="drop-menu">
+                        <li><a routerLink="/admin/contact">Quản lý yêu cầu</a></li>
+                        <li><a routerLink="/admin/customer">Quản lý người dùng</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li class="has-dropdown" *ngIf="isAdmin">
+                <details *ngIf="isMenu">
+                    <summary>Quản lý đơn hàng</summary>
+                    <ul class="drop-menu">
+                        <li><a routerLink="admin/orderprocessing">Quản lý đơn hàng được duyệt</a></li>
+                        <li><a routerLink="/admin/order">Quản lý đơn hàng</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li class="has-dropdown">
+                <details *ngIf="isMenu">
+                    <summary>Sản Phẩm</summary>
+                    <ul class="drop-menu">
+                        <li><a routerLink="/admin/product">Quản lý sản phẩm</a></li>
+                        <li><a routerLink="/admin/category">Quản lý danh mục</a></li>
+                        <li><a routerLink="/admin/image">Quản lý hình ảnh</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li class="has-dropdown" *ngIf="isAdmin">
+                <details *ngIf="isMenu">
+                    <summary>Bộ sưu tập </summary>
+                    <ul class="drop-menu">
+                        <li><a routerLink="/admin/blog">Danh sách Blog</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li class="has-dropdown" *ngIf="isAdmin">
+                <details *ngIf="isMenu">
+                    <summary>Bình luận</summary>
+                    <ul class="drop-menu">
+                        <li><a routerLink="/admin/comment">Danh sách bình luận</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li class="has-dropdown" *ngIf="isAdmin">
+                <details *ngIf="isMenu">
+                    <summary>Phân quyền </summary>
+                    <ul class="drop-menu">
+                        <li><a routerLink="/admin/user">Nhân sự</a></li>
+                        <li><a routerLink="/admin/nhomquyen">Nhóm quyền</a></li>
+                        <li><a routerLink="/admin/role">Quyền</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li class="has-dropdown">
+                <details *ngIf="isMenu">
+                    <summary>Gửi thông báo tự động </summary>
+                    <ul class="drop-menu">
+                        <li><a routerLink="">Thông báo tự động</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li class="has-dropdown">
+                <details *ngIf="isMenu">
+                    <summary>Lịch sử</summary>
+                    <ul class="drop-menu">
+                        <li><a routerLink="/admin/history">Thông tin lịch sử hệ thống</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li *ngIf="isMenu"><button class="update-btn" (click)="logout()">Đăng xuất</button></li>
+        </ul>
+    </div>
+
+    <!-- Nội dung chính -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="user-main">
+            <!-- Tiêu đề và nút -->
+            <div class="header">
+                <div class="header-content">
+                    <h2>Quản lý người dùng <span class="sub-header">Trang chủ</span></h2>
+                </div>
+            </div>
+            <!-- Nút để mở form -->
+            <button class="btn btn-primary " style="margin-bottom: 20px;" (click)="openAddUserModal()">Thêm Người Dùng
+                Mới</button>
+            <!-- Overlay -->
+            <div class="overlay" *ngIf="isAddUserModalOpen" (click)="closeAddUserModal()"></div>
+            <!-- Form Thêm Người Dùng trong Modal -->
+            <div class="add-user" *ngIf="isAddUserModalOpen">
+                <div class="upload-header">
+                   <h2>Thêm người dùng</h2>
+                    <button class="close-btn" (click)="closeAddUserModal()">×</button>
+                </div>
+                <div class="upload-body">
+                    <form (submit)="addUser()">
+                        <div class="mb-3">
+                            <label class="form-label bold">Tên đăng nhập:</label>
+                            <input type="text" class="form-control" [(ngModel)]="newUser.UserName" name="userName"
+                                required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label bold">Họ và tên:</label>
+                            <input type="text" class="form-control" [(ngModel)]="newUser.FullName" name="fullName"
+                                required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label bold">Email:</label>
+                            <input type="email" class="form-control" [(ngModel)]="newUser.Email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label bold">Mật khẩu:</label>
+                            <input type="password" class="form-control" [(ngModel)]="newUser.Password" name="password"
+                                required>
+                        </div>
+                        <!-- Chọn quyền -->
+                        <div class="form-group">
+                            <h3>Chọn Quyền</h3>
+                            <select class="permission-select" [(ngModel)]="selectpermissions" name="permission"
+                                (change)="onPermissionSelect($event)">
+                                <option *ngFor="let permission of permissions" [value]="permission.Id">
+                                    {{ permission.Name }}
+                                </option>
+                            </select>
+                            <div *ngIf="permissions.length === 0" class="no-data">Không có quyền nào để chọn.</div>
+                        </div>
+                        <div class="upload-footer">
+                            <button type="button" class="close" (click)="closeAddUserModal()">Đóng</button>
+                            <button type="submit" class="btn-upload">Thêm Người Dùng</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Danh Sách Người Dùng -->
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên Đăng Nhập</th>
+                        <th>Họ và Tên</th>
+                        <th>Email</th>
+                        <th>Quyền</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let user of users">
+                        <td>{{ user.Id }}</td>
+                        <td>{{ user.UserName }}</td>
+                        <td>{{ user.FullName }}</td>
+                        <td>{{ user.Email }}</td>
+                        <td>
+                            <span *ngFor="let perm of user.UserPermissions">
+                                {{ perm.PermissionName }}{{ user.UserPermissions.length > 1 ? ', ' : '' }}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-warning btn-sm me-2" (click)="openEditUserModal  (user)">Sửa</button>
+                            <button class="btn btn-danger btn-sm" (click)="deleteUser(user.Id)">Xóa</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Nút để mở form chỉnh sửa (giả sử bạn có danh sách người dùng với nút chỉnh sửa) -->
+            <!-- Overlay -->
+            <div class="overlay" *ngIf="isEditUserModalOpen" (click)="closeEditUserModal()"></div>
+
+            <!-- Form Chỉnh Sửa Người Dùng trong Modal -->
+            <div class="edit-user" *ngIf="isEditUserModalOpen">
+                <div class="upload-header">
+                    <h2>Chỉnh Sửa Người Dùng</h2>
+                    <button class="close-btn" (click)="closeEditUserModal()">×</button>
+                </div>
+                <div class="upload-body">
+                    <form (submit)="updateUser()">
+                        <div class="mb-3">
+                            <label class="form-label bold">Tên đăng nhập:</label>
+                            <input type="text" class="form-control" [(ngModel)]="editUser.UserName" name="editUserName"
+                                required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label bold">Họ và tên:</label>
+                            <input type="text" class="form-control" [(ngModel)]="editUser.FullName" name="editFullName"
+                                required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label bold">Email:</label>
+                            <input type="email" class="form-control" [(ngModel)]="editUser.Email" name="editEmail"
+                                required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label bold">Chọn Quyền:</label>
+                            <select class="permission-select" [(ngModel)]="selectpermissions" name="editPermissions"
+                                multiple>
+                                <option *ngFor="let perm of permissions" [value]="perm.Id">
+                                    {{ perm.Name }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="upload-footer">
+                            <button type="button" class="close" (click)="closeEditUserModal()">Hủy</button>
+                            <button type="submit" class="btn-upload">Cập nhật</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

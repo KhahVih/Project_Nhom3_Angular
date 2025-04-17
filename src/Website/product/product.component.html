@@ -146,8 +146,9 @@
                 <!-- Product list -->
                 <div class="product-list">
                     <div class="product-card" *ngFor="let product of products" routerLink="/product/{{product.Id}}">
-                        <div class="product-card-image" >
-                            <img [src]="product.Images[0].Link" [alt]="product.Name" class="thumbnail">
+                        <div class="product-card-image">
+                          <img [src]="product.Images[0].Link" [alt]="product.Name" class="thumbnail main-image">
+                          <!-- <img [src]="product.Images[1].Link" [alt]="product.Name" class="thumbnail hover-image"> -->
                         </div>
                         <div class="product-card-content">
                             <h3 class="product-title">{{ product.Name }}</h3>
@@ -159,10 +160,21 @@
                 <!--page-->
                 <nav class="pagination-container" *ngIf="totalPages >= 1">
                   <ul class="pagination">
+                
+                    <!-- Prev button -->
                     <li class="page-item" [class.disabled]="page === 1" (click)="prevPage()">
                       <a>«</a>
                     </li>
                 
+                    <!-- First page and ellipsis -->
+                    <li class="page-item" *ngIf="getPages()[0] > 1">
+                      <a (click)="goToPage(1)">1</a>
+                    </li>
+                    <li class="page-item disabled" *ngIf="getPages()[0] > 2">
+                      <a>...</a>
+                    </li>
+                
+                    <!-- Visible pages -->
                     <li
                       class="page-item"
                       *ngFor="let p of getPages()"
@@ -171,12 +183,20 @@
                       <a (click)="goToPage(p)">{{ p }}</a>
                     </li>
                 
+                    <!-- Ellipsis and last page -->
+                    <li class="page-item disabled" *ngIf="getPages()[getPages().length - 1] < totalPages - 1">
+                      <a>...</a>
+                    </li>
+                    <li class="page-item" *ngIf="getPages()[getPages().length - 1] < totalPages">
+                      <a (click)="goToPage(totalPages)">{{ totalPages }}</a>
+                    </li>
+                
+                    <!-- Next button -->
                     <li class="page-item" [class.disabled]="page === totalPages" (click)="nextPage()">
                       <a>»</a>
                     </li>
                   </ul>
-                </nav>
-                              
+                </nav>             
             </div>
         </div>
     </div>

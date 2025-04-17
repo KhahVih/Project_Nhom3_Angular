@@ -73,8 +73,6 @@ header {
   top: 90%; /* Điều chỉnh tùy vị trí menu */
   left: 70%;
   right: 0;
-  width: 100%;
-  background: #fff;
   box-shadow: 0 2px 5px rgba(219, 55, 55, 0.1);
   z-index: 1000;
   display: flex;
@@ -721,6 +719,7 @@ h2 {
 }
 
 .product-card-image {
+  position: relative;
   width: 100%;
   height: 400px;
   overflow: hidden;
@@ -732,6 +731,30 @@ h2 {
   object-fit: cover;
   display: block;
 }
+/* Ảnh chính hiển thị mặc định */
+.main-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  opacity: 1;
+}
+
+/* Ảnh hover ẩn mặc định */
+/* .hover-image {
+  position: relative;
+  z-index: 2;
+  opacity: 0;
+} */
+/* Khi hover vào thẻ product-card, thì ảnh hover xuất hiện */
+/* .product-card:hover .hover-image {
+  opacity: 1;
+} */
+
+/* Và ảnh chính sẽ ẩn đi */
+/* .product-card:hover .main-image {
+  opacity: 0;
+} */
 
 .product-card-content {
   padding: 15px;

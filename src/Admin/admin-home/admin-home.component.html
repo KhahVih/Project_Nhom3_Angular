@@ -23,7 +23,7 @@
           <details *ngIf="isMenu">
             <summary >Quản lý đơn hàng</summary>
             <ul class="drop-menu" >
-              <li><a routerLink="/admin/order">Quản lý đơn hàng được duyệt</a></li>
+              <li><a routerLink="/admin/orderprocessing">Quản lý đơn hàng được duyệt</a></li>
               <li><a routerLink="/admin/order">Quản lý đơn hàng</a></li>
             </ul>
           </details>
@@ -58,9 +58,9 @@
           <details *ngIf="isMenu">
             <summary >Phân quyền </summary>
             <ul class="drop-menu" >
-              <li><a routerLink="/user">Nhân sự</a></li>
-              <li><a routerLink="/nhomquyen">Nhóm quyền</a></li>
-              <li><a routerLink="/role">Quyền</a></li>
+              <li><a routerLink="/admin/user">Nhân sự</a></li>
+              <li><a routerLink="/admin/nhomquyen">Nhóm quyền</a></li>
+              <li><a routerLink="/admin/role">Quyền</a></li>
             </ul>
           </details>
         </li>
@@ -76,7 +76,7 @@
           <details *ngIf="isMenu">
             <summary >Lịch sử</summary>
             <ul class="drop-menu" >
-              <li><a routerLink="/history">Thông tin lịch sử hệ thống</a></li>
+              <li><a routerLink="/admin/history">Thông tin lịch sử hệ thống</a></li>
             </ul>
           </details>
         </li>

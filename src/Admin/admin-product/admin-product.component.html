@@ -1,0 +1,289 @@
+<div class="container">
+    <!-- Sidebar Menu -->
+    <div class="sidebar" (mouseover)="openMenu()" (mouseleave)="closeMenu()" [class.expanded]="isMenu">
+      <!-- Logo -->
+      <div class="logo" *ngIf="isMenu">
+        METRONIC
+        <span class="collapse-icon">«</span>
+      </div>
+      <div class="menu" *ngIf="isMenu" style="color: #fff;">
+        <h6>CHỨC NĂNG</h6>
+      </div>
+      <ul>
+        <li class="has-dropdown">
+          <details *ngIf="isMenu">
+            <summary >Chăm sóc khách hàng</summary>
+            <ul class="drop-menu" >
+              <li><a routerLink="/admin/contact">Quản lý yêu cầu</a></li>
+              <li><a routerLink="/admin/customer">Quản lý người dùng</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown" *ngIf="isAdmin">
+          <details *ngIf="isMenu">
+            <summary >Quản lý đơn hàng</summary>
+            <ul class="drop-menu" >
+              <li><a routerLink="admin/orderprocessing">Quản lý đơn hàng được duyệt</a></li>
+              <li><a routerLink="/admin/order">Quản lý đơn hàng</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown">
+          <details *ngIf="isMenu">
+            <summary >Sản Phẩm</summary>
+            <ul class="drop-menu" >
+              <li><a routerLink="/admin/product">Quản lý sản phẩm</a></li>
+              <li><a routerLink="/admin/category">Quản lý danh mục</a></li>
+              <li><a routerLink="/admin/image">Quản lý hình ảnh</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown" *ngIf="isAdmin">
+          <details *ngIf="isMenu">
+            <summary >Bộ sưu tập </summary>
+            <ul class="drop-menu" >
+              <li><a routerLink="/admin/blog">Danh sách Blog</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown" *ngIf="isAdmin">
+          <details *ngIf="isMenu">
+            <summary >Bình luận</summary>
+            <ul class="drop-menu" >
+              <li><a routerLink="/admin/comment">Danh sách bình luận</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown">
+          <details *ngIf="isMenu">
+            <summary >Phân quyền </summary>
+            <ul class="drop-menu" >
+              <li><a routerLink="/admin/user">Nhân sự</a></li>
+              <li><a routerLink="/admin/nhomquyen">Nhóm quyền</a></li>
+              <li><a routerLink="/admin/role">Quyền</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown">
+          <details *ngIf="isMenu">
+            <summary >Gửi thông báo tự động </summary>
+            <ul class="drop-menu" >
+              <li><a routerLink="">Thông báo tự động</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="has-dropdown">
+          <details *ngIf="isMenu">
+            <summary >Lịch sử</summary>
+            <ul class="drop-menu" >
+              <li><a routerLink="/admin/history">Thông tin lịch sử hệ thống</a></li>
+            </ul>
+          </details>
+        </li>
+        <li *ngIf="isMenu"><button class="update-btn" (click)="logout()">Đăng xuất</button></li>
+      </ul>
+    </div>
+  
+    <!-- Nội dung chính -->
+    <div class="main-content">
+        <div class="product-main">
+        <!-- Form thêm hoặc chỉnh sửa sản phẩm -->
+        <div class="add-product-section" *ngIf="showAddForm">
+            <!-- <div class="overlay" (click)="closeAddForm()"></div> -->
+            <div class="add-product-content">
+            <h2>{{ isEditing ? 'Edit Product' : 'Add New Product' }}</h2>
+            <form (ngSubmit)="isEditing ? updateProduct() : addProduct()" class="product-form">
+                <div class="form-group">
+                <label for="posCode">PosCode:</label>
+                <input type="text" id="posCode" [(ngModel)]="newProduct.PosCode" name="posCode" required>
+                </div>
+                <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" [(ngModel)]="newProduct.Name" name="name" required>
+                </div>
+                <div class="form-group">
+                <label for="price">Price:</label>
+                <input type="number" id="price" [(ngModel)]="newProduct.Price" name="price" required min="0">
+                </div>
+                <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" [(ngModel)]="newProduct.Description" name="description"></textarea>
+                </div>
+                <div class="form-group">
+                <label for="count">Count:</label>
+                <input type="number" id="count" [(ngModel)]="newProduct.Count" name="count" min="0">
+                </div>
+                <div class="form-group checkbox-group">
+                <input type="checkbox" id="isPublish" [(ngModel)]="newProduct.IsPublish" name="isPublish">
+                <label for="isPublish">Is Published</label>
+                </div>
+                <div class="form-group checkbox-group">
+                <input type="checkbox" id="isNew" [(ngModel)]="newProduct.IsNew" name="isNew">
+                <label for="isNew">Is New</label>
+                </div>
+            
+                <!-- Upload ảnh mới -->
+                <div class="form-group">
+                <h3>Upload Product Images</h3>
+                <div class="image-upload">
+                    <input type="file" id="imageUpload" multiple accept="image/*" 
+                        (change)="onFileSelected($event)" class="image-input">
+                    <label for="imageUpload" class="upload-label">Choose Images</label>
+                
+                    <div class="image-preview-container" *ngIf="selectedFiles.length > 0">
+                    <div *ngFor="let sf of selectedFiles; let i = index" class="image-preview-item">
+                        <img [src]="sf.preview" [alt]="sf.file.name" class="image-preview">
+                        <button type="button" class="remove-image" (click)="removeImage(i)">×</button>
+                    </div>
+                    </div>
+                    
+                    <div *ngIf="selectedFiles.length === 0" class="no-data">No images selected.</div>
+                    <div class="upload-message">{{ uploadMessage }}</div>
+                </div>
+                </div>
+                
+                <!-- Chọn danh mục -->
+                <div class="form-group">
+                <h3>Select Category</h3>
+                <select class="category-select" 
+                        [(ngModel)]="selectedCategoryId" 
+                        name="category" 
+                        (change)="onCategorySelect($event)">
+                    <option *ngFor="let category of allCategories" [value]="category.Id">
+                    {{ category.Name }}
+                    </option>
+                </select>
+                <div *ngIf="allCategories.length === 0" class="no-data">No categories available to select.</div>
+                </div>
+                <div class="form-group">
+                <h3>Select Sale</h3>
+                <select class="sale-select" [(ngModel)]="selectedSaleId" name="sale">
+                    <option *ngFor="let sale of sales" [value]="sale.Id">{{ sale.Name }}</option>
+                </select>
+                </div>
+                <!-- Chọn màu sắc -->
+                <div class="form-group">
+                <label>Colors:</label>
+                <div *ngFor="let color of colors">
+                    <input 
+                    type="checkbox" 
+                    [value]="color.Id" 
+                    (change)="toggleColorSelection(color)" 
+                    [checked]="isColorSelected(color)">
+                    {{ color.Name }}
+                </div>
+
+                <ul>
+                    <li *ngFor="let color of selectedColors">
+                    {{ color.Name }} 
+                    <button type="button" (click)="removeColor(color.Id)">Remove</button>
+                    </li>
+                </ul>
+                </div>
+                <!-- Chọn kích thước -->
+                <div class="form-group">
+                <label>Sizes:</label>
+                <div *ngFor="let size of sizes">
+                    <input 
+                    type="checkbox" 
+                    [value]="size.Id" 
+                    (change)="toggleSizeSelection(size)" 
+                    [checked]="isSizeSelected(size)">
+                    {{ size.Name }}
+                </div>
+
+                <ul>
+                    <li *ngFor="let size of selectedSizes">
+                    {{ size.Name }} 
+                    <button type="button" (click)="removeSize(size.Id)">Remove</button>
+                    </li>
+                </ul>
+                </div>
+
+            
+                <!-- Nút submit và hủy -->
+                <div class="form-actions">
+                <button type="submit" class="submit-btn" 
+                        [disabled]="!newProduct.Name || newProduct.Price < 0">
+                    {{ isEditing ? 'Update Product' : 'Add Product' }}
+                </button>
+                <button type="button" class="cancel-btn" (click)="closeAddForm()">Cancel</button>
+                </div>
+            </form> <!-- Correctly closes the form -->
+            </div>
+        </div>
+        
+        <!-- Danh sách sản phẩm dưới dạng bảng -->
+        <div class="product-list-section">
+            <div class="product-header">
+                <div class="product-title-header">
+                    <h2>Product</h2>
+                    <h6>Tổng sản phẩm: {{totalProduct}}</h6>
+                </div>
+                <div class="add-product-header">
+                    <button class="add-btn" (click)="toggleAddForm()">
+                        {{ showAddForm ? 'Hide Form' : 'Add Product' }}
+                    </button>
+                </div>
+            </div>
+        
+            <!-- Danh sách sản phẩm dạng report-table -->
+            <div class="report-table">
+            <div class="table-header">
+                <span class="source-name">NAME</span>
+                <span>POSCODE</span>
+                <span>PRICE</span>
+                <span>PUBLISHED</span>
+                <span>NEW</span>
+                <!-- <span>IMAGES</span> -->
+                <span>CATEGORIES</span>
+                <span>HÀNH ĐỘNG</span>
+            </div>
+            <div class="table-body">
+                <div class="table-row" *ngFor="let product of products">
+                    <span class="source-name">{{ product.Name }}</span>
+                    <span>{{ product.PosCode }} <br> {{ product.CreatedAt | date }}</span>
+                    <span>{{ product.Price }}00 VND</span>
+                    <span>{{ product.IsPublish ? 'Đã xuất bảng ' : 'Chưa xuất bản ' }}</span>
+                    <span>{{ product.IsNew ? 'Yes' : 'No' }}</span>
+                    <!-- <span>
+                    <div class="image-gallery">
+                        <img *ngFor="let image of product.Images" [src]="image.Link" [alt]="image.Name" class="product-image">
+                        <span *ngIf="!product.Images || product.Images.length === 0">No images</span>
+                    </div>
+                    </span> -->
+                    <span>
+                    <span *ngFor="let category of product.ProductCategorys">
+                        {{ category.CategoryName }}
+                    </span>
+                    <span *ngIf="product.ProductCategorys.length === 0">No categories</span>
+                    </span>
+                    <div class="actions">
+                    <button class="edit-btn" (click)="editProduct(product)">Sửa</button>
+                    <button class="delete-btn" (click)="deleteProduct(product.Id)">Xóa</button>
+                    </div>
+                </div>
+            </div>
+            <!-- PHÂN TRANG -->
+            <div class="pagination" style="display: flex; padding: 1rem; justify-content: center; gap: 6px; flex-wrap: wrap;">
+                <!-- Trang đầu và trước -->
+                <button (click)="prevPage()" [disabled]="page === 1">‹</button>
+            
+                <!-- Danh sách số trang -->
+                <button 
+                *ngFor="let p of visiblePages"
+                [class.active]="page === p"
+                (click)="goToPage(p)">
+                {{ p }}
+                </button>
+            
+                <!-- Trang sau và cuối -->
+                <button (click)="nextPage()" [disabled]="page === totalPages">›</button>
+            </div>
+            <div *ngIf="products.length === 0" class="no-data">No products available.</div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+

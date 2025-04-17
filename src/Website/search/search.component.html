@@ -126,7 +126,7 @@
                   <div class="header-section">
                         <div>
                             <h2>Tìm kiếm </h2> 
-                            <p>Tìm kiếm ({{TotalProduct}}): {{searchQuery}}</p>
+                            <p>Tìm kiếm ({{totalProducts}}): {{searchQuery}}</p>
                         </div>
                       <select class="sort-select" [(ngModel)] = "selectSort" (change)="sortProducts()">
                           <option value="1">Mặc định</option>
@@ -153,6 +153,46 @@
                           </div>
                       </div>
                   </div>
+                  <!--page-->
+                  <nav class="pagination-container" *ngIf="totalPages >= 1">
+                    <ul class="pagination">
+                  
+                      <!-- Prev button -->
+                      <li class="page-item" [class.disabled]="page === 1" (click)="prevPage()">
+                        <a>«</a>
+                      </li>
+                  
+                      <!-- First page and ellipsis -->
+                      <li class="page-item" *ngIf="getPages()[0] > 1">
+                        <a (click)="goToPage(1)">1</a>
+                      </li>
+                      <li class="page-item disabled" *ngIf="getPages()[0] > 2">
+                        <a>...</a>
+                      </li>
+                  
+                      <!-- Visible pages -->
+                      <li
+                        class="page-item"
+                        *ngFor="let p of getPages()"
+                        [class.active]="page === p"
+                      >
+                        <a (click)="goToPage(p)">{{ p }}</a>
+                      </li>
+                  
+                      <!-- Ellipsis and last page -->
+                      <li class="page-item disabled" *ngIf="getPages()[getPages().length - 1] < totalPages - 1">
+                        <a>...</a>
+                      </li>
+                      <li class="page-item" *ngIf="getPages()[getPages().length - 1] < totalPages">
+                        <a (click)="goToPage(totalPages)">{{ totalPages }}</a>
+                      </li>
+                  
+                      <!-- Next button -->
+                      <li class="page-item" [class.disabled]="page === totalPages" (click)="nextPage()">
+                        <a>»</a>
+                      </li>
+                    </ul>
+                  </nav>
               </div>
           </div>
       </div>

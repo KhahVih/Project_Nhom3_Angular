@@ -1,0 +1,159 @@
+<div class="container">
+    <!-- Sidebar Menu -->
+    <div class="sidebar" (mouseover)="openMenu()" (mouseleave)="closeMenu()" [class.expanded]="isMenu">
+        <!-- Logo -->
+        <div class="logo" *ngIf="isMenu">
+            METRONIC
+            <span class="collapse-icon">«</span>
+        </div>
+        <div class="menu" *ngIf="isMenu" style="color: #fff;">
+            <h6>CHỨC NĂNG </h6>
+        </div>
+        <ul>
+            <li class="has-dropdown">
+                <details *ngIf="isMenu">
+                    <summary>Chăm sóc khách hàng</summary>
+                    <ul class="drop-menu">
+                        <li><a routerLink="/admin/contact">Quản lý yêu cầu</a></li>
+                        <li><a routerLink="/admin/customer">Quản lý người dùng</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li class="has-dropdown" *ngIf="isAdmin">
+                <details *ngIf="isMenu">
+                    <summary>Quản lý đơn hàng</summary>
+                    <ul class="drop-menu">
+                        <li><a routerLink="admin/orderprocessing">Quản lý đơn hàng được duyệt</a></li>
+                        <li><a routerLink="admin/order">Quản lý đơn hàng</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li class="has-dropdown">
+                <details *ngIf="isMenu">
+                    <summary>Sản Phẩm</summary>
+                    <ul class="drop-menu">
+                        <li><a routerLink="/admin/product">Quản lý sản phẩm</a></li>
+                        <li><a routerLink="/admin/category">Quản lý danh mục</a></li>
+                        <li><a routerLink="/admin/image">Quản lý hình ảnh</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li class="has-dropdown" *ngIf="isAdmin">
+                <details *ngIf="isMenu">
+                    <summary>Bộ sưu tập </summary>
+                    <ul class="drop-menu">
+                        <li><a routerLink="/admin/blog">Danh sách Blog</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li class="has-dropdown" *ngIf="isAdmin">
+                <details *ngIf="isMenu">
+                    <summary>Bình luận</summary>
+                    <ul class="drop-menu">
+                        <li><a routerLink="/admin/comment">Danh sách bình luận</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li class="has-dropdown" *ngIf="isAdmin">
+                <details *ngIf="isMenu">
+                    <summary>Phân quyền </summary>
+                    <ul class="drop-menu">
+                        <li><a routerLink="/admin/user">Nhân sự</a></li>
+                        <li><a routerLink="/admin/nhomquyen">Nhóm quyền</a></li>
+                        <li><a routerLink="/admin/role">Quyền</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li class="has-dropdown">
+                <details *ngIf="isMenu">
+                    <summary>Gửi thông báo tự động </summary>
+                    <ul class="drop-menu">
+                        <li><a routerLink="">Thông báo tự động</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li class="has-dropdown">
+                <details *ngIf="isMenu">
+                    <summary>Lịch sử</summary>
+                    <ul class="drop-menu">
+                        <li><a routerLink="/admin/history">Thông tin lịch sử hệ thống</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li *ngIf="isMenu"><button class="update-btn" (click)="logout()">Đăng xuất</button></li>
+        </ul>
+    </div>
+
+    <!--phần chính-->
+    <div class="role-main">
+        <!-- Tiêu đề và nút -->
+        <div class="header">
+            <div class="header-content">
+                <h2>Quản lý quyền <span class="sub-header">Trang chủ</span></h2>
+            </div>
+        </div>
+
+        <!-- Nút thêm vai trò -->
+        <div class="add-role-header">
+            <button class="update-btn" (click)="toggleAddForm()">
+                {{ showAddForm ? 'Ẩn Form' : 'Thêm Quyền' }}
+            </button>
+        </div>
+
+        <!-- Danh sách vai trò dạng bảng -->
+        <div class="report-table">
+            <div class="table-header">
+                <span class="source-name">ID</span>
+                <span>TÊN QUYỀN</span>
+                <span>HÀNH ĐỘNG</span>
+            </div>
+            <div class="table-row" *ngFor="let role of roles">
+                <span class="source-name">{{ role.Id }}</span>
+                <span>{{ role.Name }}</span>
+                <div class="actions">
+                    <button class="edit-btn" (click)="edit(role)">✏️ Sửa</button>
+                    <button class="delete-btn" (click)="deleteRole(role.Id!)">💾 Xóa</button>
+                </div>
+            </div>
+            <div *ngIf="roles.length === 0" class="no-data">Không có quyền nào.</div>
+        </div>
+
+        <!-- Form thêm vai trò (modal) -->
+        <div class="add-role-section" *ngIf="showAddForm && !isEditing">
+            <!-- <div class="overlay" (click)="resetForm()"></div> -->
+            <div class="add-role-content">
+                <h3>Thêm Quyền</h3>
+                <form (ngSubmit)="addRole()" class="role-form">
+                    <div class="form-group">
+                        <label for="name">Tên Vai Trò:</label>
+                        <input id="name" type="text" [(ngModel)]="newRole.Name" name="roleName" class="form-control"
+                            required />
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="submit-btn" [disabled]="!newRole.Name">Thêm</button>
+                        <button type="button" class="cancel-btn" (click)="resetForm()">Hủy</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Form chỉnh sửa vai trò (modal) -->
+        <div class="add-role-section" *ngIf="showAddForm && isEditing">
+            <!-- <div class="overlay" (click)="resetForm()"></div> -->
+            <div class="add-role-content">
+                <h3>Chỉnh Sửa Quyền</h3>
+                <form (ngSubmit)="updateRole()" class="role-form">
+                    <div class="form-group">
+                        <label for="editName">Tên Vai Trò:</label>
+                        <input id="editName" type="text" [(ngModel)]="editRole.Name" name="editRoleName"
+                            class="form-control" required />
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="submit-btn" [disabled]="!editRole.Name">Lưu</button>
+                        <button type="button" class="cancel-btn" (click)="resetForm()">Hủy</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

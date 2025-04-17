@@ -14,14 +14,20 @@ import { AdminCategoryComponent } from '../Admin/admin-category/admin-category.c
 import { AdminImageComponent } from '../Admin/admin-image/admin-image.component';
 import { AdminCommentComponent } from '../Admin/admin-comment/admin-comment.component';
 import { AdminBlogComponent } from '../Admin/admin-blog/admin-blog.component';
+import { AdminUserComponent } from '../Admin/admin-user/admin-user.component';
+import { AdminPermissionComponent } from '../Admin/admin-permission/admin-permission.component';
+import { AdminRoleComponent } from '../Admin/admin-role/admin-role.component';
 import { RecruitmentComponent } from '../Website/recruitment/recruitment.component';
 import { PolicyComponent } from '../Website/policy/policy.component';
 import { StoresystemComponent } from '../Website/storesystem/storesystem.component';
 import { LoginComponent } from '../Website/login/login.component';
 import { ProductsaleComponent } from '../Website/productsale/productsale.component';
 import { RecruitmentDetailComponent } from '../Website/recruitment-detail/recruitment-detail.component';
-import { Component } from '@angular/core';
 import { PolicyDetailComponent } from '../Website/policy-detail/policy-detail.component';
+import { ProfileComponent } from '../Website/profile/profile.component';
+import { AdminHistoryComponent } from '../Admin/admin-history/admin-history.component';
+import { AdminProductComponent } from '../Admin/admin-product/admin-product.component';
+import { AdminOrderDeliveredComponent } from '../Admin/admin-order-delivered/admin-order-delivered.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -37,7 +43,8 @@ export const routes: Routes = [
   { path: 'stores', component: StoresystemComponent },
   { path: 'login', component: LoginComponent },
   { path: 'sale', component: ProductsaleComponent },
-  // Admin routes
+  {path: 'profile', component: ProfileComponent},
+  // Admin routes ***************************************************************************************
   { path: 'admin/home', component: AdminHomeComponent },
   { path: 'admin/contact', component: AdminContactComponent },
   { path: 'admin/login', component: AdminLoginComponent },
@@ -47,6 +54,12 @@ export const routes: Routes = [
   { path: 'admin/image', component: AdminImageComponent },
   { path: 'admin/comment', component: AdminCommentComponent },
   { path: 'admin/blog', component: AdminBlogComponent },
+  {path: 'admin/user', component: AdminUserComponent},
+  {path: 'admin/nhomquyen', component: AdminPermissionComponent},
+  {path: 'admin/role', component: AdminRoleComponent},
+  {path: 'admin/history', component: AdminHistoryComponent},
+  {path: 'admin/product', component: AdminProductComponent},
+  {path: 'admin/orderprocessing', component: AdminOrderDeliveredComponent},
   // Redirect for unmatched routes
   { path: '**', redirectTo: '/home', pathMatch: 'full' }
-];
+]

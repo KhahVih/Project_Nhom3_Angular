@@ -129,7 +129,23 @@ export class ProductsaleComponent implements OnInit{
   }
 
   getPages(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    const maxDisplayedPages = 5;
+    const half = Math.floor(maxDisplayedPages / 2);
+
+    let start = Math.max(1, this.page - half);
+    let end = Math.min(this.totalPages, start + maxDisplayedPages - 1);
+
+    // Điều chỉnh nếu đang ở gần cuối danh sách
+    if (end - start < maxDisplayedPages - 1) {
+      start = Math.max(1, end - maxDisplayedPages + 1);
+    }
+
+    const pages = [];
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    return pages;
   }
 
   // Lọc theo khuyến mãi

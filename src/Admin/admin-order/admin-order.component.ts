@@ -39,14 +39,60 @@ export class AdminOrderComponent {
   ngOnInit(): void {
     this.loadOrder();
   }
+  page: number = 1;
+  totalPages: number = 0;
   loadOrder(){
-    this.orderService.GetAllOrders().subscribe(data =>{
-      this.order = data;
-      this.totalOrder = data.length;
+    this.orderService.GetAllOrders(this.page).subscribe(data =>{
+      this.order = data.Orders;
+      this.totalOrder = data.TotalOrders;
+      this.totalPages = data.TotalPages;
       this.loadOrderCountByStatus();
+      this.updateVisiblePages();
       console.log(data);
     })
   }
+  visiblePages: number[] = [];
+  updateVisiblePages(): void {
+    const maxVisible = 5; // Số trang hiển thị tối đa
+    const half = Math.floor(maxVisible / 2);
+    let start = Math.max(1, this.page - half);
+    let end = Math.min(this.totalPages, start + maxVisible - 1);
+
+    if (end - start < maxVisible - 1) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    this.visiblePages = [];
+    for (let i = start; i <= end; i++) {
+      this.visiblePages.push(i);
+    }
+  }
+  // Phân trang
+  goToPage(pageNumber: number): void {
+    if (pageNumber >= 1 && pageNumber <= this.totalPages) {
+      this.page = pageNumber;
+      this.loadOrder();
+      this.updateVisiblePages()
+    }
+  }
+
+  prevPage(): void {
+    if (this.page > 1) {
+      this.page--;
+      this.loadOrder();
+      this.updateVisiblePages()
+    }
+  }
+
+  nextPage(): void {
+    if (this.page < this.totalPages) {
+      this.page++;
+      this.loadOrder();
+      this.updateVisiblePages()
+    }
+  }
+
+
   loadOrderCountByStatus(): void {
     this.orderService.GetOrderCountByStatus().subscribe({
       next: (data) => {

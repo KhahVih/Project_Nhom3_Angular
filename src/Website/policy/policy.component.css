@@ -63,13 +63,12 @@ header {
   .dropdown-content a:hover {
     background-color: #f0f0f0;
   }
+  
   .search-bar {
     position: absolute;
     top: 90%; /* Điều chỉnh tùy vị trí menu */
     left: 70%;
     right: 0;
-    width: 100%;
-    background: #fff;
     box-shadow: 0 2px 5px rgba(219, 55, 55, 0.1);
     z-index: 1000;
     display: flex;

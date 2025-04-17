@@ -48,16 +48,16 @@ export class ProductdetailComponent implements OnInit{
     this.loadProduct();
     this.checkLoginStatus();
     // Gán availableQuantity từ product.Count
-    if (this.product && this.product.Count >= 0) {
-      this.availableQuantity = this.product.Count;
-    } else {
-      this.availableQuantity = 0; // Mặc định là 0 nếu không có dữ liệu
-    }
+    // if (this.product && this.product.Count >= 0) {
+    //   this.availableQuantity = this.product.Count;
+    // } else {
+    //   this.availableQuantity = 0; // Mặc định là 0 nếu không có dữ liệu
+    // }
 
-    // Điều chỉnh quantity nếu cần
-    if (this.availableQuantity < this.quantity) {
-      this.quantity = this.availableQuantity; // Đảm bảo quantity không vượt quá kho
-    }
+    // // Điều chỉnh quantity nếu cần
+    // if (this.availableQuantity < this.quantity) {
+    //   this.quantity = this.availableQuantity; // Đảm bảo quantity không vượt quá kho
+    // }
   }
   // loadProduct
   loadProduct(){
@@ -72,6 +72,10 @@ export class ProductdetailComponent implements OnInit{
       this.categoryname = this.product?.ProductCategorys[0].CategoryName || '';
       this.availableQuantity = this.product?.Count || 0
       this.selectedImage = this.product?.Images[1].Link || ''; // Gán ảnh mặc định là ảnh đầu tiên trong danh sách khi component khởi tạo
+      // Điều chỉnh quantity nếu cần
+      if (this.availableQuantity < this.quantity) {
+        this.quantity = this.availableQuantity;
+      }
       console.log('Product: ',data);
       this.loadRelatedProducts();
       
@@ -98,6 +102,10 @@ export class ProductdetailComponent implements OnInit{
   AddToCart(product: Product){
     if (this.selectcolor === null || this.selectsize === null) {
       alert('Vui lòng chọn màu và kích thước!');
+      return;
+    }
+    if (this.quantity > this.availableQuantity) {
+      alert('Số lượng vượt quá tồn kho!');
       return;
     }
     // Lấy thông tin user từ authService

@@ -67,7 +67,7 @@ export class ProductService {
   }
   // Cập nhật sản phẩm 
   UpdateProduct(id: number, formData: FormData): Observable<Product> {
-    return this.http.put<Product>(`${this.productsUrl}/${id}`, formData);
+    return this.http.put<Product>(`${this.productsUrl}/UpdateProduct/${id}`, formData);
   }
   // Xóa sản phẩm
   DeleteProduct(id: number): Observable<void> {

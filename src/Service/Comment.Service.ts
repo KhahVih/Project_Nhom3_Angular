@@ -13,12 +13,9 @@ export class CommentService {
   
     constructor(private http: HttpClient) {}
   
-    getComments(): Observable<Comment[]> {
+    getComments(page: number): Observable<any> {
       const url = `${this.commentsUrl}`;
-      return this.http.get<Comment[]>(url).pipe(
-        tap(comments => console.log('Fetched comments:', comments)),
-        catchError(this.handleError<Comment[]>('getComments', []))
-      );
+      return this.http.get<any>(`${url}/GetAllComment/page=${page}`);
     }
   
     getComment(id: number): Observable<Comment> {

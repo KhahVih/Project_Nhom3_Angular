@@ -16,6 +16,7 @@ import { History } from "../Models/HistoryDTO";
                 CustomerId: CustomerId,
                 Action: Action,
                 Description: Description,
+                CreatedAt: new Date()
             };
 
             this.history.addHistory(history).subscribe({

@@ -1,0 +1,186 @@
+<div class="container">
+    <!-- Sidebar Menu -->
+    <div class="sidebar" (mouseover)="openMenu()" (mouseleave)="closeMenu()" [class.expanded]="isMenu">
+        <!-- Logo -->
+        <div class="logo" *ngIf="isMenu">
+            METRONIC
+            <span class="collapse-icon">«</span>
+        </div>
+        <div class="menu" *ngIf="isMenu" style="color: #fff;">
+            <h6>CHỨC NĂNG</h6>
+        </div>
+        <ul>
+            <li class="has-dropdown">
+                <details *ngIf="isMenu">
+                    <summary>Chăm sóc khách hàng</summary>
+                    <ul class="drop-menu">
+                        <li><a routerLink="/admin/contact">Quản lý yêu cầu</a></li>
+                        <li><a routerLink="/admin/customer">Quản lý người dùng</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li class="has-dropdown" *ngIf="isAdmin">
+                <details *ngIf="isMenu">
+                    <summary>Quản lý đơn hàng</summary>
+                    <ul class="drop-menu">
+                        <li><a routerLink="/admin/orderprocessing">Quản lý đơn hàng được duyệt</a></li>
+                        <li><a routerLink="/admin/order">Quản lý đơn hàng</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li class="has-dropdown">
+                <details *ngIf="isMenu">
+                    <summary>Sản Phẩm</summary>
+                    <ul class="drop-menu">
+                        <li><a routerLink="/admin/product">Quản lý sản phẩm</a></li>
+                        <li><a routerLink="/admin/category">Quản lý danh mục</a></li>
+                        <li><a routerLink="/admin/image">Quản lý hình ảnh</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li class="has-dropdown" *ngIf="isAdmin">
+                <details *ngIf="isMenu">
+                    <summary>Bộ sưu tập </summary>
+                    <ul class="drop-menu">
+                        <li><a routerLink="/admin/blog">Danh sách Blog</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li class="has-dropdown" *ngIf="isAdmin">
+                <details *ngIf="isMenu">
+                    <summary>Bình luận</summary>
+                    <ul class="drop-menu">
+                        <li><a routerLink="/admin/comment">Danh sách bình luận</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li class="has-dropdown" *ngIf="isAdmin">
+                <details *ngIf="isMenu">
+                    <summary>Phân quyền </summary>
+                    <ul class="drop-menu">
+                        <li><a routerLink="/admin/user">Nhân sự</a></li>
+                        <li><a routerLink="/admin/nhomquyen">Nhóm quyền</a></li>
+                        <li><a routerLink="/admin/role">Quyền</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li class="has-dropdown">
+                <details *ngIf="isMenu">
+                    <summary>Gửi thông báo tự động </summary>
+                    <ul class="drop-menu">
+                        <li><a routerLink="">Thông báo tự động</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li class="has-dropdown">
+                <details *ngIf="isMenu">
+                    <summary>Lịch sử</summary>
+                    <ul class="drop-menu">
+                        <li><a routerLink="/admin/history">Thông tin lịch sử hệ thống</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li *ngIf="isMenu"><button class="update-btn" (click)="logout()">Đăng xuất</button></li>
+        </ul>
+    </div>
+    <!--main-->
+    <div class="permission-main">
+        <!-- Tiêu đề và nút -->
+        <div class="header">
+            <div class="header-content">
+                <h2>Quản lý quyền hạn <span class="sub-header">Trang chủ</span></h2>
+            </div>
+        </div>
+        <button class="update-btn" (click)="toggleAddForm()">Thêm nhóm quyền</button>
+        <!-- Form Thêm Quyền Hạn -->
+        <div class="add-permission-section" *ngIf="showAddForm">
+            <div class="overlay" (click)="resetForm()"></div>
+            <div class="add-permission-content">
+                <div class="modal-header">
+                    <h3>Thêm Quyền Hạn</h3>
+                    <button class="close-btn" (click)="closeAddForm()">×</button>
+                </div>
+                <form (ngSubmit)="addPermission()" class="permission-form">
+                    <div class="form-group">
+                        <label for="permissionName" class="bold">Tên Quyền Hạn:</label>
+                        <input id="permissionName" type="text" [(ngModel)]="newPermission.Name" name="permissionName"
+                            class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label class="bold">Chọn Vai Trò:</label>
+                        <div class="role-selection">
+                            <div *ngFor="let role of roles" class="role-option">
+                                <input type="checkbox" [id]="'role-' + role.Id" [value]="role.Id"
+                                    (change)="toggleRoleSelection(role.Id)"
+                                    [checked]="selectedRoles.includes(role.Id)" />
+                                <label [for]="'role-' + role.Id">{{ role.Name }}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="cancel-btn" (click)="closeAddForm()">Hủy</button>
+                        <button type="submit" class="submit-btn" [disabled]="!newPermission.Name">Thêm</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Form Chỉnh Sửa Quyền Hạn -->
+        <div class="edit-permission-section" *ngIf="editPermission">
+            <div class="overlay" (click)="closedit()"></div>
+            <div class="edit-permission-content">
+                <div class="modal-header">
+                    <h3>Chỉnh Sửa Quyền Hạn</h3>
+                    <button class="close-btn" (click)="closedit()">×</button>
+                </div>
+                <form (ngSubmit)="updatePermission()" class="permission-form">
+                    <div class="form-group">
+                        <label for="editPermissionName" class="bold">Tên Quyền Hạn:</label>
+                        <input id="editPermissionName" type="text" [(ngModel)]="editPermission.Name"
+                            name="editPermissionName" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label class="bold">Chọn Vai Trò:</label>
+                        <div class="role-selection">
+                            <div *ngFor="let role of roles" class="role-option">
+                                <input type="checkbox" [id]="'edit-role-' + role.Id" [value]="role.Id"
+                                    (change)="toggleRoleSelection(role.Id)"
+                                    [checked]="selectedRoles.includes(role.Id)" />
+                                <label [for]="'edit-role-' + role.Id">{{ role.Name }}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="cancel-btn" (click)="closedit()">Hủy</button>
+                        <button type="submit" class="submit-btn">Lưu</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Bảng danh sách quyền hạn -->
+        <table class="table table-bordered">
+            <thead>
+                <tr style="text-align: center;" >
+                    <th>ID</th>
+                    <th>Tên</th>
+                    <th>Vai Trò</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let permission of permissions">
+                    <td>{{ permission.Id }}</td>
+                    <td>{{ permission.Name }}</td>
+                    <td>
+                        <ul>
+                            <li *ngFor="let role of permission.PermissionRoles">{{ role.RoleName }}</li>
+                        </ul>
+                    </td>
+                    <td style="text-align: center;">
+                        <button class="btn btn-warning btn-sm" (click)="edit(permission)" >✏️ Sửa</button>
+                        <button style="margin-left: 20px;" class="btn btn-danger btn-sm" (click)="deletePermission(permission.Id)">💾 Xóa</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

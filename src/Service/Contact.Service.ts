@@ -12,11 +12,8 @@ import { Contact } from "../Models/ContactDTO";
   
     constructor(private http: HttpClient) {}
   
-    getContacts(): Observable<Contact[]> {
-      return this.http.get<Contact[]>(this.contactsUrl).pipe(
-        tap(contacts => console.log('Fetched contacts:', contacts)),
-        catchError(this.handleError<Contact[]>('getContacts', []))
-      );
+    getContacts(page: number): Observable<any> {
+      return this.http.get<any>(`${this.contactsUrl}/GetAllContact/page${page}`);
     }
   
     getContact(id: number): Observable<Contact> {

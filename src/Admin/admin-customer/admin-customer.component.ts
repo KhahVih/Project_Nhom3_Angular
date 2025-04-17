@@ -9,42 +9,29 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-admin-customer',
-  imports: [FormsModule,CommonModule,RouterLink],
+  standalone: true,
+  imports: [FormsModule, CommonModule, RouterLink],
   templateUrl: './admin-customer.component.html',
   styleUrl: './admin-customer.component.css'
 })
 export class AdminCustomerComponent {
-  isMenu = true;
-  openMenu(){
-    this.isMenu = true;
-  }
-  closeMenu(){
-    this.isMenu = false;
-  }
-  
   customers: Customer[] = [];
   selectedCustomer: Customer | null = null;
+
+  // Modal và form
   showAddModal = false;
-  showChangePasswordModal = false; // Thêm biến để hiển thị modal đổi mật khẩu
-  changePasswordRequest: ChangePassword = {
-    Email: '',
-    OldPassword: '',
-    NewPassword: ''
-  };
-  newCustomer: Customer = {
-    Id: 0,
-    Username: '',
-    Email: '',
-    Password: '',
-    Fullname: '',
-    Address: '',
-    Phone: '',
-    Gender: true,
-    IsClone: false,
-    CreatedAt: new Date(),
-    Date: new Date(),
-    CommentCount: 0,
-  };
+  showChangePasswordModal = false;
+  newCustomer: Customer = this.getEmptyCustomer();
+  changePasswordRequest: ChangePassword = this.getEmptyPasswordRequest();
+
+  // Phân trang
+  page: number = 1;
+  totalPages: number = 0;
+
+  // Menu
+  isMenu = true;
+  openMenu() { this.isMenu = true; }
+  closeMenu() { this.isMenu = false; }
 
   constructor(private customerService: CustomerService, private login: LoginService, private router: Router) {}
 
@@ -52,13 +39,17 @@ export class AdminCustomerComponent {
     this.loadCustomers();
   }
 
+  // Tải danh sách khách hàng có phân trang
   loadCustomers(): void {
-    this.customerService.getCustomer().subscribe(data => {
-      this.customers = data;
-      console.log(data);
+    this.customerService.getCustomer(this.page).subscribe(data => {
+      this.customers = data.Customers;
+      this.totalPages = data.TotalPages;
+      this.updateVisiblePages();
+      console.log('Response:', data);
     });
   }
 
+  // Mở modal
   openAddModal(): void {
     this.showAddModal = true;
   }
@@ -69,8 +60,7 @@ export class AdminCustomerComponent {
   }
 
   addCustomer(): void {
-    this.customerService.addCustomer(this.newCustomer).subscribe(customer => {
-      this.customers.push(customer);
+    this.customerService.addCustomer(this.newCustomer).subscribe(() => {
       this.loadCustomers();
       this.closeAddModal();
     });
@@ -80,16 +70,10 @@ export class AdminCustomerComponent {
     this.selectedCustomer = { ...customer };
   }
 
-  closeEditModal(): void {
-    this.selectedCustomer = null;
-  }
-
   updateCustomer(): void {
     if (this.selectedCustomer) {
       this.customerService.updateCustomer(this.selectedCustomer.Id, this.selectedCustomer).subscribe(() => {
-        const index = this.customers.findIndex(c => c.Id === this.selectedCustomer!.Id);
-        //this.customers[index] = { ...this.selectedCustomer };
-        this.loadCustomers()
+        this.loadCustomers();
         this.closeEditModal();
       });
     }
@@ -103,8 +87,86 @@ export class AdminCustomerComponent {
     }
   }
 
+  closeEditModal(): void {
+    this.selectedCustomer = null;
+  }
+
+  // Đổi mật khẩu
+  openChangePasswordModal(): void {
+    this.showChangePasswordModal = true;
+  }
+
+  closeChangePasswordModal(): void {
+    this.showChangePasswordModal = false;
+    this.resetChangePasswordForm();
+  }
+
+  changePassword(): void {
+    const { Email, OldPassword, NewPassword } = this.changePasswordRequest;
+    if (!Email || !OldPassword || !NewPassword) {
+      alert('Vui lòng nhập đầy đủ thông tin');
+      return;
+    }
+    this.customerService.changePassword(this.changePasswordRequest).subscribe({
+      next: () => {
+        this.loadCustomers();
+        setTimeout(() => this.closeChangePasswordModal(), 2000);
+      }
+    });
+  }
+
+  visiblePages: number[] = [];
+  updateVisiblePages(): void {
+    const maxVisible = 5; // Số trang hiển thị tối đa
+    const half = Math.floor(maxVisible / 2);
+    let start = Math.max(1, this.page - half);
+    let end = Math.min(this.totalPages, start + maxVisible - 1);
+
+    if (end - start < maxVisible - 1) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    this.visiblePages = [];
+    for (let i = start; i <= end; i++) {
+      this.visiblePages.push(i);
+    }
+  }
+  // Phân trang
+  goToPage(pageNumber: number): void {
+    if (pageNumber >= 1 && pageNumber <= this.totalPages) {
+      this.page = pageNumber;
+      this.loadCustomers();
+      this.updateVisiblePages()
+    }
+  }
+
+  prevPage(): void {
+    if (this.page > 1) {
+      this.page--;
+      this.loadCustomers();
+      this.updateVisiblePages()
+    }
+  }
+
+  nextPage(): void {
+    if (this.page < this.totalPages) {
+      this.page++;
+      this.loadCustomers();
+      this.updateVisiblePages()
+    }
+  }
+
+  // Reset form
   resetNewCustomer(): void {
-    this.newCustomer = {
+    this.newCustomer = this.getEmptyCustomer();
+  }
+
+  resetChangePasswordForm(): void {
+    this.changePasswordRequest = this.getEmptyPasswordRequest();
+  }
+
+  getEmptyCustomer(): Customer {
+    return {
       Id: 0,
       Username: '',
       Email: '',
@@ -120,41 +182,21 @@ export class AdminCustomerComponent {
     };
   }
 
-  // Logic cho đổi mật khẩu
-  openChangePasswordModal(): void {
-    this.showChangePasswordModal = true;
-  }
-
-  closeChangePasswordModal(): void {
-    this.showChangePasswordModal = false;
-    this.resetChangePasswordForm();
-  }
-  changePassword(): void {
-    if(!this.changePasswordRequest.Email || !this.changePasswordRequest.OldPassword || !this.changePasswordRequest.NewPassword){
-      alert('Vui lòng nhập đầy đủ thông tin')
-    }
-    this.customerService.changePassword(this.changePasswordRequest).subscribe({
-      next: (response) => {
-        console.log(response) // "Mật khẩu đã được cập nhật thành công"
-        setTimeout(() => this.closeChangePasswordModal(), 2000); // Đóng modal sau 2 giây
-        this.loadCustomers();
-      },
-    });
-  }
-  resetChangePasswordForm(): void {
-    this.changePasswordRequest = {
+  getEmptyPasswordRequest(): ChangePassword {
+    return {
       Email: '',
       OldPassword: '',
       NewPassword: ''
     };
   }
 
-  logout(){
+  // Đăng xuất
+  logout() {
     this.login.logout();
     this.router.navigate(['admin/login']);
   }
-  get isAdmin(): boolean{
+
+  get isAdmin(): boolean {
     return this.login.isAdmin();
   }
-
 }

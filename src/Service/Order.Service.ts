@@ -11,12 +11,20 @@ export class OrderService {
   
     constructor(private http: HttpClient) { }
     // Lấy danh sách đơn hàng 
-    GetAllOrders(): Observable<Order[]> {
-      return this.http.get<Order[]>(`${this.apiUrl}/getall`);
+    GetAllOrders(page: number): Observable<any> {
+      return this.http.get<any>(`${this.apiUrl}/getall?page=${page}`);
     }
     // Lấy đơn hàng theo Id 
     GetOrderId(id: number): Observable<Order[]>{
       return this.http.get<Order[]>(`${this.apiUrl}/getorderbyid/${id}`)
+    }
+    // Lấy đơn hàng theo người dùng 
+    GetOrderCustomerId(id: string, page: number): Observable<any>{
+      return this.http.get<any>(`${this.apiUrl}/getorderbycustomer/${id}?page=${page}`)
+    }
+    // Get All Order đã giao /by-statusDelivered1
+    GetOrderDelivered(page: number): Observable<any>{
+      return this.http.get<any>(`${this.apiUrl}/by-statusDelivered${page}`)
     }
     // Cập nhật trạng thái đơn hàng 
     UpdateStatus(id: number, updateData: any): Observable<any>{

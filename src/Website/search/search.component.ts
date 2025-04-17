@@ -1,132 +1,190 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../Service/Product.Service';
 import { Product } from '../../Models/ProductDTO';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Category } from '../../Models/CategoryDTO';
+import { Sale } from '../../Models/SaleDTO';
 import { SaleService } from '../../Service/Sale.Service';
 import { Categoryservice } from '../../Service/Category.Service';
-import { Sale } from '../../Models/SaleDTO';
 import { CustomerService } from '../../Service/Customer.Service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-search',
+  standalone: true,
   imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './search.component.html',
-  styleUrl: './search.component.css'
+  styleUrls: ['./search.component.css']
 })
-export class SearchComponent implements OnInit{
-  @ViewChild('navbar', {static: false}) navbar!: ElementRef;
-  isSearchVisible: boolean = false; // Trạng thái ẩn/hiện thanh tìm kiếm
+export class SearchComponent implements OnInit {
+  @ViewChild('navbar', { static: false }) navbar!: ElementRef;
   email: string = 'Ducpham.ms@gmail.com';
+  // Tìm kiếm & trạng thái
   searchQuery: string = '';
+  isSearchVisible: boolean = false;
   isLoading: boolean = false;
   error: string | null = null;
-  categories: Category [] = [];
-  selectedCategory: string = "Sản phẩm mới";
+
+  // Dữ liệu
+  products: Product[] = [];
+  categories: Category[] = [];
+  sales: Sale[] = [];
+
+  // Phân trang
+  page: number = 1;
+  totalPages: number = 1;
+  totalProducts: number = 0;
+  
+  // Lọc & sắp xếp
+  selectedCategoryId: number | null = null;
+  selectedSaleId: number | null = null;
+  selectedSortType: number = 1;
+  selectSort: number = 1;
+
+  // UI menu
   isNewProductExpanded: boolean = true;
   isSaleExpanded: boolean = true;
-  TotalProduct: number = 0;
+
+  // Đăng nhập
+  isLoggedIn: boolean = false;
+  customerName: string | null = null;
+
   constructor(
-    private router: ActivatedRoute, 
-    private productService: ProductService, 
+    private productService: ProductService,
     private categoryService: Categoryservice,
     private saleService: SaleService,
-    private customerService: CustomerService,
-    private route: Router){}
-  products: Product [] = [];
-  page: number = 1
+    private router: Router,
+    private route: ActivatedRoute,
+    private customerService: CustomerService
+  ) {}
+
   ngOnInit(): void {
-    this.loadProducts();
     this.loadCategory();
     this.loadSale();
     this.checkLoginStatus();
+    this.loadProductsFromQuery();
   }
-  //
-  loadProducts(){
-    this.router.queryParams.subscribe(params =>{
+
+  // Xử lý dữ liệu tìm kiếm từ query param
+  loadProductsFromQuery(): void {
+    this.route.queryParams.subscribe(params => {
       this.searchQuery = params['q'] || '';
-      if(this.searchQuery){
-        this.productService.GetProductSearch(this.searchQuery, this.page).subscribe(data =>{
+      if (this.searchQuery) {
+        this.productService.GetProductSearch(this.searchQuery, this.page).subscribe(data => {
           this.products = data.Products;
-          this.TotalProduct = data.TotalProduct;
-          console.log('Products: ',data);
+          this.totalPages = data.TotalPages;
+          this.totalProducts = data.TotalProduct;
+          this.isLoading = false;
+          console.log('Response: ', data)
         });
+      } else {
+        this.loadFilteredProducts(); // Nếu không có từ khóa, load theo trạng thái lọc
       }
     });
   }
-  //loadsale
-    sales: Sale [] = [];
-    loadSale(): void{
-      this.saleService.GetSale().subscribe(data =>{
-        this.sales = data;
-        console.log('Sale: ', data);
-      });
-    }
-    //getproductsaleid
-    GetProductSaleId(Id: number){
-      this.productService.GetProductSaleId(Id, this.page).subscribe(data =>{
-        this.products = data.Products;
-        this.TotalProduct = data.TotalProduct;
-        console.log('Response: ', data);
-      });
-    }
-    //getproductcategoryId
-    GetProductCategoryId(Id: number){
-      this.productService.GetProductCategoryId(Id, this.page).subscribe(data =>{
-        this.products = data.Products;
-        this.TotalProduct = data.TotalProduct;
-        console.log('Response: ', data);
-      })
-    }
-    //loadcategory
-    loadCategory(): void{
-      this.categoryService.GetCategories().subscribe(data => {
-        this.categories = data;
-        console.log('category: ', data);
-      });
-    }
-    //
-    selectSort: any = 1;
-    sortProducts(): void {
-      if(this.selectSort == 1){
-        this.loadProducts();
+
+  // Xử lý lọc/sắp xếp
+  loadFilteredProducts(): void {
+    this.isLoading = true;
+
+    if (this.selectedSaleId) {
+      this.productService.GetProductSaleId(this.selectedSaleId, this.page).subscribe(data => this.handleProductResponse(data));
+    } else if (this.selectedCategoryId) {
+      this.productService.GetProductCategoryId(this.selectedCategoryId, this.page).subscribe(data => this.handleProductResponse(data));
+    } else {
+      switch (this.selectedSortType) {
+        case 2:
+          this.productService.GetProductNew(this.page).subscribe(data => this.handleProductResponse(data));
+          break;
+        case 3:
+          this.productService.GetProductOld(this.page).subscribe(data => this.handleProductResponse(data));
+          break;
+        case 4:
+          this.productService.GetProductPriceASC(this.page).subscribe(data => this.handleProductResponse(data));
+          break;
+        case 5:
+          this.productService.GetProductPriceASDC(this.page).subscribe(data => this.handleProductResponse(data));
+          break;
+        default:
+          this.productService.GetProductSale(this.page).subscribe(data => this.handleProductResponse(data));
       }
-      if( this.selectSort == 2){
-        this.productService.GetProductNew(this.page).subscribe(data =>{
-          this.products = data.Products;
-          this.page = data.TotalPages;
-          this.TotalProduct = data.TotalProduct;
-          console.log('Response: ', data);
-        });
-      }
-      if( this.selectSort == 3){
-        this.productService.GetProductOld(this.page).subscribe(data =>{
-          this.products = data.Products;
-          this.page = data.TotalPages;
-          this.TotalProduct = data.TotalProduct;
-          console.log('Response: ', data);
-        });
-      }
-      if( this.selectSort == 4){
-        this.productService.GetProductPriceASC(this.page).subscribe(data =>{
-          this.products = data.Products;
-          this.page = data.TotalPages; 
-          this.TotalProduct = data.TotalProduct; 
-          console.log('Response: ', data);
-        });
-      }
-      if( this.selectSort == 5){
-        this.productService.GetProductPriceASDC(this.page).subscribe(data =>{
-          this.products = data.Products;
-          this.page = data.TotalPages;
-          this.TotalProduct = data.TotalProduct;
-          console.log('Response: ', data);
-        });
-      }
-      
     }
+  }
+
+  handleProductResponse(data: any): void {
+    this.products = data.Products;
+    this.totalPages = data.TotalPages;
+    this.isLoading = false;
+    console.log('Response:', data);
+  }
+
+  // Lọc
+  GetProductSaleId(Id: number): void {
+    this.selectedSaleId = Id;
+    this.selectedCategoryId = null;
+    this.page = 1;
+    this.loadFilteredProducts();
+  }
+
+  GetProductCategoryId(Id: number): void {
+    this.selectedCategoryId = Id;
+    this.selectedSaleId = null;
+    this.page = 1;
+    this.loadFilteredProducts();
+  }
+
+  // Sắp xếp
+  sortProducts(): void {
+    this.page = 1;
+    this.selectedSortType = this.selectSort;
+    this.loadFilteredProducts();
+  }
+
+  // Phân trang
+  goToPage(p: number): void {
+    if (p >= 1 && p <= this.totalPages && p !== this.page) {
+      this.page = p;
+      this.loadFilteredProducts();
+    }
+  }
+
+  prevPage(): void {
+    if (this.page > 1) {
+      this.page--;
+      this.loadFilteredProducts();
+    }
+  }
+
+  nextPage(): void {
+    if (this.page < this.totalPages) {
+      this.page++;
+      this.loadFilteredProducts();
+    }
+  }
+
+  getPages(): number[] {
+    const maxDisplayedPages = 5;
+    const half = Math.floor(maxDisplayedPages / 2);
+
+    let start = Math.max(1, this.page - half);
+    let end = Math.min(this.totalPages, start + maxDisplayedPages - 1);
+
+    // Điều chỉnh nếu đang ở gần cuối danh sách
+    if (end - start < maxDisplayedPages - 1) {
+      start = Math.max(1, end - maxDisplayedPages + 1);
+    }
+
+    const pages = [];
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    return pages;
+  }
+
+  // UI toggle
   toggleCategory(): void {
     this.isNewProductExpanded = !this.isNewProductExpanded;
   }
@@ -135,46 +193,47 @@ export class SearchComponent implements OnInit{
     this.isSaleExpanded = !this.isSaleExpanded;
   }
 
-  toggleMenu() {
-    const navbarElement = this.navbar.nativeElement;
-    navbarElement.classList.toggle('active');
+  toggleMenu(): void {
+    this.navbar.nativeElement.classList.toggle('active');
   }
 
-  // Bật/tắt thanh tìm kiếm
-  toggleSearch() {
+  toggleSearch(): void {
     this.isSearchVisible = !this.isSearchVisible;
-    if (!this.isSearchVisible) {
-      this.searchQuery = ''; // Reset từ khóa khi đóng
-    }
+    if (!this.isSearchVisible) this.searchQuery = '';
   }
 
-  // Xử lý tìm kiếm
-  onSearch() {
+  onSearch(): void {
     if (this.searchQuery.trim()) {
-      // Điều hướng tới trang /search với query param
-      this.route.navigate(['/search'], { queryParams: { q: this.searchQuery } });
+      this.router.navigate(['/search'], { queryParams: { q: this.searchQuery } });
       this.searchQuery = '';
-      this.toggleSearch(); // Ẩn thanh tìm kiếm sau khi tìm
-
+      this.toggleSearch();
     } else {
       alert('Vui lòng nhập từ khóa tìm kiếm!');
     }
   }
 
-  // kiểm tra login 
-  isLoggedIn: boolean = false;
-  customerName: string | null = null;
-  // Kiểm tra người dùng đã đăng nhập chưa
+  // Đăng nhập
   checkLoginStatus(): void {
     const customerId = this.customerService.getCustomerId();
-    const customerName = this.customerService.getCustomerName();
     this.isLoggedIn = !!customerId;
-    this.customerName = customerName;
+    this.customerName = this.customerService.getCustomerName();
   }
 
-  // Đăng xuất
   logout(): void {
     this.customerService.logout();
     this.isLoggedIn = false;
+  }
+
+  // Load danh mục & khuyến mãi
+  loadCategory(): void {
+    this.categoryService.GetCategories().subscribe(data => {
+      this.categories = data;
+    });
+  }
+
+  loadSale(): void {
+    this.saleService.GetSale().subscribe(data => {
+      this.sales = data;
+    });
   }
 }
