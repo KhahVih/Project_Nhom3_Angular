@@ -93,16 +93,16 @@
     </div>
 
     <section class="content">
-        <div class="products">
+        <div class="products" >
             <h2>New Arrival</h2>
-            <div class="product-grid">
-                <a class="item" *ngFor="let product of products">
+            <div class="product-grid ">
+                <a class="item wow animate__animated animate__fadeInUp" data-wow-offset="100" data-wow-duration="2s" data-wow-delay="0.2s" *ngFor="let product of products">
                     <div class="image-container">
                       <img class="main-image" [src]="product.Images[0].Link" alt="{{product.Name}}" routerLink="/product/{{product.Id}}"> <!-- Use the first image -->
                       <!-- <img  class="hover-image" [src]="product.Images[1].Link" alt="{{product.Name}}" routerLink="/product/{{product.Id}}"> -->
                       <div class="hover-bar">
                           <a routerLink="/product/{{product.Id}}"><i class="fa-solid fa-eye"></i></a> <!-- Icon "Xem chi tiết" -->
-                          <a ><i class="fa-solid fa-bag-shopping"></i></a> <!-- Icon "Thêm vào giỏ" -->
+                          <a><i class="fa-solid fa-bag-shopping"></i></a> <!-- Icon "Thêm vào giỏ" -->
                           <a href=""><i class="fa-regular fa-heart"></i></a> <!-- Icon "Yêu thích" -->
                       </div>
                     </div>

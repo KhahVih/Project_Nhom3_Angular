@@ -161,7 +161,7 @@
         </div>
   
         <button class="add-to-cart" (click)="AddToCart(product)">THÊM VÀO GIỎ</button>
-        <button class="buy-now">MUA NGAY</button>
+        <button class="buy-now" (click)="buyNow(product)">MUA NGAY</button>
   
         <p class="description">{{ product.Description || 'No description available.' }}</p>
   

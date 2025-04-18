@@ -453,6 +453,7 @@ header {
     transition: opacity 0.5s ease;
     display: block;
     object-fit: cover;
+    z-index: 1;
   }
   /* Ảnh chính */
   .image-container .main-image {
@@ -461,40 +462,27 @@ header {
     left: 0;
     z-index: 1;
   }
-  /* Ảnh hover (ẩn mặc định) */
-  /* .image-container .hover-image {
-    position: relative;
-    z-index: 2;
-    opacity: 0;
-  } */
-  /* Khi hover vào container, hiển thị ảnh hover */
-  /* .image-container:hover .hover-image {
-    opacity: 1;
-  } */
-
-  /* Đồng thời ẩn ảnh chính khi hover */
-  /* .image-container:hover .main-image {
-    opacity: 0;
-  } */
 
   /* Thanh ngang khi hover */
   .hover-bar {
     position: absolute;
     width: 100%;
     height: 10%px;
-    margin-top: 1px;
-    background-color: #ffffff;
+    margin-top: 100%;
     transition: opacity 0.3s ease;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 1rem;
+    opacity: 0;
+    z-index: 2; /* cao hơn hình ảnh */
   }
+
   .hover-bar a{
     width: 30px;
     height: 20px;
     font-size: 20px;
-    color: #000;
+    color: #fff;
     padding: 10px;
   }
   

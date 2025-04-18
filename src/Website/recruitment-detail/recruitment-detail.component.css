@@ -298,7 +298,22 @@ header {
     margin: 0 auto;
     padding: 20px;
 }
-
+.main-title {
+    background-color: #fff3cd;
+    height: 40px;
+    padding: 6px;
+  }
+  
+  .title-header {
+    margin-left: 5%;
+  }
+  
+  .title-header a,
+  .title-header span {
+    text-decoration: none;
+    color: #000000;
+    font-size: 14px;
+  }
 .error-message {
     text-align: center;
     padding: 20px;

@@ -61,9 +61,16 @@
     </div>
 </header>
 <!-- End Header -->
-
 <!-- Start Main -->
 <main>
+  <div class="main-title">
+    <div class="title-header">
+      <a routerLink="/home">Trang chủ /</a>
+      <a routerLink="/recruitment"> Tuyển dụng /</a>
+      <span *ngIf="jobId && jobDetails[jobId]" style="color: #999;"> {{jobDetails[jobId].title}}</span>
+    </div>
+  </div>
+
   <div class="container">
     <div *ngIf="!jobId || !jobDetails[jobId]" class="error-message">
       <p>Không tìm thấy thông tin công việc. Vui lòng quay lại trang <a routerLink="/recruitment">Tuyển dụng</a>.</p>

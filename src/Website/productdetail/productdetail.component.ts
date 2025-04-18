@@ -98,6 +98,21 @@ export class ProductdetailComponent implements OnInit{
     });
   }
 
+  // mua ngay 
+  buyNow(product: Product): void {
+    this.AddToCart(product);
+    if (this.selectcolor === null || this.selectsize === null) {
+      return;
+    }
+    if (this.quantity > this.availableQuantity) {
+      return;
+    }
+    else{
+      this.route.navigate(['/cart']);
+    }
+    
+  }
+
   // Add To Cart
   AddToCart(product: Product){
     if (this.selectcolor === null || this.selectsize === null) {

@@ -67,6 +67,14 @@
 
 <!-- Start Main -->
 <main>
+
+  <div class="main-title">
+    <div class="title-header">
+      <a routerLink="/home">Trang chủ /</a>
+      <a routerLink="/collections"> Bộ sưu tập /</a>
+      <span *ngIf="collection" style="color: #999;"> {{ collection.name }}</span>
+    </div>
+  </div>  
   <!-- Collection Detail Section -->
   <div class="collection-detail-section">
     <h1 class="section-title" *ngIf="collection">{{ collection.name }}</h1>

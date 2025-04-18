@@ -9,6 +9,8 @@ import { FormsModule } from '@angular/forms'
 import { SaleService } from '../../Service/Sale.Service';
 import { Sale } from '../../Models/SaleDTO';
 import { CustomerService } from '../../Service/Customer.Service';
+import WOW from 'wowjs';
+
 @Component({
   selector: 'app-product',
   imports: [CommonModule, RouterLink, FormsModule],
@@ -63,6 +65,7 @@ export class ProductComponent implements OnInit{
     this.loadCategory();
     this.loadSale();
     this.checkLoginStatus();
+    new WOW().init();
   }
   // Hàm chính xử lý tải sản phẩm theo trạng thái lọc
   loadFilteredProducts(): void {

@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, PLATFORM_ID, Inject  } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { Product } from '../../Models/ProductDTO';
 import { ProductService } from '../../Service/Product.Service';
 import { FormsModule } from '@angular/forms';
 import { CustomerService } from '../../Service/Customer.Service';
-
+import { isPlatformBrowser } from '@angular/common';
 export interface Review {
   image: string;
   name: string;
@@ -27,12 +27,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy{
   constructor(
     private productService: ProductService, 
     private router: Router, 
-    private customerService: CustomerService){}
+    private customerService: CustomerService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ){}
 
     email: string = 'Ducpham.ms@gmail.com';
     products: Product [] = [];
     productdetail: any;
-    reviews: Review[] = [
+  reviews: Review[] = [
     {
       image: 'https://chamygaby.vn/thumbs/140x140x1/upload/news/44144247621264888177368305473686737407652445n-4052.jpg',
       name: 'CHỊ DUYÊN',
@@ -63,11 +65,28 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy{
   intervalTime = 5000; // thời gian chuyển slide (3 giây)
   autoSlideInterval: any;
   //
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.LoadProduct();
     this.checkLoginStatus();
     //this.startSlideshow();
+    // Trong ngOnInit hoặc nơi khởi tạo WOW:
+    // Trong file main.ts hoặc ngOnInit của component
+    if (isPlatformBrowser(this.platformId)) {
+      new (window as any).WOW({
+        boxClass: 'wow', // class apply cho phần tử
+        animateClass: 'animate__animated', // class animation
+        offset: 100, // giống data-wow-offset
+        mobile: true, // kích hoạt trên di động
+        live: true, // theo dõi DOM thay đổi
+        callback: function(box: any) {
+          // Có thể log khi chạy
+        },
+        resetAnimation: false // ✅ CHO PHÉP CHẠY LẠI
+      }).init();
+    }
+
   }
+
   ngAfterViewInit(): void {
     // Lấy tất cả phần tử có class "slide" trong banner
     this.slides = Array.from(this.banner.nativeElement.querySelectorAll('.slide'));
