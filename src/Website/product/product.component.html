@@ -128,7 +128,7 @@
             </div>
 
             <!-- Main content -->
-            <div class="main-content">
+            <div class="main-content wow animate__animated animate__fadeInUp" data-wow-offset="100" data-wow-duration="2s" data-wow-delay="0.2s">
                 <div class="header-section">
                     <h2>Danh Sách Sản Phẩm</h2>
                     <select class="sort-select" [(ngModel)] = "selectSort" (change)="sortProducts()">
@@ -145,7 +145,7 @@
                 </div> -->
                 <!-- Product list -->
                 <div class="product-list">
-                    <div class="product-card" *ngFor="let product of products" routerLink="/product/{{product.Id}}">
+                    <div class="product-card wow animate__animated animate__fadeInUp" data-wow-offset="100" data-wow-duration="2s" data-wow-delay="0.2s" *ngFor="let product of products" routerLink="/product/{{product.Id}}">
                         <div class="product-card-image">
                           <img [src]="product.Images[0].Link" [alt]="product.Name" class="thumbnail main-image">
                           <!-- <img [src]="product.Images[1].Link" [alt]="product.Name" class="thumbnail hover-image"> -->

@@ -585,113 +585,154 @@ header {
     background-color: #000000;
   }
   
-  /* Reviews Section */
-  .reviews {
-    width: 100%;
-    background-color: #FFFFFF;
-    padding: 2rem 1rem;
-    text-align: center;
-    overflow: hidden;
-  }
-  
-  .reviews h2 {
-    font-size: 2.5rem;
-    color: #333;
-    margin-bottom: 2rem;
-    text-transform: uppercase;
-  }
-  
-  .review-slider {
-    width: 100%;
-    overflow-x: auto;
-    white-space: nowrap;
-    scroll-behavior: smooth;
-  }
-  
-  .review-track {
-    display: inline-block;
-    width: 18rem;
-    margin-right: 2rem;
-    transition: transform 0.3s ease;
-    vertical-align: middle;
-  }
-  
-  .review-item {
-    position: relative;
-    text-align: center;
-    background-color: #FFFFFF;
-    border: 1px solid #000000;
-    border-bottom: none;
-    border-radius: 7.5rem 7.5rem 0 0;
-    padding: 2rem 1rem 1rem;
-    width: 17rem;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .review-track.highlighted .review-item {
-    transform: scale(1.1);
-    box-shadow: 0 0.625rem 1.25rem rgba(0, 0, 0, 0.2);
-    z-index: 1;
-  }
-  
-  .review-item::before {
-    content: '“';
-    position: absolute;
-    top: -1.5rem;
-    left: -1.5rem;
-    font-size: 3rem;
-    color: #333;
-    z-index: 2;
-  }
-  
-  .review-item::after {
-    content: '”';
-    position: absolute;
-    bottom: -0.5rem;
-    right: -1.5rem;
-    font-size: 3rem;
-    color: #333;
-    z-index: 2;
-  }
-  
-  .review-image {
-    width: 10rem;
-    height: 10rem;
-    margin: 0 auto 1rem;
-  }
-  
-  .review-image img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-  
-  .review-content h3 {
-    font-size: 1.125rem;
-    color: #333;
-    margin-bottom: 0.3rem;
-    font-weight: bold;
-  }
-  
-  .review-content .title {
-    font-size: 0.875rem;
-    color: #888;
-    margin-bottom: 0.625rem;
-  }
-  
-  .review-content .quote {
-    font-size: 1rem;
-    color: #333;
-    margin-bottom: 0.625rem;
-    font-style: italic;
-  }
-  
-  .review-content .stars {
-    font-size: 1.25rem;
-    color: #000000;
-  }
-  
+  /*Product Detail */
+.Product-Detail {
+  justify-content: center; /* Căn giữa theo chiều ngang */
+  align-items: center; /* Căn giữa theo chiều dọc */
+  min-height: 80%; /* Đảm bảo chiếm toàn bộ chiều cao màn hình */
+  width: 100%; /* Chiếm toàn bộ chiều ngang */
+  position: fixed; /* Đặt vị trí cố định để căn giữa toàn màn hình */
+  top: 120px;
+  left: 0;
+  /* background-color: rgba(0, 0, 0, 0.5);  Nền mờ để làm nổi bật (tùy chọn) */
+  z-index: 1000; /* Đảm bảo nổi lên trên các phần tử khác */
+  overflow-y: auto; /* Cho phép cuộn nếu nội dung quá dài */
+}
+/* Trong file productdetail.component.css */
+.btn-close {
+  position: absolute; /* Định vị tuyệt đối so với container cha */
+  top: 10px; /* Cách đỉnh 10px */
+  right: 10rem;
+  font-size: 20px; /* Kích thước chữ X */
+  color: #000; /* Màu chữ */
+  text-decoration: none; /* Bỏ gạch chân mặc định của <a> */
+  z-index: 1100; /* Cao hơn z-index của Product-Detail (1000) */
+}
+
+/* Đảm bảo container bên trong không bị ảnh hưởng */
+.container {
+  display: flex;
+  background-color: #fff; /* Nền trắng cho nội dung */
+  padding: 10px;
+  border-radius: 8px;
+  max-width: 1200px; /* Giới hạn chiều rộng tối đa */
+  width: 80%; /* Responsive */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Hiệu ứng đổ bóng */
+}
+
+.product-images {
+  flex: 1;
+  display: flex;
+  margin-right: 20px;
+}
+
+.thumbnail-images {
+  display: flex;
+  flex-direction: column;
+  margin-right: 10px;
+}
+
+.thumbnail {
+  width: 100px;
+  height: 150px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  object-fit: cover; /* Đảm bảo ảnh vừa khung */
+  border-radius: 5px;
+  transition: opacity 0.3s ease;
+}
+
+.thumbnail:hover {
+  opacity: 0.8;
+}
+
+.main-image {
+  width: 400px;
+  height: 500px;
+  object-fit: cover;
+  display: block;
+  border-radius: 5px;
+}
+
+.product-info {
+  flex: 3;
+  flex-direction: column;
+}
+
+.price {
+  font-size: 24px;
+  color: red;
+}
+
+.availability {
+  font-weight: bold;
+  color: #333;
+}
+
+
+.option-container {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.option-box {
+  position: relative;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  min-width: 50px;
+  transition: border-color 0.3s ease;
+}
+
+.option-box:hover {
+  border-color: #007bff;
+}
+
+.option-box.selected {
+  border-color: #ff0000;
+  background-color: #ffe6e6;
+}
+
+.checkmark {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  color: #ff0000;
+  font-size: 12px;
+}
+
+.quantity-selection {
+  margin: 10px 0;
+}
+
+.add-to-cart,
+.buy-now {
+  padding: 10px 20px;
+  background-color: #007bff;
+  width: 200px;
+  color: white;
+  margin-top: 1rem;
+  border: none;
+  cursor: pointer;
+  margin-right: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.add-to-cart:hover,
+.buy-now:hover {
+  background-color: #0056b3;
+}
+
+.description {
+  margin-top: 20px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
   /*****************************************************************************************************************************************/
   /* Footer Styles */
   footer {
@@ -700,7 +741,6 @@ header {
     font-family: 'Roboto', sans-serif;
     color: #FFFFFF;
     position: relative; /* Đảm bảo footer không chồng lên nội dung */
-    z-index: 1;
   }
   
   .footer-container {
@@ -867,3 +907,4 @@ header {
       font-size: 0.8rem;
     }
   }
+

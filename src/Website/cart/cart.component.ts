@@ -70,6 +70,7 @@ export class CartComponent implements OnInit{
     const CustomerId = this.authService.getCustomerId();
     if(CustomerId){
       this.cartService.deleteCartIteam(CartId).subscribe(data =>{
+        this.loadCartItems();
         console.log('Delete CartItemId: ', CartId);
         console.log(data);
       });
@@ -77,6 +78,7 @@ export class CartComponent implements OnInit{
     else{
       // Trường hợp chưa đăng nhập: Xóa item khỏi localStorage
       this.cartItems = this.cartItems.filter((i) => i.Id !== CartId);
+      this.loadCartItems();
       this.cartService.removeLocalCartId(CartId);
     }
   }

@@ -9,6 +9,8 @@ import { CustomerService } from '../../Service/Customer.Service';
 import { CartItem } from '../../Models/CartDTO';
 import { CartService } from '../../Service/Cart.Service';
 import { FormsModule } from '@angular/forms';
+import { Comment } from '../../Models/CommentDTO';
+import { CommentService } from '../../Service/Comment.Service';
 
 @Component({
   selector: 'app-productdetail',
@@ -26,6 +28,7 @@ export class ProductdetailComponent implements OnInit{
     private router: ActivatedRoute, 
     private customerService: CustomerService,
     private cartService: CartService,
+    private commentService: CommentService,
     private route: Router
   ){}
   @Input() product: Product | undefined;
@@ -33,8 +36,8 @@ export class ProductdetailComponent implements OnInit{
   selectedImage: string = ''; // Biến lưu URL của ảnh chính
   colors: Color [] = []; // color
   sizes: Size [] = []; // size
-  selectcolor: number | null = null; // Lưu ID màu được chọn
-  selectsize: number | null = null;  // Lưu ID kích thước được chọn
+  selectedcolor: number | null = null; // Lưu ID màu được chọn
+  selectedsize: number | null = null;  // Lưu ID kích thước được chọn
   quantity: number = 1; // Giá trị mặc định
   availableQuantity: number = 0; // Số lượng còn lại trong kho
   activeTab: string = 'comments';
@@ -44,20 +47,10 @@ export class ProductdetailComponent implements OnInit{
   newCommentText: string = ''; // Nội dung bình luận
   submitting: boolean = false; // Trạng thái gửi
   DiscountPercentage: number = 0;
+
   ngOnInit(): void {
     this.loadProduct();
     this.checkLoginStatus();
-    // Gán availableQuantity từ product.Count
-    // if (this.product && this.product.Count >= 0) {
-    //   this.availableQuantity = this.product.Count;
-    // } else {
-    //   this.availableQuantity = 0; // Mặc định là 0 nếu không có dữ liệu
-    // }
-
-    // // Điều chỉnh quantity nếu cần
-    // if (this.availableQuantity < this.quantity) {
-    //   this.quantity = this.availableQuantity; // Đảm bảo quantity không vượt quá kho
-    // }
   }
   // loadProduct
   loadProduct(){
@@ -71,7 +64,7 @@ export class ProductdetailComponent implements OnInit{
       this.categoryId = this.product?.ProductCategorys[0].CategoryId || 0 ;// Lấy category đầu tiên
       this.categoryname = this.product?.ProductCategorys[0].CategoryName || '';
       this.availableQuantity = this.product?.Count || 0
-      this.selectedImage = this.product?.Images[1].Link || ''; // Gán ảnh mặc định là ảnh đầu tiên trong danh sách khi component khởi tạo
+      this.selectedImage = this.product?.Images[0].Link || ''; // Gán ảnh mặc định là ảnh đầu tiên trong danh sách khi component khởi tạo
       // Điều chỉnh quantity nếu cần
       if (this.availableQuantity < this.quantity) {
         this.quantity = this.availableQuantity;
@@ -81,27 +74,10 @@ export class ProductdetailComponent implements OnInit{
       
     });
   }
-  //load color
-  loadColor(){
-    this.productService.getColor().subscribe(data =>{
-      this.colors = data;
-      //this.selectedColor = this.colors[0]?.Name || '';
-      console.log('Color: ',data);
-    });
-  }
-  // load size
-  loadSize(){
-    this.productService.getSize().subscribe(data =>{
-      this.sizes = data;
-      //this.selectedSize = this.sizes[0]?.Name || '';
-      console.log('Size: ',data)
-    });
-  }
-
   // mua ngay 
   buyNow(product: Product): void {
     this.AddToCart(product);
-    if (this.selectcolor === null || this.selectsize === null) {
+    if (this.selectedcolor === null || this.selectedsize === null) {
       return;
     }
     if (this.quantity > this.availableQuantity) {
@@ -115,7 +91,7 @@ export class ProductdetailComponent implements OnInit{
 
   // Add To Cart
   AddToCart(product: Product){
-    if (this.selectcolor === null || this.selectsize === null) {
+    if (this.selectedcolor === null || this.selectedsize === null) {
       alert('Vui lòng chọn màu và kích thước!');
       return;
     }
@@ -139,20 +115,23 @@ export class ProductdetailComponent implements OnInit{
       ProductName: product.Name,
       ProductImage: productImage,
       Quantity: this.quantity,
-      ColorId: this.selectcolor || 0,
-      ColorName: this.colors.find(c => c.Id === this.selectcolor)?.Name || '', // Lấy từ danh sách colors
-      SizeId: this.selectsize || 0,
-      SizeName: this.sizes.find(s => s.Id === this.selectsize)?.Name || '', // Lấy từ danh sách sizes
+      ColorId: this.selectedcolor || 0,
+      ColorName: this.colors.find(c => c.Id === this.selectedcolor)?.Name || '', // Lấy từ danh sách colors
+      SizeId: this.selectedsize || 0,
+      SizeName: this.sizes.find(s => s.Id === this.selectedsize)?.Name || '', // Lấy từ danh sách sizes
       UnitPrice: product.Price || 0,
       FinalPrice: priceAfterDiscount * this.quantity, // áp dụng nếu sản có giảm giá  
     };
     if (CustomerId) {
       // Nếu đã đăng nhập, gọi API để thêm vào giỏ hàng
       this.cartService.addToCart(cartItem).subscribe({
-        next: () => {
-          alert('Sản phẩm đã được thêm vào giỏ hàng!');
+        next: (response) => {
           console.log('Cart: ',cartItem);
+          this.loadCartItems(response.Id);
           // this.loadCartItems(); // Cập nhật lại giỏ hàng từ API
+          this.quantity = 1;
+          this.reset();
+          this.isCart = true;
         },
         error: (err) => {
           console.error('Error adding to cart:', err);
@@ -160,7 +139,7 @@ export class ProductdetailComponent implements OnInit{
         }
       });
     } else {
-      let cart = this.cartService.getCartFromLocal();
+        let cart = this.cartService.getCartFromLocal();
 
         // Tìm sản phẩm đã tồn tại dựa trên ProductId, ColorId, SizeId
         const existingItem = cart.find(item =>
@@ -183,22 +162,26 @@ export class ProductdetailComponent implements OnInit{
                 Id: newId,
                 FinalPrice: priceAfterDiscount * cartItem.Quantity // GIÁ SAU KHI GIẢM
             };
+            this.newCartId = newId;
+            console.log(this.newCartId);
+            this.isCart = true;
             cart.push(newItem);
+            
         }
 
         // Lưu giỏ hàng vào localStorage
         this.cartService.saveCartToLocal(cart);
-        // Thông báo cho người dùng
-        alert('Sản phẩm đã được thêm vào giỏ hàng!');
+        this.reset();
+        this.loadCartLocal();
         console.log('Cart:', cart);
-    }
+      }
   }
-
+  // thanh nav menu 
   toggleMenu() {
     const navbarElement = this.navbar.nativeElement;
     navbarElement.classList.toggle('active');
   }
-
+  // chuyển đổi trạng thái của thẻ 
   setActiveTab(tab: string): void {
     this.activeTab = tab;
   }
@@ -208,18 +191,22 @@ export class ProductdetailComponent implements OnInit{
   }
   // Hàm chọn màu
   selectColor(color: any) {
-    this.selectcolor = color.Id;
+    this.selectedcolor = color.Id;
     console.log(color);
-    console.log('Selected Color ID:', this.selectcolor);
+    console.log('Selected Color ID:', this.selectedcolor);
   }
 
   // Hàm chọn size
   selectSize(size: any) {
-    this.selectsize = size.Id;
+    this.selectedsize = size.Id;
     console.log(size);
-    console.log('Selected Size ID:', this.selectsize);
+    console.log('Selected Size ID:', this.selectedsize);
   }
-
+  // reset
+  reset(){
+    this.selectedcolor = null;
+    this.selectedsize = null;
+  }
   // Khi hover vào thumbnail, tạm thời thay đổi ảnh chính (tùy chọn)
   previewImage(imageUrl: string): void {
     this.selectedImage = imageUrl;
@@ -259,21 +246,6 @@ export class ProductdetailComponent implements OnInit{
       CreatedAt: new Date().toISOString(), // Giả lập ngày tạo
       ProductId: this.product?.Id // Giả lập ID sản phẩm
     };
-    // Nếu dùng API thực tế, thay bằng:
-    /*
-    this.productService.addComment(newComment).subscribe(
-      (response) => {
-        this.product.Comments.push(response);
-        this.newCommentText = '';
-        this.newCommentVote = 0;
-        this.submitting = false;
-      },
-      (error) => {
-        console.error('Lỗi khi gửi bình luận:', error);
-        this.submitting = false;
-      }
-    );
-    */
   }
   // load sản phẩm cùng loại 
   page: number = 1
@@ -286,6 +258,117 @@ export class ProductdetailComponent implements OnInit{
         console.log(data);
       });
     }
+  }
+
+  // add comment 
+  isCart: boolean = false;
+  AddComment(): void {
+    if (!this.newCommentText.trim() || this.newCommentVote < 1) {
+      alert('Vui lòng nhập nội dung và chọn đánh giá!');
+      return;
+    }
+  
+    const customerId = this.customerService.getCustomerId();
+    if (!customerId || !this.product?.Id) {
+      alert('Bạn phải đăng nhập để bình luận!');
+      return;
+    }
+  
+    this.submitting = true;
+  
+    const newComment: Comment = {
+      Id: 0,
+      ProductId: this.product.Id,
+      CustomerId: +customerId,
+      Vote: this.newCommentVote,
+      Description: this.newCommentText,
+      CreatedAt: new Date(),
+      IsShow: false,
+      ProductName: this.product?.Name || '',
+      CustomerName: this.customerService.getCustomerName() || ''
+    };
+  
+    this.commentService.createComment(newComment).subscribe({
+      next: (response) => {
+        this.newCommentText = '';
+        this.newCommentVote = 0;
+        this.submitting = false;
+        alert('Bình luận đã được gửi!');
+      },
+      error: (err) => {
+        console.error('Lỗi khi gửi bình luận:', err);
+        alert('Có lỗi xảy ra, vui lòng thử lại sau!');
+        this.submitting = false;
+      }
+    });
+  }
+  
+  // load product add to cart 
+  cartItems: CartItem [] = [];
+  newCartId: number = 0;
+  loadCartItems(Id: number) {
+    const CustomerId = this.customerService.getCustomerId();
+    if (CustomerId) {
+      // Nếu đã đăng nhập, lấy giỏ hàng từ API
+      this.cartService.getCartId(Id).subscribe(data => {
+        this.cartItems = data;
+        console.log('Cart Items from API:', this.cartItems);
+      })
+    }
+  }
+  // load product add to cart local 
+  loadCartLocal(){
+    this.cartItems = this.cartService.getCartLocalById(this.newCartId).map(item => ({
+      ...item,
+      ProductName: item.ProductName || 'Không có tên',
+      ColorName: item.ColorName || 'Không chọn',
+      SizeName: item.SizeName || 'Không chọn'
+    }));
+    console.log('Cart Items from local storage:', this.cartItems);
+  }
+  closeCart(){
+    this.isCart = false;
+  }
+  // xóa cartitem local 
+  removeItem(CartId: number): void {
+    const CustomerId = this.customerService.getCustomerId();
+    if(CustomerId){
+      this.cartService.deleteCartIteam(CartId).subscribe(data =>{
+        console.log('Delete CartItemId: ', CartId);
+        console.log(data);
+      });
+    }
+    else{
+      // Trường hợp chưa đăng nhập: Xóa item khỏi localStorage
+      this.cartItems = this.cartItems.filter((i) => i.Id !== CartId);
+      this.cartService.removeLocalCartId(CartId);
+    }
+  }
+  // cập nhật số lượng sản phẩm (tăng)
+  increaseQuantitycart(item: CartItem): void {
+    item.Quantity++;
+    item.FinalPrice = item.FinalPrice * item.Quantity; // Cập nhật FinalPrice
+    this.cartService.updateLocalQuantity(item.Id, item.Quantity); // Cập nhật localStorage
+  }
+  // cập nhật số lượng sản phẩm (giảm) 
+  decreaseQuantitycart(item: CartItem): void {
+      if (item.Quantity > 1) { // Đảm bảo số lượng không nhỏ hơn 1
+          item.Quantity--;
+          item.FinalPrice = item.FinalPrice * item.Quantity; // Cập nhật FinalPrice
+          this.cartService.updateLocalQuantity(item.Id, item.Quantity); // Cập nhật localStorage
+      }
+  }
+  // tổng giá gốc 
+  getTotalOriginalPrice(): number {
+    return this.cartItems.reduce((total, item) => total + item.UnitPrice * item.Quantity, 0);
+  }
+  // tổng giá giảm 
+  getTotalFinalPrice(): number {
+    return this.cartItems.reduce((total, item) => total + item.FinalPrice * item.Quantity, 0);
+  }
+  // tổng tiền 
+  getTotalDiscount(): number {
+    return this.getTotalOriginalPrice() - this.getTotalFinalPrice();
   }
 
   // Bật/tắt thanh tìm kiếm

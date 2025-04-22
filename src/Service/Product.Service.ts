@@ -76,6 +76,10 @@ export class ProductService {
       catchError(this.handleError<void>('deleteProduct'))
     );
   }
+  CountProduct(Id: number): Observable<any>{
+    return this.http.get<any>(`https://localhost:7194/api/Order/count-sold-by-product?Id=${Id}`)
+  }
+
   // 🎨 Lấy danh sách màu sắc
   getColor(): Observable<any[]> {
     return this.http.get<any[]>(`${this.productsUrl}/GetColor`);

@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, ElementRef, Inject, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { Product } from '../../Models/ProductDTO';
 import { ProductService } from '../../Service/Product.Service';
@@ -9,7 +9,6 @@ import { FormsModule } from '@angular/forms'
 import { SaleService } from '../../Service/Sale.Service';
 import { Sale } from '../../Models/SaleDTO';
 import { CustomerService } from '../../Service/Customer.Service';
-import WOW from 'wowjs';
 
 @Component({
   selector: 'app-product',
@@ -58,6 +57,7 @@ export class ProductComponent implements OnInit{
     private saleService: SaleService,
     private router: Router,
     private customerService: CustomerService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
@@ -65,7 +65,20 @@ export class ProductComponent implements OnInit{
     this.loadCategory();
     this.loadSale();
     this.checkLoginStatus();
-    new WOW().init();
+    // Trong file main.ts hoặc ngOnInit của component
+    if (isPlatformBrowser(this.platformId)) {
+      new (window as any).WOW({
+        boxClass: 'wow', // class apply cho phần tử
+        animateClass: 'animate__animated', // class animation
+        offset: 100, // giống data-wow-offset
+        mobile: true, // kích hoạt trên di động
+        live: true, // theo dõi DOM thay đổi
+        callback: function(box: any) {
+          // Có thể log khi chạy
+        },
+        resetAnimation: false // ✅ CHO PHÉP CHẠY LẠI
+      }).init();
+    }
   }
   // Hàm chính xử lý tải sản phẩm theo trạng thái lọc
   loadFilteredProducts(): void {

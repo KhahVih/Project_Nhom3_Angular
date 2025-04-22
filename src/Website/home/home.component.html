@@ -102,7 +102,7 @@
                       <!-- <img  class="hover-image" [src]="product.Images[1].Link" alt="{{product.Name}}" routerLink="/product/{{product.Id}}"> -->
                       <div class="hover-bar">
                           <a routerLink="/product/{{product.Id}}"><i class="fa-solid fa-eye"></i></a> <!-- Icon "Xem chi tiết" -->
-                          <a><i class="fa-solid fa-bag-shopping"></i></a> <!-- Icon "Thêm vào giỏ" -->
+                          <a (click)="GetProductDetail(product.Id)"><i class="fa-solid fa-bag-shopping"></i></a> <!-- Icon "Thêm vào giỏ" -->
                           <a href=""><i class="fa-regular fa-heart"></i></a> <!-- Icon "Yêu thích" -->
                       </div>
                     </div>
@@ -112,32 +112,94 @@
                             <div class="price">{{product.Price | number}}đ</div>
                         </div>
                         <div class="right-column">
-                            <div class="sold">({{product.Count}} đã bán)</div>
+                            <div class="sold" >({{CountProduct[product.Id] || 0}} đã bán) </div>
                         </div>
                     </div>
                 </a>
             </div>
             <button class="view-more-btn" routerLink="/product">Xem thêm sản phẩm</button>
-            <section class="reviews">
-                <h2>CẢM NHẬN KHÁCH HÀNG</h2>
-                <div class="review-slider" >
-                    <div class="review-track" *ngFor="let review of duplicatedReviews;">
-                        <div class="review-item">
-                            <div class="review-image">
-                                <img [src]="review.image" [alt]="review.name">
-                            </div>
-                            <div class="review-content">
-                                <h3>{{review.name}}</h3>
-                                <p class="title">{{review.title}}</p>
-                                <p class="quote">{{review.quote}}</p>
-                                <div class="stars">★★★★★</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-            </section>
         </div>
     </section>
+    <div class="Product-Detail" *ngIf="isProductdetail">
+      <div class="container" *ngIf="productdetail">
+        <div class="product-images">
+          <!-- Danh sách thumbnail -->
+          <div class="thumbnail-images">
+            <img
+              *ngFor="let image of productdetail.Images"
+              [src]="image.Link"
+              (click)="selectImage(image.Link)"
+              (mouseover)="previewImage(image.Link)"
+              alt="{{ productdetail.Name }}"
+              class="thumbnail"
+            />
+          </div>
+          <!-- Hình ảnh chính -->
+          <img [src]="selectedImage" alt="{{ productdetail.Name }}" class="main-image" />
+        </div>
+        <a (click)="closeProductdetail()" class="btn-close"></a>
+        <div class="product-info">
+          <h1>{{ productdetail.Name }}</h1>
+          <p>Mã sản phẩm: {{ productdetail.PosCode || 'N/A' }}</p>
+          <p class="price">{{ productdetail.Price | number }}đ</p>
+    
+          <div class="availability">
+            <p>Số lượng còn lại: {{ productdetail.Count }}</p>
+          </div>
+    
+          <div class="color-selection" *ngIf="colors && colors.length > 0">
+            <label>Màu:</label>
+            <div class="option-container">
+              <div
+                *ngFor="let color of colors"
+                class="option-box"
+                [class.selected]="selectedcolor === color.Id"
+                (click)="selectColor(color)">
+                {{ color.Name }}
+                <span class="checkmark" *ngIf="selectedcolor === color.Id">✔</span>
+              </div>
+            </div>
+          </div>
+    
+          <div class="size-selection" *ngIf="sizes && sizes.length > 0">
+            <label>Size:</label>
+            <div class="option-container">
+              <div
+                *ngFor="let size of sizes"
+                class="option-box"
+                [class.selected]="selectedsize === size.Id"
+                (click)="selectSize(size)">
+                {{ size.Name }}
+                <span class="checkmark" *ngIf="selectedsize === size.Id">✔</span>
+              </div>
+            </div>
+          </div>
+    
+          <div class="quantity-selection">
+            <label for="quantity">Số lượng:</label>
+            <div class="quantity-controls">
+              <button 
+                (click)="decreaseQuantity()" 
+                [disabled]="quantity <= 1" 
+                class="quantity-btn">-</button>
+              <span class="quantity-display" style="margin-left: 10px;">{{ quantity }}</span>
+              <button 
+                (click)="increaseQuantity()" 
+                [disabled]="quantity >= availableQuantity" 
+                class="quantity-btn" style="margin-left: 10px;">+</button>
+            </div>
+          </div>
+          <div class="button-bottom" style="display: flex;">
+            <button class="add-to-cart" (click)="AddToCart(productdetail)">THÊM VÀO GIỎ</button>
+            <button class="buy-now" (click)="buyNow(productdetail)">MUA NGAY</button>
+          </div>
+          
+    
+          <p class="description">{{ productdetail.Description || 'No description available.' }}</p>
+    
+        </div>
+      </div>
+    </div>
 </main>
 <!--End Main-->
 

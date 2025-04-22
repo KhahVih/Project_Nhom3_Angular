@@ -25,7 +25,10 @@ export class CartService {
     getCart(customerId: number): Observable<CartItem[]> {
         return this.http.get<CartItem[]>(`${this.apiUrl}/Customer/${customerId}`);
     }
-
+    //
+    getCartId(Id: number): Observable<CartItem []> {
+        return this.http.get<CartItem []>(`${this.apiUrl}/CartId/${Id}`);
+    }
     // 🔄 Cập nhật số lượng sản phẩm trong giỏ hàng
     updateCartItem(cartItemId: number, quantity: number): Observable<any> {
         return this.http.put(`${this.apiUrl}/${cartItemId}`, { quantity });
@@ -40,6 +43,14 @@ export class CartService {
     getCartFromLocal(): CartItem[] {
       const cart = localStorage.getItem('cart');
       return cart ? JSON.parse(cart) : [];
+    }
+    getCartLocalById(Id: number): CartItem[] {
+      const cart = localStorage.getItem('cart');
+      if (cart) {
+        const cartItems: CartItem[] = JSON.parse(cart);
+        return cartItems.filter(item => item.Id === Id); // lọc theo item.Id
+      }
+      return [];
     }
     // Cập nhật số lượng sản phẩm trong localStorage
     updateLocalQuantity(cartItemId: number, newQuantity: number): void {

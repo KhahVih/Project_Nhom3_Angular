@@ -110,7 +110,6 @@
       <div class="product-info">
         <h1>{{ product.Name }}</h1>
         <p>Mã sản phẩm: {{ product.PosCode || 'N/A' }}</p>
-        <p>Lượt xem: {{ product.Count || 0 }}</p>
         <p class="price">{{ product.Price | number }}đ</p>
   
         <div class="availability">
@@ -123,10 +122,10 @@
             <div
               *ngFor="let color of colors"
               class="option-box"
-              [class.selected]="selectcolor === color.Id"
+              [class.selected]="selectedcolor === color.Id"
               (click)="selectColor(color)">
               {{ color.Name }}
-              <span class="checkmark" *ngIf="selectcolor === color.Id">✔</span>
+              <span class="checkmark" *ngIf="selectedcolor === color.Id">✔</span>
             </div>
           </div>
         </div>
@@ -137,10 +136,10 @@
             <div
               *ngFor="let size of sizes"
               class="option-box"
-              [class.selected]="selectsize === size.Id"
+              [class.selected]="selectedsize === size.Id"
               (click)="selectSize(size)">
               {{ size.Name }}
-              <span class="checkmark" *ngIf="selectsize === size.Id">✔</span>
+              <span class="checkmark" *ngIf="selectedsize === size.Id">✔</span>
             </div>
           </div>
         </div>
@@ -192,6 +191,7 @@
           </div>
         </div>
       </div>
+      
     </div>
     <!-- Tabs được đưa xuống cuối -->
     <div class="tabs">
@@ -216,16 +216,36 @@
         <div class="comment-list" *ngIf="product">
           <div class="comment" *ngFor="let comment of product.Comments">
             <div class="comment-rating">
+              <label>Tên khách hàng: {{comment.CustomerName}}</label>
+              <br>
               <label>Đánh giá: </label>
               <span *ngFor="let star of (comment.Vote ? getStars(comment.Vote) : [])" 
                     class="star" 
-                    [class.filled]="star <= (comment.Vote ?? 0)">★</span>
+                    [class.filled]="star <= (comment.Vote ?? 0)"> ★</span>
               <br>
               <p class="comment-text">Mô tả: {{ comment.Description }}</p>
               <span class="comment-date">{{ comment.CreatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
             </div>
           </div>
           <p *ngIf="product.Comments.length === 0">Chưa có bình luận nào.</p>
+        </div>
+        <!-- Form thêm bình luận -->
+        <div class="comment-form" *ngIf="isLoggedIn">
+          <h4>Viết bình luận</h4>
+          <label>Đánh giá:</label>
+          <div>
+            <span *ngFor="let star of getStars(5)" 
+                  class="star" 
+                  [class.filled]="star <= newCommentVote"
+                  (click)="setVote(star)">★</span>
+          </div>
+          <textarea [(ngModel)]="newCommentText" placeholder="Nhập bình luận của bạn..."></textarea> 
+          <button (click)="AddComment()" [disabled]="submitting" class="add-comment">
+            {{ submitting ? 'Đang gửi...' : 'Gửi bình luận' }}
+          </button>
+        </div>
+        <div *ngIf="!isLoggedIn">
+          <p>Bạn cần <a routerLink="/login">đăng nhập</a> để bình luận.</p>
         </div>
       </div>
 
@@ -246,6 +266,81 @@
         </ng-template>
       </div>
     </div>
+    <div class="cart-overlay" *ngIf="isCart">
+      <div class="cart-table-popup">
+        <!-- Nội dung giỏ hàng giữ nguyên -->
+        <div class="cart-table">
+          <h4>GIỎ HÀNG CỦA BẠN:  </h4>
+          <hr>
+          <table class="cart-table">
+              <thead>
+                  <tr>
+                      <th>Hình Ảnh</th>
+                      <th>Tên Sản Phẩm</th>
+                      <th>Số lượng</th>
+                      <th>Thành Tiền</th>
+                      <th></th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor="let item of cartItems; let i = index">
+                      <td data-label="Hình Ảnh">
+                          <div class="product-info-image-cart">
+                              <img
+                                  [src]="item.ProductImage || 'assets/images/default-product.jpg'"
+                                  alt="{{ item.ProductName }}"
+                                  class="product-image-cart"
+                              />
+                              <span (click)="removeItem(item.Id)">Xóa</span>
+                          </div>
+                      </td>
+                      <td data-label="Tên Sản Phẩm">
+                          <div class="product-info-cart">
+                              <a routerLink="/product/{{item.ProductId}}"><h5>{{item.ProductName}}</h5></a>
+                              <div class="color-size-cart">
+                                  <p>Màu: {{item.ColorName}}</p>
+                                  <p>Size: {{item.SizeName}}</p>
+                              </div>
+                          </div>
+                      </td>
+                      <td data-label="Số lượng">
+                          <div class="quantity-control-cart">
+                              <button class="quantity-btn-cart decrease" (click)="decreaseQuantitycart(item)">-</button>
+                              <input
+                                  type="text"
+                                  [(ngModel)]="item.Quantity"
+                                  class="quantity-input-cart"
+                                  readonly
+                              />
+                              <button class="quantity-btn-cart increase" (click)="increaseQuantitycart(item)">+</button>
+                          </div>
+                      </td>
+                      <td data-label="Thành Tiền">{{ item.UnitPrice | currency: 'VND':'symbol':'1.0-0' }}</td>
+                  </tr>
+              </tbody>
+          </table>
+          <div class="price-bottom-cart" *ngIf="cartItems.length > 0">
+            <div class="price-unitprice-cart">
+              <p>Giá Gốc: </p>
+              <p>{{ getTotalOriginalPrice() | currency: 'VND':'symbol':'1.0-0' }}</p>
+            </div>
+            <div class="price-sale-cart">
+              <p>Giảm Giá: </p>
+              <p>-{{ getTotalDiscount() | currency: 'VND':'symbol':'1.0-0' }}</p>
+            </div>
+            <div class="price-final-cart">
+              <p>Tổng Thanh Toán: </p>
+              <p>{{ getTotalFinalPrice() | currency: 'VND':'symbol':'1.0-0' }}</p>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <a (click)="closeCart()">Tiếp tục mua hàng</a>
+            <a routerLink="/cart" style="text-decoration: none; color: black;">Thanh toán</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
   </main>
   <!--End Main-->
 

@@ -5,6 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Customer } from '../../Models/CustomerDTO';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -36,11 +37,22 @@ export class LoginComponent {
 
 
   Login(){
+    
     this.customerService.login(this.loginData).subscribe({
       next: (response) => {
         this.customerService.saveCustomerId(response.customer.Id); // Lưu customerId vào localStorage
         this.customerService.saveCustomerName(response.customer.Fullname);
-        alert(response.message);
+        Swal.fire({
+          icon: 'success', // Biểu tượng thành công
+          title: 'Thành công',
+          text: 'Đăng nhập thành công!',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#3085d6',
+          toast: true, // Hiển thị dạng toast (góc trên)
+          position: 'top-end', // Vị trí góc trên bên phải
+          timer: 3000, // Tự đóng sau 3 giây
+          timerProgressBar: true, // Thanh tiến trình
+        });
         this.router.navigate(['/home']); // Chuyển hướng sau khi đăng nhập thành công
       }
     });
@@ -56,12 +68,34 @@ export class LoginComponent {
   onRegisterSuccess(form: NgForm) {
     
     if(form.invalid){
-      alert('Vui lòng điền đầy đủ thông tin!');
+      // alert('Vui lòng điền đầy đủ thông tin!');
+      Swal.fire({
+                icon: 'warning', // Biểu tượng cảnh báo
+                title: 'Lỗi',
+                text: 'Vui lòng điền đầy đủ thông tin!',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3085d6',
+                toast: true, // Hiển thị dạng toast (góc trên)
+                position: 'top-end', // Vị trí góc trên bên phải
+                timer: 3000, // Tự đóng sau 3 giây
+                timerProgressBar: true, // Thanh tiến trình
+              });
       return;
     }
     
     if (this.formCustomer.password !== this.formCustomer.confirmPassword) {
       alert('Mật khẩu không khớp!');
+      Swal.fire({
+                icon: 'warning', // Biểu tượng cảnh báo
+                title: 'Lỗi',
+                text: 'Mật khẩu không khớp!',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3085d6',
+                toast: true, // Hiển thị dạng toast (góc trên)
+                position: 'top-end', // Vị trí góc trên bên phải
+                timer: 3000, // Tự đóng sau 3 giây
+                timerProgressBar: true, // Thanh tiến trình
+              });
       return;
     }
     const newcustomer: Customer = {
@@ -79,11 +113,33 @@ export class LoginComponent {
       CommentCount: 0
     };
     this.customerService.addCustomer(newcustomer).subscribe(res =>{
-      alert('Đăng ký thành công!');
+      // alert('Đăng ký thành công!');
+      Swal.fire({
+        icon: 'success', // Biểu tượng thành công
+        title: 'Thành công',
+        text: 'Đăng ký thành công!',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#3085d6',
+        toast: true, // Hiển thị dạng toast (góc trên)
+        position: 'top-end', // Vị trí góc trên bên phải
+        timer: 3000, // Tự đóng sau 3 giây
+        timerProgressBar: true, // Thanh tiến trình
+      });
       this.resetForm()
       console.log('New Customer: ',newcustomer);
     }, err => {
-      alert('Đăng ký thất bại!');
+      // alert('Đăng ký thất bại!');
+      Swal.fire({
+        icon: 'warning', // Biểu tượng cảnh báo
+        title: 'Lỗi',
+        text: 'Đăng ký thất bại!',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#3085d6',
+        toast: true, // Hiển thị dạng toast (góc trên)
+        position: 'top-end', // Vị trí góc trên bên phải
+        timer: 3000, // Tự đóng sau 3 giây
+        timerProgressBar: true, // Thanh tiến trình
+      });
     });
     this.isResgiter = false;
     this.label = 'Đăng Nhập';
