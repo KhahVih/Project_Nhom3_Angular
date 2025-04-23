@@ -159,7 +159,6 @@
   }
   
   /*order-list*/
-  
   /*Order-detail*/
   .overlay {
     position: fixed;
@@ -276,7 +275,15 @@
   .order-management {
     padding-top: 1rem;
   }
-
+.button-detail{
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #888;
+}
+.button-detail:hover{
+  background-color: #666;
+  color: #fff;
+}
   /*phan trang */
   .pagination {
     display: flex;

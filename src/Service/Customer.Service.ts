@@ -34,9 +34,16 @@ export class CustomerService {
     deleteCustomer(id: number): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/${id}`);
     }
-
+    // check username
+    CheckUsername(username: string){
+        return this.http.get<{ exists: boolean }>(`${this.apiUrl}/check-username?username=${username}`);
+    }
+    // check username
+    CheckEmail(email: string){
+      return this.http.get<{ exists: boolean }>(`${this.apiUrl}/check-email?email=${email}`);
+    }
     // Phương thức mới: Đổi mật khẩu
-    changePassword(request: { Email: string; OldPassword: string; NewPassword: string }): Observable<any> {
+    changePassword(request: { Email: string; NewPassword: string }): Observable<any> {
         return this.http.put(`${this.apiUrl}/change-password`, request);
     }
 

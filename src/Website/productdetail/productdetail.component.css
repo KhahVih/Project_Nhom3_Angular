@@ -961,7 +961,7 @@ hr {
 /*cart*/
 .cart-overlay {
   position: fixed;
-  top: 50px;
+  top: 0;
   left: 0;
   width: 100%;
   height: 100%;
@@ -976,6 +976,7 @@ hr {
   background-color: #fff;
   padding: 2rem;
   border-radius: 10px;
+  width: 900px;
   z-index: 1000; /* đè lên cả lớp mờ */
   max-height: 90vh;
   overflow-y: auto;

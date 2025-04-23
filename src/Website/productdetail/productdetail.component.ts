@@ -11,6 +11,7 @@ import { CartService } from '../../Service/Cart.Service';
 import { FormsModule } from '@angular/forms';
 import { Comment } from '../../Models/CommentDTO';
 import { CommentService } from '../../Service/Comment.Service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-productdetail',
@@ -91,12 +92,32 @@ export class ProductdetailComponent implements OnInit{
 
   // Add To Cart
   AddToCart(product: Product){
-    if (this.selectedcolor === null || this.selectedsize === null) {
-      alert('Vui lòng chọn màu và kích thước!');
+    if (this.selectedsize === null) {
+      Swal.fire({
+                  icon: 'warning', // Biểu tượng cảnh báo
+                  title: 'Lỗi',
+                  text: 'Vui lòng chọn màu và kích thước!',
+                  confirmButtonText: 'OK',
+                  confirmButtonColor: '#3085d6',
+                  toast: true, // Hiển thị dạng toast (góc trên)
+                  position: 'top-end', // Vị trí góc trên bên phải
+                  timer: 3000, // Tự đóng sau 3 giây
+                  timerProgressBar: true, // Thanh tiến trình
+                });
       return;
     }
-    if (this.quantity > this.availableQuantity) {
-      alert('Số lượng vượt quá tồn kho!');
+    if (this.quantity > this.availableQuantity || this.quantity < 100) {
+      Swal.fire({
+                  icon: 'warning', // Biểu tượng cảnh báo
+                  title: 'Lỗi',
+                  text: 'Số lượng vượt quá mức quy định!',
+                  confirmButtonText: 'OK',
+                  confirmButtonColor: '#3085d6',
+                  toast: true, // Hiển thị dạng toast (góc trên)
+                  position: 'top-end', // Vị trí góc trên bên phải
+                  timer: 3000, // Tự đóng sau 3 giây
+                  timerProgressBar: true, // Thanh tiến trình
+                });
       return;
     }
     // Lấy thông tin user từ authService

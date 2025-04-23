@@ -121,12 +121,11 @@
                         <p style="margin-top: 1rem; margin-left: 1rem;">Đổi mật khẩu</p>
                     </div>
                     <div class="password" *ngIf="isPassword">
-                        <input type="password" style="width: 350px;height: 40px;">
-                        <button class="button-changepassword" (click)="changPassword()">Lưu</button>
+                        <input type="password" name="password" [(ngModel)]="newPassword" placeholder="Mật khẩu mới" style="width: 350px;height: 40px;">
                     </div>
                 </div>
             </div>
-            <button class="button-update">Cập Nhật </button>
+            <button class="button-update" (click)="updateCustomer()">Cập Nhật </button>
         </div>
         <!--History-->
         <div class="transaction-history" *ngIf="selectedTab === 'history'">
@@ -149,12 +148,12 @@
                   <td>{{order.CreatedAt | date:'dd/MM/yyyy: HH:mm:ss'}}</td>
                   <td>
                     <ul>
-                      <li *ngFor="let item of order.OrderItems">{{ item.ProductName }}</li>
+                      <p *ngFor="let item of order.OrderItems">{{ item.ProductName }}</p>
                     </ul>
                   </td>
                   <td>
                     <ul>
-                      <li *ngFor="let item of order.OrderItems">{{ item.Quantity }}</li>
+                      <p *ngFor="let item of order.OrderItems">{{ item.Quantity }}</p>
                     </ul>
                   </td>
                   <td>{{order.Status}}</td>

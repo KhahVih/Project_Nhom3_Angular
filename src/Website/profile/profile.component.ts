@@ -6,6 +6,7 @@ import { CustomerService } from '../../Service/Customer.Service';
 import { Customer } from '../../Models/CustomerDTO';
 import { Order } from '../../Models/OrderDTO';
 import { OrderService } from '../../Service/Order.Service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-profile',
@@ -80,7 +81,44 @@ export class ProfileComponent implements OnInit{
       this.customer.Date = new Date(value);
     }
   }
-
+  // update 
+  updateCustomer(){
+    const customerId = this.customerService.getCustomerId();
+    if(this.isPassword = true){
+      this.customer.Password = this.newPassword;
+    }
+    const updateCustomers: Customer = {
+      Id: this.customer.Id,
+      Username: this.customer.Username,
+      Email: this.customer.Email,
+      Fullname: this.customer.Fullname,
+      Password: this.customer.Password,
+      Address: this.customer.Address,
+      Phone: this.customer.Phone,
+      Gender: this.customer.Gender,
+      IsClone: this.customer.IsClone,
+      CreatedAt: this.customer.CreatedAt,
+      Date: this.customer.Date,
+      CommentCount: this.customer.CommentCount
+    };
+    if(customerId){
+      const Id = Number(customerId);
+      this.customerService.updateCustomer(Id, updateCustomers).subscribe(() =>{
+        Swal.fire({
+                icon: 'success', // Biểu tượng thành công
+                title: 'Thành công',
+                text: 'Cập nhật thành công vui lòng đăng nhập lại!',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3085d6',
+                toast: true, // Hiển thị dạng toast (góc trên)
+                position: 'top-end', // Vị trí góc trên bên phải
+                timer: 3000, // Tự đóng sau 3 giây
+                timerProgressBar: true, // Thanh tiến trình
+              });
+        this.router.navigate(['/login']);
+      })
+    }
+  }
   toggleMenu() {
     const navbarElement = this.navbar.nativeElement;
     navbarElement.classList.toggle('active');
@@ -91,21 +129,7 @@ export class ProfileComponent implements OnInit{
       this.searchQuery = ''; // Reset từ khóa khi đóng
     }
   }
-  // open change password 
-  changPassword(): void {
-    if (!this.newPassword || this.newPassword.trim().length < 6) {
-      alert('Mật khẩu phải có ít nhất 6 ký tự!');
-      return;
-    }
   
-    // Gọi API hoặc xử lý cập nhật mật khẩu tại đây
-    console.log('Mật khẩu mới:', this.newPassword);
-  
-    // Reset form
-    this.isPassword = false;
-    this.newPassword = '';
-    alert('Đổi mật khẩu thành công!');
-  }
   // History Order
   GetOrderCustomer(){
     const customerId = this.customerService.getCustomerId();

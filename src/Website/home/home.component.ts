@@ -134,7 +134,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy{
     }
     // Add To Cart
     AddToCart(product: Product){
-        if (this.selectedcolor === null || this.selectedsize === null) {
+        if (this.selectedsize === null) {
           // alert('Vui lòng chọn màu và kích thước!');
           Swal.fire({
             icon: 'warning', // Biểu tượng cảnh báo

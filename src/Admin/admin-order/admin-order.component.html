@@ -127,9 +127,9 @@
               <td>{{ order.TotalAmount | currency }} VND</td>
               <td>{{ order.Status }}</td>
               <td>{{ order.CreatedAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
-              <td class="btn-action">
-                  <Button (click)="GetOrderDetail(order.Id)">Xem chi tiết</Button>
-                  <Button (click)="DeleteOrder(order.Id)">Xóa</Button>
+              <td class="btn-action" style="display: flex; gap: 1rem;">
+                  <Button (click)="GetOrderDetail(order.Id)" class="button-detail">Xem chi tiết</Button>
+                  <Button (click)="DeleteOrder(order.Id)" class="button-detail">Xóa</Button>
               </td>
               </tr>
           </tbody>
@@ -185,7 +185,7 @@
                 <dd>{{order.CreatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</dd>
               </dl>
             </div>
-            <div class="order-items" *ngFor="let order of orderdetail">
+            <div class="order-items">
               <table>
                 <thead>
                   <tr>
@@ -204,31 +204,32 @@
                     <td>{{orderiteam.Quantity}}</td>
                     <td>{{orderiteam.SizeName}}</td>
                     <td>{{orderiteam.ColorName}}</td>
-                    <td>{{orderiteam.UnitPrice}}</td>
+                    <td>{{orderiteam.UnitPrice | currency}} VND</td>
                   </tr>
                 </tbody>
               </table>
             </div>
             <!--thanh toan-->
-            <div class="payment-totals" *ngFor="let order of orderdetail">
+            <div class="payment-totals" style="margin-top: 2rem;">
               <dl>
                 <dt>Tổng đơn: </dt>
-                <dd >{{ order.TotalAmount | currency:'' }} VND</dd>
+                <dd >{{ order.TotalAmount | currency }} VND</dd>
                 <dt>Giảm giá hóa đơn: </dt>
                 <dd>0 VND</dd>
                 <dt>Tổng phải thanh toán: </dt>
-                <dd>{{ order.TotalAmount | currency:'' }} VND</dd>
+                <dd>{{ order.TotalAmount | currency }} VND</dd>
               </dl>
             </div>
             <!-- Cập nhật trạng thái -->
-            <div class="status-update" *ngFor="let order of orderdetail">
-              <h6>Cập nhật trạng thái đơn hàng</h6>
+            <div class="status-update">
+              <h6>Trạng thái đơn hàng: {{order.Status}}</h6>
               <div class="form-group">
                 <label for="orderStatus">Trạng thái:</label>
                 <select id="orderStatus" [(ngModel)]="selectedStatus" class="form-control">
                   <option *ngFor="let status of orderStatuses" [value]="status.value">{{status.label}}</option>
                 </select>
                 <button class="btn btn-primary mt-2" (click)="UpdateStatus(order.Id)">Cập nhật</button>
+                <button class="btn btn-success mb-3" style="margin-top: 1.5rem; margin-left: 2rem;" (click)="exportToExcel()">📁 Xuất Excel</button>
               </div>
             </div>
           </div>

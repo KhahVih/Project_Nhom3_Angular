@@ -3,13 +3,13 @@ import { LoginDTO } from '../../Models/LoginDTO';
 import { CustomerService } from '../../Service/Customer.Service';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Customer } from '../../Models/CustomerDTO';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -19,8 +19,21 @@ export class LoginComponent {
   email: string = 'Ducpham.ms@gmail.com';
   isSearchVisible: boolean = false; // Trạng thái ẩn/hiện thanh tìm kiếm
   searchQuery: string = ''; // Từ khóa tìm kiếm
-  constructor(private customerService: CustomerService, private router: Router){}
+  // Đổi password 
+  forgotForm: FormGroup;
+  constructor(
+    private customerService: CustomerService, 
+    private router: Router,
+    private fb: FormBuilder,
+  ){
+    this.forgotForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      newPassword: ['', [Validators.required, Validators.minLength(6)]]
+    });
+  }
   isResgiter: boolean = false;
+  isLogin: boolean = true;
+  isPassword: boolean = false;
   label: string = 'Đăng Nhập';
 
   formCustomer: any = {
@@ -28,16 +41,15 @@ export class LoginComponent {
     username: '',
     password: '',
     confirmPassword: '',
-    gender: true,
+    gender: true || false,
     date: '',
     email: '',
     phone: '',
     address: ''
   };
-
-
+  
+  // đăng nhập
   Login(){
-    
     this.customerService.login(this.loginData).subscribe({
       next: (response) => {
         this.customerService.saveCustomerId(response.customer.Id); // Lưu customerId vào localStorage
@@ -57,47 +69,60 @@ export class LoginComponent {
       }
     });
   }
-  
   // Chuyển sang form đăng ký
   goToRegister() {
     this.isResgiter = true;
+    this.isLogin = false;
+    this.isPassword = false;
     this.label = 'Đăng Ký';
+  }
+  // Chuyển sang form login
+  goToLogin() {
+    this.isResgiter = false;
+    this.isLogin = true;
+    this.isPassword = false;
+    this.label = 'Đăng Nhập';
+  }
+  // Chuyển sang form chang password
+  goToChangePassword() {
+    this.isResgiter = false;
+    this.isLogin = false;
+    this.isPassword = true;
+    this.label = 'Đổi mật khẩu';
   }
 
   // Sau khi đăng ký xong, chuyển lại form login
   onRegisterSuccess(form: NgForm) {
     
-    if(form.invalid){
-      // alert('Vui lòng điền đầy đủ thông tin!');
-      Swal.fire({
-                icon: 'warning', // Biểu tượng cảnh báo
-                title: 'Lỗi',
-                text: 'Vui lòng điền đầy đủ thông tin!',
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#3085d6',
-                toast: true, // Hiển thị dạng toast (góc trên)
-                position: 'top-end', // Vị trí góc trên bên phải
-                timer: 3000, // Tự đóng sau 3 giây
-                timerProgressBar: true, // Thanh tiến trình
-              });
+    // Kiểm tra username đã tồn tại chưa
+    this.customerService.CheckUsername(this.formCustomer.username).subscribe(res => {
+      if (res.exists) {
+        this.showError('Tên tài khoản đã tồn tại! Vui lòng chọn tên khác.');
+        return;
+      }
+    })
+
+    if (this.formCustomer.password.length < 6) {
+      this.showError('Mật khẩu phải trên 6 ký tự!');
       return;
     }
-    
+  
     if (this.formCustomer.password !== this.formCustomer.confirmPassword) {
-      alert('Mật khẩu không khớp!');
-      Swal.fire({
-                icon: 'warning', // Biểu tượng cảnh báo
-                title: 'Lỗi',
-                text: 'Mật khẩu không khớp!',
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#3085d6',
-                toast: true, // Hiển thị dạng toast (góc trên)
-                position: 'top-end', // Vị trí góc trên bên phải
-                timer: 3000, // Tự đóng sau 3 giây
-                timerProgressBar: true, // Thanh tiến trình
-              });
+      this.showError('Mật khẩu không khớp!');
       return;
     }
+    // Kiểm tra email đã tồn tại chưa
+    this.customerService.CheckEmail(this.formCustomer.email).subscribe(res => {
+      if (res.exists) {
+        this.showError('Tên email đã tồn tại! Vui lòng chọn email khác.');
+        return;
+      }
+    })
+    if (form.invalid) {
+      this.showError('Vui lòng điền đầy đủ thông tin!');
+      return;
+    }
+
     const newcustomer: Customer = {
       Id: 0,
       Username: this.formCustomer.username,
@@ -126,24 +151,37 @@ export class LoginComponent {
         timerProgressBar: true, // Thanh tiến trình
       });
       this.resetForm()
+      this.goToLogin();
       console.log('New Customer: ',newcustomer);
     }, err => {
-      // alert('Đăng ký thất bại!');
-      Swal.fire({
-        icon: 'warning', // Biểu tượng cảnh báo
-        title: 'Lỗi',
-        text: 'Đăng ký thất bại!',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#3085d6',
-        toast: true, // Hiển thị dạng toast (góc trên)
-        position: 'top-end', // Vị trí góc trên bên phải
-        timer: 3000, // Tự đóng sau 3 giây
-        timerProgressBar: true, // Thanh tiến trình
-      });
+      this.showError('Đăng ký thất bại!');
     });
-    this.isResgiter = false;
-    this.label = 'Đăng Nhập';
   }
+  // đổi mật khẩu 
+  ChangePassword() {
+    if(this.forgotForm.invalid){
+      return;
+    }
+    const formData = this.forgotForm.value;
+    this.customerService.changePassword(formData).subscribe({
+      next: (res: any) => {
+        Swal.fire({
+          icon: 'success', // Biểu tượng thành công
+          title: 'Thành công',
+          text: `${res.message}`,
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#3085d6',
+          toast: true, // Hiển thị dạng toast (góc trên)
+          position: 'top-end', // Vị trí góc trên bên phải
+          timer: 3000, // Tự đóng sau 3 giây
+          timerProgressBar: true, // Thanh tiến trình
+        }),
+        this.goToLogin();
+      },
+      error: (err) => {this.showError(`${err.error.message}`)}
+    });
+  }
+
   resetForm(){
     this.formCustomer = {
       fullname: '',
@@ -157,10 +195,26 @@ export class LoginComponent {
       address: ''
     };
   }
+
+  showError(message: string) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Lỗi',
+      text: message,
+      confirmButtonText: 'OK',
+      confirmButtonColor: '#3085d6',
+      toast: true,
+      position: 'top-end',
+      timer: 3000,
+      timerProgressBar: true,
+    });
+  }
+  
   toggleMenu() {
     const navbarElement = this.navbar.nativeElement;
     navbarElement.classList.toggle('active');
   }
+
   toggleSearch() {
     this.isSearchVisible = !this.isSearchVisible;
     if (!this.isSearchVisible) {

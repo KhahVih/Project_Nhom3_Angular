@@ -48,6 +48,7 @@ export const routes: Routes = [
   { path: 'collections/:id', component: CollectionsDetailComponent }, // Thêm route cho CollectionsDetailComponent
   { path: 'profile', component: ProfileComponent },
   // Admin routes
+  { path: 'admin', component: AdminLoginComponent },
   { path: 'admin/home', component: AdminHomeComponent },
   { path: 'admin/contact', component: AdminContactComponent },
   { path: 'admin/login', component: AdminLoginComponent },
