@@ -124,7 +124,7 @@
               <td>{{ order.CustomerName }}</td>
               <td>{{ order.Address }}</td>
               <td>{{ order.Phone }}</td>
-              <td>{{ order.TotalAmount | currency }} VND</td>
+              <td>{{ order.TotalAmount | number}} VND</td>
               <td>{{ order.Status }}</td>
               <td>{{ order.CreatedAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
               <td class="btn-action" style="display: flex; gap: 1rem;">
@@ -204,7 +204,7 @@
                     <td>{{orderiteam.Quantity}}</td>
                     <td>{{orderiteam.SizeName}}</td>
                     <td>{{orderiteam.ColorName}}</td>
-                    <td>{{orderiteam.UnitPrice | currency}} VND</td>
+                    <td>{{orderiteam.UnitPrice | number}}VND</td>
                   </tr>
                 </tbody>
               </table>
@@ -213,11 +213,11 @@
             <div class="payment-totals" style="margin-top: 2rem;">
               <dl>
                 <dt>Tổng đơn: </dt>
-                <dd >{{ order.TotalAmount | currency }} VND</dd>
+                <dd >{{ order.TotalAmount | number}} VND</dd>
                 <dt>Giảm giá hóa đơn: </dt>
                 <dd>0 VND</dd>
                 <dt>Tổng phải thanh toán: </dt>
-                <dd>{{ order.TotalAmount | currency }} VND</dd>
+                <dd>{{ order.TotalAmount | number}} VND</dd>
               </dl>
             </div>
             <!-- Cập nhật trạng thái -->

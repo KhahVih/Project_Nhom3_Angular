@@ -23,7 +23,7 @@
           <details *ngIf="isMenu">
             <summary >Quản lý đơn hàng</summary>
             <ul class="drop-menu" >
-              <li><a routerLink="admin/orderprocessing">Quản lý đơn hàng được duyệt</a></li>
+              <li><a routerLink="/admin/orderprocessing">Quản lý đơn hàng được duyệt</a></li>
               <li><a routerLink="/admin/order">Quản lý đơn hàng</a></li>
             </ul>
           </details>
@@ -243,7 +243,7 @@
                 <div class="table-row" *ngFor="let product of products">
                     <span class="source-name">{{ product.Name }}</span>
                     <span>{{ product.PosCode }} <br> {{ product.CreatedAt | date }}</span>
-                    <span>{{ product.Price }}00 VND</span>
+                    <span>{{ product.Price | number}} VND</span>
                     <span>{{ product.IsPublish ? 'Đã xuất bảng ' : 'Chưa xuất bản ' }}</span>
                     <span>{{ product.IsNew ? 'Yes' : 'No' }}</span>
                     <!-- <span>

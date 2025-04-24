@@ -157,6 +157,15 @@
               [disabled]="quantity >= availableQuantity" 
               class="quantity-btn">+</button>
           </div>
+          <!-- Link để hiển thị hướng dẫn chọn size -->
+          <a href="javascript:void(0);" style="text-decoration: none;" (click)="showGuide()">Hướng dẫn chọn size</a>
+
+          <!-- Modal hiển thị hình ảnh hướng dẫn -->
+          <div *ngIf="isGuideVisible" class="guide">
+              <img src="https://chamygaby.vn/thumbs/568x1014x3/upload/photo/size-2640.jpg" alt="Hướng dẫn chọn size" />
+              <span (click)="closeGuide()" class="close">&times;</span>
+          </div>
+
         </div>
   
         <button class="add-to-cart" (click)="AddToCart(product)">THÊM VÀO GIỎ</button>

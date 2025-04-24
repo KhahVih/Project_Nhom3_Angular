@@ -7,6 +7,7 @@ import { CartService } from '../../Service/Cart.Service';
 import { CustomerService } from '../../Service/Customer.Service';
 import { AddressService } from '../../Service/Address.Service';
 import { CheckOut } from '../../Models/CheckOutDTO';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cart',
@@ -186,11 +187,11 @@ export class CartComponent implements OnInit{
     const CustomerId = this.authService.getCustomerId();
     console.log('Selected codes:', this.selectedProvinceCode, this.selectedDistrictCode, this.selectedWardCode);
     if (this.cartItems.length === 0) {
-      alert('Giỏ hàng trống!');
+      this.showError('Giỏ hàng trống!');
       return;
     }
     if (!this.checkoutForm.Address || !this.checkoutForm.Phone || !this.checkoutForm.CustomerName ) {
-      alert('Vui lòng nhập đầy đủ thông tin giao hàng!');
+      this.showError('Vui lòng nhập đầy đủ thông tin giao hàng!')
       return;
     }
     
@@ -209,7 +210,8 @@ export class CartComponent implements OnInit{
     console.log('CheckOut: ', checkout);
     this.cartService.checkOut(checkout).subscribe({
       next: (response) => {
-        alert('Đơn hàng đã được tạo thành công! Mã đơn hàng: ' + response.orderId);
+        // alert('Đơn hàng đã được tạo thành công! Mã đơn hàng: ' + response.orderId);
+        this.showError('Đơn hàng đã được tạo thành công! Mã đơn hàng: ' + response.orderId)
         if (CustomerId) {
           this.cartItems = []; // Xóa giỏ hàng trên giao diện nếu đã đăng nhập
           this.loadCartItems(); // Tải lại từ API
@@ -235,7 +237,19 @@ export class CartComponent implements OnInit{
     };
 
   }
-
+  showError(message: string) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Lỗi',
+        text: message,
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#3085d6',
+        toast: true,
+        position: 'top-end',
+        timer: 3000,
+        timerProgressBar: true,
+      });
+    }
   // kiểm tra login 
   isLoggedIn: boolean = false;
   customerName: string | null = null;

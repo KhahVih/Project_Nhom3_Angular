@@ -684,6 +684,35 @@ hr {
     border-top: 1px solid #ccc;
     margin: 0;
 }
+.guide {
+  display: block;
+  position: fixed;
+  top: 55%;
+  left: 20%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  width: 30%; /* Giới hạn chiều rộng của modal */
+}
+
+.guide img {
+  width: 100%; /* Hình ảnh sẽ chiếm 100% chiều rộng của modal */
+  max-width: 100%; /* Đảm bảo hình ảnh không vượt quá chiều rộng modal */
+  height: auto; /* Giữ tỉ lệ của hình ảnh */
+  max-height: 80vh; /* Giới hạn chiều cao của hình ảnh */
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 30px;
+  color: black;
+  cursor: pointer;
+}
+
 
 /* Tabs Styles - Chỉnh sửa */
 .tabs {
@@ -814,6 +843,7 @@ hr {
 .star.filled {
     color: #ffcc00; /* Màu vàng cho sao được chọn (dựa trên Vote) */
 }
+
 /* Responsive Design */
 /* Tablet (max-width: 768px) */
 @media (max-width: 880px) {

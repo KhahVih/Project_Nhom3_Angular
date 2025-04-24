@@ -108,7 +108,7 @@ export class ProductComponent implements OnInit{
       this.productService.GetProductPriceASDC(this.page).subscribe(data => {
         this.handleProductResponse(data);
       });
-    } else {
+    } else if(this.selectedSortType == 1){
       this.productService.GetProducts(this.page).subscribe(data => {
         this.handleProductResponse(data);
       });
@@ -122,7 +122,12 @@ export class ProductComponent implements OnInit{
     this.getPages();
     console.log('Response:', data);
   }
-
+  //load product
+  loadProducts(){
+    this.productService.GetProducts(this.page).subscribe(data => {
+      this.handleProductResponse(data);
+    });
+  }
   // Phân trang
   goToPage(p: number): void {
     if (p < 1 || p > this.totalPages || p === this.page) return;
@@ -232,7 +237,12 @@ export class ProductComponent implements OnInit{
       alert('Vui lòng nhập từ khóa tìm kiếm!');
     }
   }
-
+  // sử lý tìm kiếm theo thời gian thực 
+  onSearchChange() {
+    if (this.searchQuery.trim()) {
+      this.router.navigate(['/search'], { queryParams: { q: this.searchQuery } });
+    }
+  }
   // Kiểm tra người dùng đã đăng nhập chưa
   checkLoginStatus(): void {
     const customerId = this.customerService.getCustomerId();

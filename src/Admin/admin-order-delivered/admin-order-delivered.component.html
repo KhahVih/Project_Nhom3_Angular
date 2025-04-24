@@ -137,10 +137,10 @@
                 </td>
                 <td >
                     <ul>
-                    <p *ngFor="let orderitem of order.OrderItems">{{ orderitem.UnitPrice }}</p>
+                    <p *ngFor="let orderitem of order.OrderItems">{{ orderitem.UnitPrice | number }}VND</p>
                     </ul>
                 </td>
-                <td>{{ order.TotalAmount }}</td>
+                <td>{{ order.TotalAmount | number}}VND</td>
                 </tr>
             </tbody>
             </table>

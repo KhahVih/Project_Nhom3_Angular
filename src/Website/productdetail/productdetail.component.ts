@@ -106,7 +106,7 @@ export class ProductdetailComponent implements OnInit{
                 });
       return;
     }
-    if (this.quantity > this.availableQuantity || this.quantity < 100) {
+    if (this.quantity > this.availableQuantity) {
       Swal.fire({
                   icon: 'warning', // Biểu tượng cảnh báo
                   title: 'Lỗi',
@@ -196,6 +196,16 @@ export class ProductdetailComponent implements OnInit{
         this.loadCartLocal();
         console.log('Cart:', cart);
       }
+  }
+  isGuideVisible: boolean = false;
+   // Hiển thị hướng dẫn
+   showGuide(): void {
+    this.isGuideVisible = true;
+  }
+
+  // Đóng hướng dẫn
+  closeGuide(): void {
+    this.isGuideVisible = false;
   }
   // thanh nav menu 
   toggleMenu() {

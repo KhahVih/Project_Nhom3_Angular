@@ -33,6 +33,7 @@
                   <input
                     type="text"
                     [(ngModel)]="searchQuery"
+                    (change)="onSearchChange()"
                     name="searchQuery"
                     placeholder="Nhập từ khóa tìm kiếm..."
                     class="search-input"
@@ -101,9 +102,9 @@
                         <h3>CATEGORY</h3>
                     </div>
                     <div class="category-item">
-                        <div class="category-item-header" (click)="toggleCategory()">
-                            <span class="category-title">SẢN PHẨM MỚI</span>
-                            <span class="toggle-icon">{{ isNewProductExpanded ? '−' : '+' }}</span>
+                        <div class="category-item-header" >
+                            <span class="category-title" (click)="loadProducts()">SẢN PHẨM MỚI</span>
+                            <span class="toggle-icon" (click)="toggleCategory()">{{ isNewProductExpanded ? '−' : '+' }}</span>
                         </div>
                         <ul class="subcategory-list" [class.active]="isNewProductExpanded">
                           <li 

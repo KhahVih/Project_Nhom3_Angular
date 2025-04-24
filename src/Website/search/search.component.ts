@@ -83,6 +83,7 @@ export class SearchComponent implements OnInit {
         this.loadFilteredProducts(); // Nếu không có từ khóa, load theo trạng thái lọc
       }
     });
+    
   }
 
   // Xử lý lọc/sắp xếp
