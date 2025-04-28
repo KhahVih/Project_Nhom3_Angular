@@ -54,7 +54,7 @@
             </ul>
           </details>
         </li>
-        <li class="has-dropdown">
+        <li class="has-dropdown" *ngIf="isAdmin">
           <details *ngIf="isMenu">
             <summary >Phân quyền </summary>
             <ul class="drop-menu" >

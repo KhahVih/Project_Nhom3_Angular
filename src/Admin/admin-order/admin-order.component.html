@@ -6,10 +6,9 @@
         METRONIC
         <span class="collapse-icon">«</span>
       </div>
-      <div class="menu" *ngIf="isMenu">
+      <div class="menu" *ngIf="isMenu" style="color: #fff;">
         <h6>CHỨC NĂNG</h6>
       </div>
-
       <ul>
         <li class="has-dropdown">
           <details *ngIf="isMenu">
@@ -81,7 +80,7 @@
             </ul>
           </details>
         </li>
-        <li *ngIf="isMenu"><button  class="update-btn" (click)="logout()">Đăng xuất</button></li>
+        <li *ngIf="isMenu"><button class="update-btn" (click)="logout()">Đăng xuất</button></li>
       </ul>
     </div>
   

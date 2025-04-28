@@ -6,16 +6,14 @@
         METRONIC
         <span class="collapse-icon">«</span>
       </div>
-  
-      <div class="menu" *ngIf="isMenu">
+      <div class="menu" *ngIf="isMenu" style="color: #fff;">
         <h6>CHỨC NĂNG</h6>
       </div>
-  
       <ul>
         <li class="has-dropdown">
           <details *ngIf="isMenu">
-            <summary>Chăm sóc khách hàng</summary>
-            <ul class="drop-menu">
+            <summary >Chăm sóc khách hàng</summary>
+            <ul class="drop-menu" >
               <li><a routerLink="/admin/contact">Quản lý yêu cầu</a></li>
               <li><a routerLink="/admin/customer">Quản lý người dùng</a></li>
             </ul>
@@ -23,8 +21,8 @@
         </li>
         <li class="has-dropdown" *ngIf="isAdmin">
           <details *ngIf="isMenu">
-            <summary>Quản lý đơn hàng</summary>
-            <ul class="drop-menu">
+            <summary >Quản lý đơn hàng</summary>
+            <ul class="drop-menu" >
               <li><a routerLink="/admin/orderprocessing">Quản lý đơn hàng được duyệt</a></li>
               <li><a routerLink="/admin/order">Quản lý đơn hàng</a></li>
             </ul>
@@ -32,8 +30,8 @@
         </li>
         <li class="has-dropdown">
           <details *ngIf="isMenu">
-            <summary>Sản Phẩm</summary>
-            <ul class="drop-menu">
+            <summary >Sản Phẩm</summary>
+            <ul class="drop-menu" >
               <li><a routerLink="/admin/product">Quản lý sản phẩm</a></li>
               <li><a routerLink="/admin/category">Quản lý danh mục</a></li>
               <li><a routerLink="/admin/image">Quản lý hình ảnh</a></li>
@@ -42,24 +40,24 @@
         </li>
         <li class="has-dropdown" *ngIf="isAdmin">
           <details *ngIf="isMenu">
-            <summary>Bộ sưu tập </summary>
-            <ul class="drop-menu">
+            <summary >Bộ sưu tập </summary>
+            <ul class="drop-menu" >
               <li><a routerLink="/admin/blog">Danh sách Blog</a></li>
             </ul>
           </details>
         </li>
         <li class="has-dropdown" *ngIf="isAdmin">
           <details *ngIf="isMenu">
-            <summary>Bình luận</summary>
-            <ul class="drop-menu">
+            <summary >Bình luận</summary>
+            <ul class="drop-menu" >
               <li><a routerLink="/admin/comment">Danh sách bình luận</a></li>
             </ul>
           </details>
         </li>
         <li class="has-dropdown" *ngIf="isAdmin">
           <details *ngIf="isMenu">
-            <summary>Phân quyền </summary>
-            <ul class="drop-menu">
+            <summary >Phân quyền </summary>
+            <ul class="drop-menu" >
               <li><a routerLink="/admin/user">Nhân sự</a></li>
               <li><a routerLink="/admin/nhomquyen">Nhóm quyền</a></li>
               <li><a routerLink="/admin/role">Quyền</a></li>
@@ -68,21 +66,20 @@
         </li>
         <li class="has-dropdown">
           <details *ngIf="isMenu">
-            <summary>Gửi thông báo tự động </summary>
-            <ul class="drop-menu">
+            <summary >Gửi thông báo tự động </summary>
+            <ul class="drop-menu" >
               <li><a routerLink="">Thông báo tự động</a></li>
             </ul>
           </details>
         </li>
         <li class="has-dropdown">
           <details *ngIf="isMenu">
-            <summary>Lịch sử</summary>
-            <ul class="drop-menu">
+            <summary >Lịch sử</summary>
+            <ul class="drop-menu" >
               <li><a routerLink="/admin/history">Thông tin lịch sử hệ thống</a></li>
             </ul>
           </details>
         </li>
-  
         <li *ngIf="isMenu"><button class="update-btn" (click)="logout()">Đăng xuất</button></li>
       </ul>
     </div>
