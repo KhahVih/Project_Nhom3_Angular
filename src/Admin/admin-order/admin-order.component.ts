@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
+import { CartItem } from '../../Models/CartDTO';
 
 @Component({
   selector: 'app-admin-order',
@@ -24,6 +25,7 @@ export class AdminOrderComponent {
   }
   order: Order [] = [];
   orderdetail: Order [] = [];
+  cartItems: CartItem [] = [];
   totalOrder: number = 0;
   isOrderDeatail: boolean = false;
   selectedStatus: string = ''; // Trạng thái được chọn từ dropdown
@@ -108,10 +110,10 @@ export class AdminOrderComponent {
     this.isOrderDeatail = true;
     this.orderService.GetOrderId(Id).subscribe(data =>{
       this.orderdetail = data;
+      console.log(data)
       this.selectedStatus = data[0].Status;
     })
   }
-
   UpdateStatus(Id: number){
     if (!this.selectedStatus) {
       alert('Vui lòng chọn trạng thái!');
@@ -131,6 +133,22 @@ export class AdminOrderComponent {
       }
     });
   }
+  
+  getTotalDiscountForDetail(): number {
+    const order = this.orderdetail[0];
+    if (!order || !order.OrderItems) {
+      return 0;
+    }
+  
+    const sumOfItems = order.OrderItems.reduce((total, item) => {
+      return total + (item.UnitPrice * item.Quantity);
+    }, 0);
+  
+    // Giảm giá = Tổng gốc - Tổng đã thanh toán
+    return sumOfItems - order.TotalAmount;
+  }
+  
+  
   DeleteOrder(Id: number){
     this.orderService.DeleteOrder(Id).subscribe({
       next: (reponse) =>{
@@ -168,9 +186,8 @@ export class AdminOrderComponent {
     }));
 
     const totals = [
-      ['Tổng đơn:', order.TotalAmount],
-      ['Giảm giá hóa đơn:', 0],
-      ['Tổng phải thanh toán:', order.TotalAmount]
+      ['Giảm giá hóa đơn:', ],
+      ['Tổng tiền đơn hàng:', order.TotalAmount],
     ];
   
     const ws1 = XLSX.utils.aoa_to_sheet(customerInfo);

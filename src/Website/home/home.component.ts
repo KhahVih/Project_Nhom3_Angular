@@ -180,7 +180,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy{
           ProductName: product.Name,
           ProductImage: productImage,
           Quantity: this.quantity,
-          ColorId: this.selectedcolor || 0,
+          ColorId: this.selectedcolor !== undefined && this.selectedcolor !== null ? this.selectedcolor : null,
           ColorName: this.colors.find(c => c.Id === this.selectedcolor)?.Name || '', // Lấy từ danh sách colors
           SizeId: this.selectedsize || 0,
           SizeName: this.sizes.find(s => s.Id === this.selectedsize)?.Name || '', // Lấy từ danh sách sizes
@@ -197,6 +197,17 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy{
               this.quantity = 1;
               this.reset();
               this.isCart = true;
+              Swal.fire({
+                icon: 'success', // Biểu tượng cảnh báo
+                title: 'Thành Công ',
+                text: 'Sản phẩm đã được thêm vào giỏ hàng của bạn',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3085d6',
+                toast: true, // Hiển thị dạng toast (góc trên)
+                position: 'top-end', // Vị trí góc trên bên phải
+                timer: 3000, // Tự đóng sau 3 giây
+                timerProgressBar: true, // Thanh tiến trình
+              });
             },
             error: (err) => {
               console.error('Error adding to cart:', err);
@@ -242,17 +253,28 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy{
                 console.log(this.newCartId);
                 this.isCart = true;
                 cart.push(newItem);
-                
             }
+            Swal.fire({
+              icon: 'success', // Biểu tượng cảnh báo
+              title: 'Thành Công ',
+              text: 'Sản phẩm đã được thêm vào giỏ hàng của bạn',
+              confirmButtonText: 'OK',
+              confirmButtonColor: '#3085d6',
+              toast: true, // Hiển thị dạng toast (góc trên)
+              position: 'top-end', // Vị trí góc trên bên phải
+              timer: 3000, // Tự đóng sau 3 giây
+              timerProgressBar: true, // Thanh tiến trình
+            });
     
             // Lưu giỏ hàng vào localStorage
             this.cartService.saveCartToLocal(cart);
             this.reset();
+            
             this.loadCartLocal();
             console.log('Cart:', cart);
           }
     }
-      // Khi click vào thumbnail, thay đổi ảnh chính
+    // Khi click vào thumbnail, thay đổi ảnh chính
     selectImage(imageUrl: string): void {
       this.selectedImage = imageUrl;
     }

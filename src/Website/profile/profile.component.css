@@ -581,6 +581,7 @@ header {
     width: 100%;
     border-collapse: collapse;
     margin-top: 1rem;
+    margin-bottom: 1rem;
   }
   
   .order-table th,

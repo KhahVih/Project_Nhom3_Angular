@@ -74,6 +74,18 @@ export class CartComponent implements OnInit{
         this.loadCartItems();
         console.log('Delete CartItemId: ', CartId);
         console.log(data);
+        Swal.fire({
+          icon: 'success',
+          title: 'Thành Công',
+          text: 'Sản phẩm đã được xóa khỏi giỏ hàng thành công!',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#3085d6',
+          toast: true,
+          position: 'top-end',
+          timer: 3000,
+          timerProgressBar: true,
+        });
+        this.loadCartItems();
       });
     }
     else{
@@ -81,6 +93,18 @@ export class CartComponent implements OnInit{
       this.cartItems = this.cartItems.filter((i) => i.Id !== CartId);
       this.loadCartItems();
       this.cartService.removeLocalCartId(CartId);
+      Swal.fire({
+        icon: 'success',
+        title: 'Thành Công',
+        text: 'Sản phẩm đã được xóa khỏi giỏ hàng thành công!',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#3085d6',
+        toast: true,
+        position: 'top-end',
+        timer: 3000,
+        timerProgressBar: true,
+      });
+      this.loadCartItems();
     }
   }
   // cập nhật số lượng sản phẩm (tăng)
@@ -211,7 +235,17 @@ export class CartComponent implements OnInit{
     this.cartService.checkOut(checkout).subscribe({
       next: (response) => {
         // alert('Đơn hàng đã được tạo thành công! Mã đơn hàng: ' + response.orderId);
-        this.showError('Đơn hàng đã được tạo thành công! Mã đơn hàng: ' + response.orderId)
+        Swal.fire({
+          icon: 'success',
+          title: 'Thành Công',
+          text: 'Đơn hàng đã được tạo thành công! Mã đơn hàng: ' + response.orderId,
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#3085d6',
+          toast: true,
+          position: 'top-end',
+          timer: 3000,
+          timerProgressBar: true,
+        });
         if (CustomerId) {
           this.cartItems = []; // Xóa giỏ hàng trên giao diện nếu đã đăng nhập
           this.loadCartItems(); // Tải lại từ API

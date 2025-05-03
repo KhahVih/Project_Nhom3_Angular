@@ -139,7 +139,7 @@
         </div>
         <a (click)="closeProductdetail()" class="btn-close"></a>
         <div class="product-info">
-          <h1>{{ productdetail.Name }}</h1>
+          <h1 style="margin-top: 1rem;">{{ productdetail.Name }}</h1>
           <p>Mã sản phẩm: {{ productdetail.PosCode || 'N/A' }}</p>
           <p class="price">{{ productdetail.Price | number }}đ</p>
     
@@ -193,8 +193,6 @@
             <button class="add-to-cart" (click)="AddToCart(productdetail)">THÊM VÀO GIỎ</button>
             <button class="buy-now" (click)="buyNow(productdetail)">MUA NGAY</button>
           </div>
-          
-    
           <p class="description">{{ productdetail.Description || 'No description available.' }}</p>
     
         </div>

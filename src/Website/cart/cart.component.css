@@ -643,7 +643,10 @@ header {
     border-bottom: 1px solid #ddd;
     text-align: center;
 }
-
+.cart-table td{
+  overflow-y: auto;
+  max-height: 100px;
+}
 .cart-table th {
     font-weight: 600;
     color: #333;

@@ -93,7 +93,7 @@
     <div class="container" *ngIf="product">
       <div class="product-images">
         <!-- Danh sách thumbnail -->
-        <div class="thumbnail-images">
+        <!-- <div class="thumbnail-images">
           <img
             *ngFor="let image of product.Images"
             [src]="image.Link"
@@ -102,6 +102,19 @@
             alt="{{ product.Name }}"
             class="thumbnail"
           />
+        </div> -->
+        <!-- Danh sách thumbnail dạng thanh ngang có thể cuộn -->
+        <div class="thumbnail-container">
+          <div class="thumbnail-images">
+            <img
+              *ngFor="let image of product.Images"
+              [src]="image.Link"
+              (click)="selectImage(image.Link)"
+              (mouseover)="previewImage(image.Link)"
+              alt="{{ product.Name }}"
+              class="thumbnail"
+            />
+          </div>
         </div>
         <!-- Hình ảnh chính -->
         <img [src]="selectedImage" alt="{{ product.Name }}" class="main-image" />
@@ -260,7 +273,7 @@
 
       <div class="tab-content" *ngIf="activeTab === 'related'">
         <div class="related-products" *ngIf="relatedProducts.length > 0; else noRelated">
-          <div class="related-product" *ngFor="let relatedProduct of relatedProducts">
+          <div class="related-product" *ngFor="let relatedProduct of relatedProducts" (click)="navigateToProduct(relatedProduct.Id)">
             <img 
               [src]="relatedProduct.Images[0].Link || 'assets/placeholder.jpg'" 
               alt="{{ relatedProduct.Name }}" 
@@ -275,6 +288,7 @@
         </ng-template>
       </div>
     </div>
+    <!-- Modal giỏ hàng -->
     <div class="cart-overlay" *ngIf="isCart">
       <div class="cart-table-popup">
         <!-- Nội dung giỏ hàng giữ nguyên -->

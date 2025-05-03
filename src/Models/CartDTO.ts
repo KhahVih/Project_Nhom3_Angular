@@ -5,7 +5,7 @@ export interface CartItem {
     ProductName: string; 
     ProductImage?: string;
     Quantity: number;
-    ColorId?: number;
+    ColorId?: number | null;
     ColorName?: string
     SizeId?: number;
     SizeName?: string

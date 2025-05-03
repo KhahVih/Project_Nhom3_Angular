@@ -211,12 +211,10 @@
             <!--thanh toan-->
             <div class="payment-totals" style="margin-top: 2rem;">
               <dl>
-                <dt>Tổng đơn: </dt>
+                <dt>Giảm giá: </dt>
+                <dd > -{{ getTotalDiscountForDetail() | number}} VND</dd>
+                <dt>Tổng tiền đơn hàng: </dt>
                 <dd >{{ order.TotalAmount | number}} VND</dd>
-                <dt>Giảm giá hóa đơn: </dt>
-                <dd>0 VND</dd>
-                <dt>Tổng phải thanh toán: </dt>
-                <dd>{{ order.TotalAmount | number}} VND</dd>
               </dl>
             </div>
             <!-- Cập nhật trạng thái -->

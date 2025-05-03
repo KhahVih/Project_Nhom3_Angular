@@ -48,15 +48,17 @@ export class ProductdetailComponent implements OnInit{
   newCommentText: string = ''; // Nội dung bình luận
   submitting: boolean = false; // Trạng thái gửi
   DiscountPercentage: number = 0;
-
+  productId: number = 0;
   ngOnInit(): void {
-    this.loadProduct();
+    this.router.paramMap.subscribe(params => {
+      this.productId = Number(params.get('id'));
+      this.loadProductDetail(this.productId);
+    });
     this.checkLoginStatus();
   }
   // loadProduct
-  loadProduct(){
-    const ProductId = Number(this.router.snapshot.paramMap.get('id'));
-    this.productService.GetProductId(ProductId).subscribe(data =>{
+  loadProductDetail(Id: number){
+    this.productService.GetProductId(Id).subscribe(data =>{
       this.product = data;
       // Lấy màu và size từ product
       this.colors = this.product?.Colors || [];
@@ -136,7 +138,7 @@ export class ProductdetailComponent implements OnInit{
       ProductName: product.Name,
       ProductImage: productImage,
       Quantity: this.quantity,
-      ColorId: this.selectedcolor || 0,
+      ColorId: this.selectedcolor !== undefined && this.selectedcolor !== null ? this.selectedcolor : null,
       ColorName: this.colors.find(c => c.Id === this.selectedcolor)?.Name || '', // Lấy từ danh sách colors
       SizeId: this.selectedsize || 0,
       SizeName: this.sizes.find(s => s.Id === this.selectedsize)?.Name || '', // Lấy từ danh sách sizes
@@ -422,6 +424,9 @@ export class ProductdetailComponent implements OnInit{
     }
   }
 
+  navigateToProduct(id: number): void {
+    this.route.navigate(['/product', id]);
+  }
   // kiểm tra login 
   isLoggedIn: boolean = false;
   customerName: string | null = null;
