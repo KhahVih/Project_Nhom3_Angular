@@ -145,3 +145,67 @@
   .sidebar ul li a:hover i {
     transform: scale(1.1);
   }
+
+  /* Dashboard */
+  .dashboard-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 30px;
+    text-align: center;
+  }
+  
+  h1 {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 40px;
+    color: #333;
+  }
+  
+  .chart-container {
+    width: 100%;
+    max-width: 900px;
+    height: 400px;
+    margin: 0 auto 50px;
+  }
+  
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+  
+  .card-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+  }
+  
+  .card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    width: 280px;
+    text-align: center;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .card:hover {
+    transform: scale(1.05);
+  }
+  
+  .card-title {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 10px;
+  }
+  
+  .card-value {
+    font-size: 28px;
+    font-weight: bold;
+    color: #007BFF;
+    margin: 0;
+  }
+  

@@ -1,92 +1,117 @@
 <div class="container">
-    <!-- Sidebar Menu -->
-    <div class="sidebar" (mouseover)="openMenu()" (mouseleave)="closeMenu()" [class.expanded]="isMenu">
-      <!-- Logo -->
-      <div class="logo" *ngIf="isMenu">
-        METRONIC
-        <span class="collapse-icon">«</span>
-      </div>
-      <div class="menu" *ngIf="isMenu" style="color: #fff;">
-        <h6>CHỨC NĂNG</h6>
-      </div>
-      <ul>
-        <li class="has-dropdown">
-          <details *ngIf="isMenu">
-            <summary >Chăm sóc khách hàng</summary>
-            <ul class="drop-menu" >
-              <li><a routerLink="/admin/contact">Quản lý yêu cầu</a></li>
-              <li><a routerLink="/admin/customer">Quản lý người dùng</a></li>
-            </ul>
-          </details>
-        </li>
-        <li class="has-dropdown" *ngIf="isAdmin">
-          <details *ngIf="isMenu">
-            <summary >Quản lý đơn hàng</summary>
-            <ul class="drop-menu" >
-              <li><a routerLink="/admin/orderprocessing">Quản lý đơn hàng được duyệt</a></li>
-              <li><a routerLink="/admin/order">Quản lý đơn hàng</a></li>
-            </ul>
-          </details>
-        </li>
-        <li class="has-dropdown">
-          <details *ngIf="isMenu">
-            <summary >Sản Phẩm</summary>
-            <ul class="drop-menu" >
-              <li><a routerLink="/admin/product">Quản lý sản phẩm</a></li>
-              <li><a routerLink="/admin/category">Quản lý danh mục</a></li>
-              <li><a routerLink="/admin/image">Quản lý hình ảnh</a></li>
-            </ul>
-          </details>
-        </li>
-        <li class="has-dropdown" *ngIf="isAdmin">
-          <details *ngIf="isMenu">
-            <summary >Bộ sưu tập </summary>
-            <ul class="drop-menu" >
-              <li><a routerLink="/admin/blog">Danh sách Blog</a></li>
-            </ul>
-          </details>
-        </li>
-        <li class="has-dropdown" *ngIf="isAdmin">
-          <details *ngIf="isMenu">
-            <summary >Bình luận</summary>
-            <ul class="drop-menu" >
-              <li><a routerLink="/admin/comment">Danh sách bình luận</a></li>
-            </ul>
-          </details>
-        </li>
-        <li class="has-dropdown" *ngIf="isAdmin">
-          <details *ngIf="isMenu">
-            <summary >Phân quyền </summary>
-            <ul class="drop-menu" >
-              <li><a routerLink="/admin/user">Nhân sự</a></li>
-              <li><a routerLink="/admin/nhomquyen">Nhóm quyền</a></li>
-              <li><a routerLink="/admin/role">Quyền</a></li>
-            </ul>
-          </details>
-        </li>
-        <li class="has-dropdown">
-          <details *ngIf="isMenu">
-            <summary >Gửi thông báo tự động </summary>
-            <ul class="drop-menu" >
-              <li><a routerLink="">Thông báo tự động</a></li>
-            </ul>
-          </details>
-        </li>
-        <li class="has-dropdown">
-          <details *ngIf="isMenu">
-            <summary >Lịch sử</summary>
-            <ul class="drop-menu" >
-              <li><a routerLink="/admin/history">Thông tin lịch sử hệ thống</a></li>
-            </ul>
-          </details>
-        </li>
-        <li *ngIf="isMenu"><button class="update-btn" (click)="logout()">Đăng xuất</button></li>
-      </ul>
+  <!-- Sidebar Menu -->
+  <div class="sidebar" (mouseover)="openMenu()" (mouseleave)="closeMenu()" [class.expanded]="isMenu">
+    <!-- Logo -->
+    <div class="logo" *ngIf="isMenu">
+      METRONIC
+      <span class="collapse-icon">«</span>
     </div>
-  
-    <!-- Nội dung chính -->
-    <div class="main-content">
-      <!-- Header -->
-      
-    </div>   
+    <div class="menu" *ngIf="isMenu" style="color: #fff;">
+      <h6>CHỨC NĂNG</h6>
+    </div>
+    <ul>
+      <li class="has-dropdown">
+        <details *ngIf="isMenu">
+          <summary>Chăm sóc khách hàng</summary>
+          <ul class="drop-menu">
+            <li><a routerLink="/admin/contact">Quản lý yêu cầu</a></li>
+            <li><a routerLink="/admin/customer">Quản lý người dùng</a></li>
+          </ul>
+        </details>
+      </li>
+      <li class="has-dropdown" *ngIf="isAdmin">
+        <details *ngIf="isMenu">
+          <summary>Quản lý đơn hàng</summary>
+          <ul class="drop-menu">
+            <li><a routerLink="/admin/orderprocessing">Quản lý đơn hàng được duyệt</a></li>
+            <li><a routerLink="/admin/order">Quản lý đơn hàng</a></li>
+          </ul>
+        </details>
+      </li>
+      <li class="has-dropdown">
+        <details *ngIf="isMenu">
+          <summary>Sản Phẩm</summary>
+          <ul class="drop-menu">
+            <li><a routerLink="/admin/product">Quản lý sản phẩm</a></li>
+            <li><a routerLink="/admin/category">Quản lý danh mục</a></li>
+            <li><a routerLink="/admin/image">Quản lý hình ảnh</a></li>
+          </ul>
+        </details>
+      </li>
+      <li class="has-dropdown" *ngIf="isAdmin">
+        <details *ngIf="isMenu">
+          <summary>Bộ sưu tập </summary>
+          <ul class="drop-menu">
+            <li><a routerLink="/admin/blog">Danh sách Blog</a></li>
+          </ul>
+        </details>
+      </li>
+      <li class="has-dropdown" *ngIf="isAdmin">
+        <details *ngIf="isMenu">
+          <summary>Bình luận</summary>
+          <ul class="drop-menu">
+            <li><a routerLink="/admin/comment">Danh sách bình luận</a></li>
+          </ul>
+        </details>
+      </li>
+      <li class="has-dropdown" *ngIf="isAdmin">
+        <details *ngIf="isMenu">
+          <summary>Phân quyền </summary>
+          <ul class="drop-menu">
+            <li><a routerLink="/admin/user">Nhân sự</a></li>
+            <li><a routerLink="/admin/nhomquyen">Nhóm quyền</a></li>
+            <li><a routerLink="/admin/role">Quyền</a></li>
+          </ul>
+        </details>
+      </li>
+      <li class="has-dropdown">
+        <details *ngIf="isMenu">
+          <summary>Gửi thông báo tự động </summary>
+          <ul class="drop-menu">
+            <li><a routerLink="">Thông báo tự động</a></li>
+          </ul>
+        </details>
+      </li>
+      <li class="has-dropdown">
+        <details *ngIf="isMenu">
+          <summary>Lịch sử</summary>
+          <ul class="drop-menu">
+            <li><a routerLink="/admin/history">Thông tin lịch sử hệ thống</a></li>
+          </ul>
+        </details>
+      </li>
+      <li *ngIf="isMenu"><button class="update-btn" (click)="logout()">Đăng xuất</button></li>
+    </ul>
+  </div>
+
+  <!-- Nội dung chính -->
+
+
+
+  <div class="dashboard-container">
+    <h1>Bảng điều khiển quản trị</h1>
+
+    <!-- Biểu đồ doanh thu -->
+    <div class="chart-container">
+      <canvas baseChart [data]="barChartData" [options]="barChartOptions" chartType="bar">
+      </canvas>
+    </div>
+
+    <!-- Các thẻ thống kê -->
+    <div class="card-container">
+      <div class="card" routerLink="/admin/product">
+        <div class="card-title">Tổng sản phẩm</div>
+        <div class="card-value">{{totalProduct}}</div>
+      </div>
+      <div class="card" routerLink="/admin/category">
+        <div class="card-title">Tổng danh mục</div>
+        <div class="card-value">{{totalCategory}}</div>
+      </div>
+      <div class="card" routerLink="/admin/image">
+        <div class="card-title">Tổng hình ảnh</div>
+        <div class="card-value">{{totalImages}}</div>
+      </div>
+    </div>
+  </div>
+
 </div>
