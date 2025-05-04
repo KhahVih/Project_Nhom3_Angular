@@ -52,7 +52,7 @@
     position: relative;
     justify-content: left;
     width: 100px;
-    height: 100vh;
+    height: 150vh;
     background-color: #1e2a44;
     transition: width 0.3s;
     overflow: hidden;
@@ -87,6 +87,7 @@
   @media (max-width: 768px) {
     .sidebar {
       width: 100%;
+      height: 100%;
     }
   }
   .sidebar.expanded {
@@ -183,6 +184,7 @@
     color: #007bff;
     margin-left: 20px;
   }
+
 
   /*phan trang */
   .pagination {

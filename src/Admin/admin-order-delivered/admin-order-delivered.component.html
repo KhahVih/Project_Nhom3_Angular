@@ -90,59 +90,59 @@
 
             <div class="header">
                 <div class="header-content">
-                <h2>Danh sách đơn hàng <span class="sub-header">Trang chủ</span></h2>
+                <h2>Danh sách đơn hàng <span routerLink="/admin/home" class="sub-header">Trang chủ</span></h2>
                 </div>
             </div>
 
             <table *ngIf="orders.length > 0; else noOrders" class="table">
-            <thead>
-                <tr>
-                <th>Mã Hoán đơn</th>
-                <th>Tên khách hàng</th>
-                <th>Số điện thoại</th>
-                <th>Địa chỉ</th>
-                <th>Tên sản phẩm </th>
-                <th>Size</th>
-                <th>Màu</th>
-                <th>Số lượng </th>
-                <th>Giá sản phẩm</th>
-                <th>Thành tiền </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let order of orders">
-                <td>{{ order.Id }}</td>
-                <td>{{ order.CustomerName }}</td>
-                <td>{{ order.Phone }}</td>
-                <td>{{ order.Address }}</td>
-                <td >
-                    <ul>
-                    <p *ngFor="let orderitem of order.OrderItems">{{ orderitem.ProductName }}</p>
-                    </ul>
-                </td>
-                <td >
-                    <ul>
-                    <p *ngFor="let orderitem of order.OrderItems">{{ orderitem.SizeName }}</p>
-                    </ul>
-                </td>
-                <td >
-                    <ul>
-                    <p *ngFor="let orderitem of order.OrderItems">{{ orderitem.ColorName }}</p>
-                    </ul>
-                </td>
-                <td>
-                    <ul>
-                        <p *ngFor="let orderitem of order.OrderItems">{{ orderitem.Quantity }}</p>
-                    </ul>
-                </td>
-                <td >
-                    <ul>
-                    <p *ngFor="let orderitem of order.OrderItems">{{ orderitem.UnitPrice | number }}VND</p>
-                    </ul>
-                </td>
-                <td>{{ order.TotalAmount | number}}VND</td>
-                </tr>
-            </tbody>
+              <thead>
+                  <tr>
+                  <th>Mã Hoán đơn</th>
+                  <th>Tên khách hàng</th>
+                  <th>Số điện thoại</th>
+                  <th>Địa chỉ</th>
+                  <th>Tên sản phẩm </th>
+                  <th>Size</th>
+                  <th>Màu</th>
+                  <th>Số lượng </th>
+                  <th>Giá sản phẩm</th>
+                  <th>Thành tiền </th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor="let order of orders">
+                  <td>{{ order.Id }}</td>
+                  <td>{{ order.CustomerName }}</td>
+                  <td>{{ order.Phone }}</td>
+                  <td>{{ order.Address }}</td>
+                  <td >
+                      <ul class="scroll-cell">
+                      <p *ngFor="let orderitem of order.OrderItems">{{ orderitem.ProductName }}</p>
+                      </ul>
+                  </td>
+                  <td >
+                      <ul>
+                      <p *ngFor="let orderitem of order.OrderItems">{{ orderitem.SizeName }}</p>
+                      </ul>
+                  </td>
+                  <td >
+                      <ul>
+                      <p *ngFor="let orderitem of order.OrderItems">{{ orderitem.ColorName }}</p>
+                      </ul>
+                  </td>
+                  <td>
+                      <ul>
+                          <p *ngFor="let orderitem of order.OrderItems">{{ orderitem.Quantity }}</p>
+                      </ul>
+                  </td>
+                  <td >
+                      <ul>
+                      <p *ngFor="let orderitem of order.OrderItems">{{ orderitem.UnitPrice | number }}VND</p>
+                      </ul>
+                  </td>
+                  <td>{{ order.TotalAmount | number}}VND</td>
+                  </tr>
+              </tbody>
             </table>
         </div>
         <!-- PHÂN TRANG -->

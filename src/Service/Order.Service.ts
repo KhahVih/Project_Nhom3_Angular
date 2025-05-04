@@ -38,4 +38,7 @@ export class OrderService {
     GetOrderCountByStatus(): Observable<any> {
       return this.http.get<any>(`${this.apiUrl}/count-by-status`);
     }
+    GetRenewByMonth(): Observable<any> {
+      return this.http.get<any>(`${this.apiUrl}/revenue-by-month`);
+    }
 }

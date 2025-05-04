@@ -121,39 +121,34 @@ export class AdminHomeComponent implements OnInit {
 
   loadProducts(): void {
     this.productService.GetProducts(this.page).subscribe(data =>{
-      this.products = data.Products;
-      this.totalProduct = data.TotalProduct;
-      this.totalPages = data.TotalPages;  
-      console.log('Response: ',data);
+      this.totalProduct = data.TotalProduct; 
+      console.log('Response: ',data.TotalProduct);
     })
   }
 
   loadCategorys(){
     this.categoryService.GetCategories().subscribe(data =>{
       this.totalCategory = data.length;
-      console.log('Response: ',data);
       this.categories = data;
     });
   }
   loadImages(): void {
     this.imageService.GetAllImages(this.page).subscribe(data => {
-      this.images = data.Images;
       this.totalImages = data.TotalImage;
-      this.totalPages = data.TotalPages;
-      console.log('Response:', data);
+      console.log('Response:', data.TotalImage);
     });
   }
   
   Revenue(): void {
     this.orderService.GetRenewByMonth().subscribe(data => {
-      const labels = data.map((item: any) => `Tháng ${item.month}`);
-      const revenue = data.map((item: any) => item.revenue);
-  
+      const labels = data.map((item: any) => `Tháng ${item.Month}`);
+      const revenue = data.map((item: any) => item.Revenue);
+      console.log('Dữ liệu doanh thu:', data); // 👉 kiểm tra tại đây
       this.barChartData = {
         labels: labels,
         datasets: [
           {
-            label: 'Doanh thu',
+            label: 'Doanh thu (VND)',
             data: revenue,
             backgroundColor: 'rgba(54, 162, 235, 0.6)',
             borderColor: 'rgba(54, 162, 235, 1)',

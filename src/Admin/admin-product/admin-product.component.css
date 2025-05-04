@@ -524,4 +524,29 @@
     border-color: #007bff;
   }
   
+  /* Dinh dang noi dung tieu de    */
+.header {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.header-content h2 {
+  font-size: 30px;
+  color: #1e2a44;
+}
+
+.header-content .sub-header {
+  font-size: 16px;
+  color: #a3bffa;
+  margin-left: 10px;
+}
   
