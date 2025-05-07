@@ -129,9 +129,9 @@ export class AdminPermissionComponent {
     this.selectedRoles = [];
   }
 
-  logout(): void {
+  logout(){
     this.login.logout();
-    this.router.navigate(['/login']);
+    this.router.navigate(['admin/login']);
   }
 
   get isAdmin(): boolean {

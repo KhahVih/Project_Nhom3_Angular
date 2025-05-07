@@ -226,7 +226,7 @@
                   <option *ngFor="let status of orderStatuses" [value]="status.value">{{status.label}}</option>
                 </select>
                 <button class="btn btn-primary mt-2" (click)="UpdateStatus(order.Id)">Cập nhật</button>
-                <button class="btn btn-success mb-3" style="margin-top: 1.5rem; margin-left: 2rem;" (click)="exportToExcel()">📁 Xuất Excel</button>
+                <button class="btn btn-success mb-3" style="margin-top: 1.5rem; margin-left: 2rem;" (click)="exportToWord()">📁 Xuất Hóa đơn</button>
               </div>
             </div>
           </div>

@@ -24,7 +24,12 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets" 
               }
+
             ],
             "styles": [
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
@@ -87,6 +92,10 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              }, 
+              {
+                "glob": "**/*",
+                "input": "src/assets" 
               }
             ],
             "styles": [

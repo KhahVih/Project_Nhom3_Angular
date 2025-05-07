@@ -59,61 +59,61 @@ export class AdminCustomerComponent {
     this.resetNewCustomer();
   }
 
-  addCustomer(): void {
-    this.customerService.addCustomer(this.newCustomer).subscribe(() => {
-      this.loadCustomers();
-      this.closeAddModal();
-    });
-  }
+  // addCustomer(): void {
+  //   this.customerService.addCustomer(this.newCustomer).subscribe(() => {
+  //     this.loadCustomers();
+  //     this.closeAddModal();
+  //   });
+  // }
 
-  editCustomer(customer: Customer): void {
-    this.selectedCustomer = { ...customer };
-  }
+  // editCustomer(customer: Customer): void {
+  //   this.selectedCustomer = { ...customer };
+  // }
 
-  updateCustomer(): void {
-    if (this.selectedCustomer) {
-      this.customerService.updateCustomer(this.selectedCustomer.Id, this.selectedCustomer).subscribe(() => {
-        this.loadCustomers();
-        this.closeEditModal();
-      });
-    }
-  }
+  // updateCustomer(): void {
+  //   if (this.selectedCustomer) {
+  //     this.customerService.updateCustomer(this.selectedCustomer.Id, this.selectedCustomer).subscribe(() => {
+  //       this.loadCustomers();
+  //       this.closeEditModal();
+  //     });
+  //   }
+  // }
 
-  deleteCustomer(id: number): void {
-    if (confirm('Bạn có chắc muốn xóa khách hàng này?')) {
-      this.customerService.deleteCustomer(id).subscribe(() => {
-        this.customers = this.customers.filter(c => c.Id !== id);
-      });
-    }
-  }
+  // deleteCustomer(id: number): void {
+  //   if (confirm('Bạn có chắc muốn xóa khách hàng này?')) {
+  //     this.customerService.deleteCustomer(id).subscribe(() => {
+  //       this.customers = this.customers.filter(c => c.Id !== id);
+  //     });
+  //   }
+  // }
 
-  closeEditModal(): void {
-    this.selectedCustomer = null;
-  }
+  // closeEditModal(): void {
+  //   this.selectedCustomer = null;
+  // }
 
   // Đổi mật khẩu
-  openChangePasswordModal(): void {
-    this.showChangePasswordModal = true;
-  }
+  // openChangePasswordModal(): void {
+  //   this.showChangePasswordModal = true;
+  // }
 
-  closeChangePasswordModal(): void {
-    this.showChangePasswordModal = false;
-    this.resetChangePasswordForm();
-  }
+  // closeChangePasswordModal(): void {
+  //   this.showChangePasswordModal = false;
+  //   this.resetChangePasswordForm();
+  // }
 
-  changePassword(): void {
-    const { Email, OldPassword, NewPassword } = this.changePasswordRequest;
-    if (!Email || !OldPassword || !NewPassword) {
-      alert('Vui lòng nhập đầy đủ thông tin');
-      return;
-    }
-    this.customerService.changePassword(this.changePasswordRequest).subscribe({
-      next: () => {
-        this.loadCustomers();
-        setTimeout(() => this.closeChangePasswordModal(), 2000);
-      }
-    });
-  }
+  // changePassword(): void {
+  //   const { Email, OldPassword, NewPassword } = this.changePasswordRequest;
+  //   if (!Email || !OldPassword || !NewPassword) {
+  //     alert('Vui lòng nhập đầy đủ thông tin');
+  //     return;
+  //   }
+  //   this.customerService.changePassword(this.changePasswordRequest).subscribe({
+  //     next: () => {
+  //       this.loadCustomers();
+  //       setTimeout(() => this.closeChangePasswordModal(), 2000);
+  //     }
+  //   });
+  // }
 
   visiblePages: number[] = [];
   updateVisiblePages(): void {

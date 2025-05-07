@@ -5,8 +5,8 @@ import { LoginService } from '../../Service/Login.Service';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import * as XLSX from 'xlsx';
-import * as FileSaver from 'file-saver';
+import { Document, Packer, Paragraph, Table, TableRow, TableCell, WidthType, TextRun, AlignmentType, BorderStyle } from 'docx';
+import { saveAs } from 'file-saver';
 import { CartItem } from '../../Models/CartDTO';
 
 @Component({
@@ -160,82 +160,377 @@ export class AdminOrderComponent {
   closedetail(){
     this.isOrderDeatail = false;
   }
-  // xuất file excel
-  exportToExcel(): void {
-    const order = this.orderdetail[0]; // Vì bạn đang lặp *ngFor nhưng chỉ là 1 đơn
+  // Hàm chuyển file TTF thành base64
+  // async getBase64Font(): Promise<string> {
+  //   try {
+  //     const response = await fetch('assets/fonts/times.ttf'); // Đường dẫn đến file TTF
+  //     const blob = await response.blob();
+  //     return new Promise((resolve, reject) => {
+  //       const reader = new FileReader();
+  //       reader.onloadend = () => {
+  //         const base64data = reader.result as string;
+  //         resolve(base64data);
+  //       };
+  //       reader.onerror = reject;
+  //       reader.readAsDataURL(blob);
+  //     });
+  //   } catch (error) {
+  //     console.error('Lỗi khi đọc file TTF:', error);
+  //     throw error;
+  //   }
+  // }
+  // xuất file
+  async exportToWord(): Promise<void> {
+    const order = this.orderdetail[0];
   
-    const customerInfo = [
-      ['Tên người mua', order.CustomerName],
-      ['Email', order.Email],
-      ['Tỉnh / Thành phố', order.Province],
-      ['Quận / Huyện', order.District],
-      ['Phường / Xã', order.Wards],
-      ['Địa chỉ', order.Address],
-      ['Số điện thoại', order.Phone],
-      ['Ghi chú', order.Note],
-      ['Ngày mua', new Date(order.CreatedAt).toLocaleString()]
-    ];
+    // Tạo tài liệu Word
+    const doc = new Document({
+      sections: [
+        {
+          properties: {
+            page: {
+              margin: {
+                top: 720, // 1 inch = 720 twips
+                right: 720,
+                bottom: 720,
+                left: 720,
+              },
+            },
+          },
+          children: [
+            // Tiêu đề hóa đơn
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              children: [
+                new TextRun({
+                  text: 'HÓA ĐƠN MUA HÀNG',
+                  bold: true,
+                  size: 32, // Font size 16 (size trong docx là point * 2)
+                  allCaps: true,
+                }),
+              ],
+              spacing: { after: 200 },
+            }),
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              children: [
+                new TextRun({
+                  text: `Mã hóa đơn: ${order.Id}`,
+                  size: 24, // Font size 12
+                }),
+              ],
+              spacing: { after: 400 },
+            }),
   
-    const items = order.OrderItems.map(item => ({
-      'Tên sản phẩm': item.ProductName,
-      'Mã PosCode': item.ProductPosCode,
-      'Số lượng': item.Quantity,
-      'Kích thước': item.SizeName,
-      'Màu sắc': item.ColorName,
-      'Giá': item.UnitPrice
-    }));
-
-    const totals = [
-      ['Giảm giá hóa đơn:', ],
-      ['Tổng tiền đơn hàng:', order.TotalAmount],
-    ];
+            // Bảng thông tin khách hàng
+            new Table({
+              width: { size: 100, type: WidthType.PERCENTAGE },
+              borders: {
+                top: { style: BorderStyle.SINGLE, size: 1 },
+                bottom: { style: BorderStyle.SINGLE, size: 1 },
+                left: { style: BorderStyle.SINGLE, size: 1 },
+                right: { style: BorderStyle.SINGLE, size: 1 },
+                insideHorizontal: { style: BorderStyle.SINGLE, size: 1 },
+                insideVertical: { style: BorderStyle.NONE },
+              },
+              rows: [
+                // Tiêu đề bảng
+                new TableRow({
+                  children: [
+                    new TableCell({
+                      width: { size: 100, type: WidthType.PERCENTAGE },
+                      columnSpan: 2,
+                      children: [
+                        new Paragraph({
+                          text: 'THÔNG TIN KHÁCH HÀNG',
+                          
+                          alignment: AlignmentType.CENTER,
+                        }),
+                      ],
+                      shading: { fill: '16A085' }, // Màu nền tương ứng với [22, 160, 133]
+                    }),
+                  ],
+                }),
+                // Dữ liệu khách hàng
+                ...[
+                  ['Tên khách hàng', order.CustomerName ?? ''],
+                  ['Email', order.Email ?? ''],
+                  ['Tỉnh / Thành phố', order.Province ?? ''],
+                  ['Quận / Huyện', order.District ?? ''],
+                  ['Phường / Xã', order.Wards ?? ''],
+                  ['Địa chỉ', order.Address ?? ''],
+                  ['Số điện thoại', order.Phone ?? ''],
+                  ['Ghi chú', order.Note ?? ''],
+                  ['Ngày mua', new Date(order.CreatedAt).toLocaleString()],
+                ].map(
+                  ([label, value]) =>
+                    new TableRow({
+                      children: [
+                        new TableCell({
+                          width: { size: 30, type: WidthType.PERCENTAGE },
+                          children: [
+                            new Paragraph({
+                              text: label,
+                              
+                            }),
+                          ],
+                        }),
+                        new TableCell({
+                          width: { size: 70, type: WidthType.PERCENTAGE },
+                          children: [
+                            new Paragraph({
+                              text: value,
+                            }),
+                          ],
+                        }),
+                      ],
+                    }),
+                ),
+              ],
+            }),
   
-    const ws1 = XLSX.utils.aoa_to_sheet(customerInfo);
-    // Đặt độ rộng cho phần customer info (2 cột đầu tiên)
-    ws1['!cols'] = [
-      { wch: 40 },
-      { wch: 60 },
-      { wch: 40 },
-      { wch: 40 },
-      { wch: 40 },
-      { wch: 40 },
-      { wch: 40 },
-      { wch: 40 },
-      { wch: 40 }
-    ];
-    // Thêm danh sách sản phẩm vào cùng sheet (sau thông tin khách hàng)
-    XLSX.utils.sheet_add_aoa(ws1, [['']], { origin: -1 }); // dòng trống
-    XLSX.utils.sheet_add_aoa(ws1, [['Thông tin sản phẩm']], { origin: -1 }); 
-    XLSX.utils.sheet_add_json(ws1, items, { skipHeader: false, origin: -1 });
-    // Set độ rộng cho các cột sản phẩm (ghi đè lên !cols cũ)
-    ws1['!cols'] = [
-      { wch: 25 }, // Tên sản phẩm
-      { wch: 18 }, // Mã PosCode
-      { wch: 12 }, // Số lượng  
-      { wch: 14 }, // Kích thước
-      { wch: 14 }, // Màu sắc
-      { wch: 12 }  // Giá
-    ];
-    // Thêm tổng hóa đơn
-    XLSX.utils.sheet_add_aoa(ws1, [['']], { origin: -1 }); // dòng trống
-    XLSX.utils.sheet_add_aoa(ws1, [['Tổng hóa đơn']], { origin: -1 }); 
-    XLSX.utils.sheet_add_aoa(ws1, totals, { origin: -1 });
-    // 👇 Set chiều rộng từng cột (width tính theo ký tự)
+            // Khoảng cách giữa các bảng
+            new Paragraph({
+              text: '',
+              spacing: { after: 400 },
+            }),
   
-    const wb: XLSX.WorkBook = { 
-      Sheets: { 'ChiTietDonHang': ws1 },
-      SheetNames: ['ChiTietDonHang']
-    };
+            // Bảng danh sách sản phẩm
+            new Table({
+              width: { size: 100, type: WidthType.PERCENTAGE },
+              borders: {
+                top: { style: BorderStyle.SINGLE, size: 1 },
+                bottom: { style: BorderStyle.SINGLE, size: 1 },
+                left: { style: BorderStyle.SINGLE, size: 1 },
+                right: { style: BorderStyle.SINGLE, size: 1 },
+                insideHorizontal: { style: BorderStyle.SINGLE, size: 1 },
+                insideVertical: { style: BorderStyle.SINGLE, size: 1 },
+              },
+              rows: [
+                // Tiêu đề bảng
+                new TableRow({
+                  children: [
+                    new TableCell({
+                      width: { size: 5, type: WidthType.PERCENTAGE },
+                      children: [
+                        new Paragraph({
+                          text: 'STT',
+                          
+                          alignment: AlignmentType.CENTER,
+                        }),
+                      ],
+                      shading: { fill: '2980B9' }, // Màu nền tương ứng với [41, 128, 185]
+                    }),
+                    new TableCell({
+                      width: { size: 25, type: WidthType.PERCENTAGE },
+                      children: [
+                        new Paragraph({
+                          text: 'Tên sản phẩm',
+                          
+                          alignment: AlignmentType.CENTER,
+                        }),
+                      ],
+                      shading: { fill: '2980B9' },
+                    }),
+                    new TableCell({
+                      width: { size: 15, type: WidthType.PERCENTAGE },
+                      children: [
+                        new Paragraph({
+                          text: 'Mã PosCode',
+                          
+                          alignment: AlignmentType.CENTER,
+                        }),
+                      ],
+                      shading: { fill: '2980B9' },
+                    }),
+                    new TableCell({
+                      width: { size: 10, type: WidthType.PERCENTAGE },
+                      children: [
+                        new Paragraph({
+                          text: 'Số lượng',
+                          
+                          alignment: AlignmentType.CENTER,
+                        }),
+                      ],
+                      shading: { fill: '2980B9' },
+                    }),
+                    new TableCell({
+                      width: { size: 10, type: WidthType.PERCENTAGE },
+                      children: [
+                        new Paragraph({
+                          text: 'Size',
+                         
+                          alignment: AlignmentType.CENTER,
+                        }),
+                      ],
+                      shading: { fill: '2980B9' },
+                    }),
+                    new TableCell({
+                      width: { size: 15, type: WidthType.PERCENTAGE },
+                      children: [
+                        new Paragraph({
+                          text: 'Màu',
+                          
+                          alignment: AlignmentType.CENTER,
+                        }),
+                      ],
+                      shading: { fill: '2980B9' },
+                    }),
+                    new TableCell({
+                      width: { size: 20, type: WidthType.PERCENTAGE },
+                      children: [
+                        new Paragraph({
+                          text: 'Giá',
+                          
+                          alignment: AlignmentType.CENTER,
+                        }),
+                      ],
+                      shading: { fill: '2980B9' },
+                    }),
+                  ],
+                }),
+                // Dữ liệu sản phẩm
+                ...order.OrderItems.map((item, index) =>
+                  new TableRow({
+                    children: [
+                      new TableCell({
+                        width: { size: 5, type: WidthType.PERCENTAGE },
+                        children: [
+                          new Paragraph({
+                            text: (index + 1).toString(),
+                            alignment: AlignmentType.CENTER,
+                          }),
+                        ],
+                      }),
+                      new TableCell({
+                        width: { size: 25, type: WidthType.PERCENTAGE },
+                        children: [
+                          new Paragraph({
+                            text: item.ProductName ?? '',
+                          }),
+                        ],
+                      }),
+                      new TableCell({
+                        width: { size: 15, type: WidthType.PERCENTAGE },
+                        children: [
+                          new Paragraph({
+                            text: item.ProductPosCode ?? '',
+                            alignment: AlignmentType.CENTER,
+                          }),
+                        ],
+                      }),
+                      new TableCell({
+                        width: { size: 10, type: WidthType.PERCENTAGE },
+                        children: [
+                          new Paragraph({
+                            text: item.Quantity.toString(),
+                            alignment: AlignmentType.CENTER,
+                          }),
+                        ],
+                      }),
+                      new TableCell({
+                        width: { size: 10, type: WidthType.PERCENTAGE },
+                        children: [
+                          new Paragraph({
+                            text: item.SizeName ?? '',
+                            alignment: AlignmentType.CENTER,
+                          }),
+                        ],
+                      }),
+                      new TableCell({
+                        width: { size: 15, type: WidthType.PERCENTAGE },
+                        children: [
+                          new Paragraph({
+                            text: item.ColorName ?? '',
+                            alignment: AlignmentType.CENTER,
+                          }),
+                        ],
+                      }),
+                      new TableCell({
+                        width: { size: 20, type: WidthType.PERCENTAGE },
+                        children: [
+                          new Paragraph({
+                            text: item.UnitPrice.toLocaleString() + ' VNĐ',
+                            alignment: AlignmentType.RIGHT,
+                          }),
+                        ],
+                      }),
+                    ],
+                  }),
+                ),
+              ],
+            }),
   
-    // Gộp các phần vào cùng 1 sheet
-    // XLSX.utils.sheet_add_json(ws1, items, { origin: -1 });
-    // XLSX.utils.sheet_add_aoa(ws1, [['']], { origin: -1 });
-    // XLSX.utils.sheet_add_aoa(ws1, totals, { origin: -1 });
+            // Khoảng cách
+            new Paragraph({
+              text: '',
+              spacing: { after: 400 },
+            }),
   
-    const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-    const data: Blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
-    FileSaver.saveAs(data, `ChiTietDonHang_${order.Id}.xlsx`);
+            // Bảng tổng tiền
+            new Table({
+              width: { size: 100, type: WidthType.PERCENTAGE },
+              borders: {
+                top: { style: BorderStyle.NONE },
+                bottom: { style: BorderStyle.NONE },
+                left: { style: BorderStyle.NONE },
+                right: { style: BorderStyle.NONE },
+                insideHorizontal: { style: BorderStyle.NONE },
+                insideVertical: { style: BorderStyle.NONE },
+              },
+              rows: [
+                new TableRow({
+                  children: [
+                    new TableCell({
+                      width: { size: 80, type: WidthType.PERCENTAGE },
+                      children: [
+                        new Paragraph({
+                          text: 'Tổng tiền đơn hàng:',
+                          
+                          alignment: AlignmentType.RIGHT,
+                        }),
+                      ],
+                    }),
+                    new TableCell({
+                      width: { size: 20, type: WidthType.PERCENTAGE },
+                      children: [
+                        new Paragraph({
+                          text: order.TotalAmount.toLocaleString() + ' VNĐ',
+                          
+                          alignment: AlignmentType.RIGHT,
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+              ],
+            }),
+  
+            // Dòng chữ cảm ơn
+            new Paragraph({
+              text: '',
+              spacing: { after: 400 },
+            }),
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              children: [
+                new TextRun({
+                  text: 'Cảm ơn quý khách đã mua hàng!',
+                  italics: true,
+                  size: 24, // Font size 12
+                }),
+              ],
+            }),
+          ],
+        },
+      ],
+    });
+  
+    // Tạo và lưu file Word
+    const blob = await Packer.toBlob(doc);
+    saveAs(blob, `Hóa Đơn Mua Hàng ${order.Id}.docx`);
   }
+  
   //
   logout(){
     this.login.logout();

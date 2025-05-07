@@ -66,6 +66,9 @@ export class LoginComponent {
           timerProgressBar: true, // Thanh tiến trình
         });
         this.router.navigate(['/home']); // Chuyển hướng sau khi đăng nhập thành công
+      },
+      error: (error) => {
+        this.showError(`Mật khẩu hoặc tài khoản không đúng `);
       }
     });
   }

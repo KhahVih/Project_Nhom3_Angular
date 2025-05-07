@@ -91,10 +91,10 @@
         <div class="header-content">
           <h2>Danh Sách Khách Hàng<span routerLink="/admin/home" class="sub-header">Trang chủ</span></h2>
         </div>
-        <div class="button-btn">
+        <!-- <div class="button-btn">
           <button class="update-btn" (click)="openAddModal()">Thêm Khách Hàng</button>
           <button class="update-btn" (click)="openChangePasswordModal()" style="margin-left: 20px;">Đổi Mật Khẩu</button>
-        </div>
+        </div> -->
       </div>
 
       <div class="table-content">
@@ -105,7 +105,7 @@
           <div>Địa Chỉ</div>
           <div>Số Điện Thoại </div>
           <div>Giới Tính</div>
-          <div>Hành Động</div>
+          <!-- <div>Hành Động</div> -->
         </div>
         <div class="table-row" *ngFor="let customer of customers">
           <div>{{ customer.Username }}</div>
@@ -114,10 +114,10 @@
           <div>{{ customer.Address }}</div>
           <div>{{ customer.Phone}}</div>
           <div>{{  customer.Gender ? 'Nam' : 'Nữ'  }}</div>
-          <div>
+          <!-- <div>
             <button class="edit-btn" (click)="editCustomer(customer)">Sửa</button>
             <button class="delete-btn" (click)="deleteCustomer(customer.Id)">Xóa</button>
-          </div>
+          </div> -->
         </div>
       </div>
       <!-- PHÂN TRANG -->
@@ -137,7 +137,7 @@
         <button (click)="nextPage()" [disabled]="page === totalPages">›</button>
       </div>
       <!-- Modal Thêm Khách Hàng -->
-      <div class="overlay" *ngIf="showAddModal" (click)="closeAddModal()"></div>
+      <!-- <div class="overlay" *ngIf="showAddModal" (click)="closeAddModal()"></div>
       <div class="add-customer-modal" *ngIf="showAddModal">
         <div class="modal-header">
           <h3>Thêm Khách Hàng</h3>
@@ -184,10 +184,10 @@
             </div>
           </form>
         </div>
-      </div>
+      </div> -->
   
       <!-- Modal Chỉnh Sửa Khách Hàng -->
-      <div class="overlay" *ngIf="selectedCustomer" (click)="closeEditModal()"></div>
+      <!-- <div class="overlay" *ngIf="selectedCustomer" (click)="closeEditModal()"></div>
       <div class="edit-customer-modal" *ngIf="selectedCustomer">
         <div class="modal-header">
           <h3>Chỉnh Sửa Khách Hàng</h3>
@@ -232,9 +232,9 @@
             </div>
           </form>
         </div>
-      </div>
+      </div> -->
       <!-- Modal Đổi Mật Khẩu -->
-      <div class="overlay" *ngIf="showChangePasswordModal" (click)="closeChangePasswordModal()"></div>
+      <!-- <div class="overlay" *ngIf="showChangePasswordModal" (click)="closeChangePasswordModal()"></div>
       <div class="change-password-modal" *ngIf="showChangePasswordModal">
         <div class="modal-header">
           <h3>Đổi Mật Khẩu</h3>
@@ -262,6 +262,6 @@
             </div>
           </form>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>

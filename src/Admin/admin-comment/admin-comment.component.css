@@ -524,4 +524,16 @@
   color: #a3bffa;
   margin-left: 10px;
 }
-  
+
+.delete-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.edit-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
