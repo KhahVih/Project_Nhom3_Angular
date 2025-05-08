@@ -52,6 +52,7 @@ export class ProfileComponent implements OnInit{
     this.checkLoginStatus();
     this.GetCustomerId();
     this.GetOrderCustomer();
+    
   }
 
   GetCustomerId(){
@@ -81,12 +82,18 @@ export class ProfileComponent implements OnInit{
       this.customer.Date = new Date(value);
     }
   }
+  
+
   // update 
   updateCustomer(){
     const customerId = this.customerService.getCustomerId();
-    if(this.isPassword = true){
+    if(this.isPassword){
       this.customer.Password = this.newPassword;
+      console.log('newpassword',this.customer.Password);
+    }else {
+      console.log('Không đổi mật khẩu, giữ nguyên mật khẩu cũ:', this.customer.Password);
     }
+    
     const updateCustomers: Customer = {
       Id: this.customer.Id,
       Username: this.customer.Username,
@@ -115,6 +122,7 @@ export class ProfileComponent implements OnInit{
                 timer: 3000, // Tự đóng sau 3 giây
                 timerProgressBar: true, // Thanh tiến trình
               });
+        this.isPassword = false;
         this.router.navigate(['/login']);
       })
     }
